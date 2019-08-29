@@ -1,5 +1,6 @@
 package cn.workde.core.sample.boot;
 
+import cn.workde.core.base.exception.LoginException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -17,7 +18,10 @@ public class HelloController {
 
     @GetMapping
     @ApiOperation(value = "首页")
-    public String index() { return "Hello Workde"; }
+    public String index() {
+    	throw new LoginException("请登录");
+    	//return "Hello Workde";
+    }
 
     @GetMapping(value = "说")
     public String say() {

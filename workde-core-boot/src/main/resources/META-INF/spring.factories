@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.workde.core.boot.config.WorkdeAutoConfiguration
+cn.workde.core.boot.config.WorkdeAutoConfiguration,cn.workde.core.boot.config.WorkdeExecutorConfiguration
