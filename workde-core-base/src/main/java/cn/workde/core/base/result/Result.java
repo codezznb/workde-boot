@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
@@ -26,7 +27,7 @@ public class Result<T> implements Serializable {
     /** 提示信息 */
     private String msg;
     /** 状态 */
-    private Boolean flag;
+    private Boolean success;
     /** 数据 */
     private T data;
     /** count */
@@ -40,7 +41,7 @@ public class Result<T> implements Serializable {
      * @return
      */
     private static Result<?> error(Integer code, String msg) {
-        return Result.builder().code(code).msg(msg).flag(false).build();
+        return Result.builder().code(code).msg(msg).success(false).build();
     }
 
     /**
@@ -53,7 +54,7 @@ public class Result<T> implements Serializable {
      * @return
      */
     private static <T> Result<T> error(Integer code, String msg, T data) {
-        return new Result<T>().toBuilder().code(code).msg(msg).flag(false).data(data).build();
+        return new Result<T>().toBuilder().code(code).msg(msg).success(false).data(data).build();
     }
 
     // 100 - 访问限制
@@ -114,7 +115,7 @@ public class Result<T> implements Serializable {
         return Result.builder()
                 .code(ResultEnum.SUCCESS.getCode())
                 .msg(ResultEnum.SUCCESS.getMsg())
-                .flag(true)
+                .success(true)
                 .build();
     }
     /**
@@ -127,7 +128,7 @@ public class Result<T> implements Serializable {
         return new Result<T>().toBuilder()
                 .code(ResultEnum.SUCCESS.getCode())
                 .msg(ResultEnum.SUCCESS.getMsg())
-                .flag(true)
+                .success(true)
                 .data(data)
                 .build();
     }
@@ -205,6 +206,17 @@ public class Result<T> implements Serializable {
     public static Result<String> param_check_not_pass(String data) {
         return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg(), data);
     }
+
+
+	/**
+	 * 校验未通过，错误提示
+	 * @param msg
+	 * @return
+	 */
+	public static Result<?> fail(String msg) {
+		return error(ResultEnum.PARAM_VOID.getCode(), msg);
+	}
+
     /**
      * 参数校验未通过，无效的value-402
      * @return HTTP请求，最外层响应对象
@@ -214,11 +226,10 @@ public class Result<T> implements Serializable {
     }
     /**
      * 参数校验未通过，无效的value-402
-     * @param data 数据
      * @return HTTP请求，最外层响应对象
      */
-    public static Result<String> param_value_invalid(String data) {
-        return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), ResultEnum.PARAM_VALUE_INVALID.getMsg(), data);
+    public static Result<?> param_value_invalid(String msg) {
+        return error(ResultEnum.PARAM_VALUE_INVALID.getCode(), msg);
     }
     /**
      * 参数解密错误-403

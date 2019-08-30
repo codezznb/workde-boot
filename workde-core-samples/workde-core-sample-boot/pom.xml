@@ -16,7 +16,7 @@
     <dependencies>
         <dependency>
             <groupId>cn.workde</groupId>
-            <artifactId>workde-core-boot</artifactId>
+            <artifactId>workde-starter-boot</artifactId>
         </dependency>
 
         <dependency>

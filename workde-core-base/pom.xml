@@ -4,10 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
     <parent>
-        <artifactId>workde-core-build</artifactId>
+        <artifactId>workde-core</artifactId>
         <groupId>cn.workde</groupId>
         <version>${revision}</version>
-        <relativePath>../workde-core-build</relativePath>
     </parent>
 
     <modelVersion>4.0.0</modelVersion>
@@ -25,6 +24,15 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>cn.hutool</groupId>
