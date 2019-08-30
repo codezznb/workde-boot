@@ -21,7 +21,12 @@ rebel.xml
 ## MAC ##
 .DS_Store
 
+## Mavne ##
+.flattened-pom.xml
+
 ## Other ##
 logs/
 temp/
 scripts/docker/docker
+
+
