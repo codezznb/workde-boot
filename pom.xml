@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.0.9-SNAPSHOT</revision>
+        <revision>1.1.3-SNAPSHOT</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -43,7 +43,7 @@
         <module>workde-starter-secure</module>
         <module>workde-starter-swagger</module>
         <module>workde-starter-redis</module>
-
+        <module>workde-starter-token</module>
     </modules>
 
     <dependencyManagement>
@@ -78,6 +78,12 @@
             <dependency>
                 <groupId>cn.workde</groupId>
                 <artifactId>workde-starter-swagger</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.workde</groupId>
+                <artifactId>workde-starter-token</artifactId>
                 <version>${revision}</version>
             </dependency>
 

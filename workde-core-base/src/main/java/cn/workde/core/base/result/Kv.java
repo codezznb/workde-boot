@@ -1,4 +1,4 @@
-package cn.workde.core.base.token;
+package cn.workde.core.base.result;
 
 import cn.workde.core.base.cover.Convert;
 import org.springframework.util.LinkedCaseInsensitiveMap;
@@ -24,7 +24,7 @@ public class Kv extends LinkedCaseInsensitiveMap<Object> {
 	 *
 	 * @return Kv
 	 */
-	public static Kv init() {
+	public static Kv create() {
 		return new Kv();
 	}
 

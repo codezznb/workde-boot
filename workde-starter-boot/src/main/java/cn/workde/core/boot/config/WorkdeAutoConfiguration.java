@@ -1,6 +1,7 @@
 package cn.workde.core.boot.config;
 
 import cn.workde.core.base.properties.WorkdeProperties;
+import cn.workde.core.base.utils.SpringUtils;
 import cn.workde.core.base.validation.Validator;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -30,6 +31,11 @@ public class WorkdeAutoConfiguration {
 	public Validator validator(){
 		log.info("【初始化配置-校验器】Bean：Validator ... 已初始化完毕。");
 		return new Validator();
+	}
+
+	@Bean
+	public SpringUtils springUtils() {
+		return new SpringUtils();
 	}
 
 }
