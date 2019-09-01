@@ -3,14 +3,13 @@ package cn.workde.core.boot.config;
 import cn.workde.core.base.properties.WorkdeProperties;
 import cn.workde.core.base.utils.SpringUtils;
 import cn.workde.core.base.validation.Validator;
+import cn.workde.core.boot.json.JacksonObjectMapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.EnableAspectJAutoProxy;
-import org.springframework.context.annotation.Import;
+import org.springframework.context.annotation.*;
 
 /**
  * @author zhujingang
@@ -37,5 +36,13 @@ public class WorkdeAutoConfiguration {
 	public SpringUtils springUtils() {
 		return new SpringUtils();
 	}
+
+	@Bean
+	@Primary
+	@ConditionalOnMissingBean(ObjectMapper.class)
+	public ObjectMapper jacksonObjectMapper() {
+		return new JacksonObjectMapper();
+	}
+
 
 }

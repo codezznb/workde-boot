@@ -9,6 +9,7 @@ import java.util.Locale;
  */
 public class DateUtils {
 
+
 	/** 年-月-日T时:分:秒 */
 	public static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss");
 	/** 年-月-日 时:分:秒（标准北京时间） */
@@ -23,5 +24,8 @@ public class DateUtils {
 	public static final DateTimeFormatter TODAY_END = DateTimeFormatter.ofPattern("yyyy-MM-dd 23:59:59");
 	/** 年-月-01 00:00:00（当月起始时间） */
 	public static final DateTimeFormatter MONTH_START = DateTimeFormatter.ofPattern("yyyy-MM-01 00:00:00");
+
+	/** 时:分:秒（标准北京时间） */
+	public static final DateTimeFormatter H_m_s = DateTimeFormatter.ofPattern("HH:mm:ss");
 
 }
