@@ -5,6 +5,7 @@ import cn.workde.core.boot.annotation.SerializeField;
 import cn.workde.core.sample.boot.entity.User;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("hello")
 @Api(tags = "我的")
+@Slf4j
 public class HelloController {
 
     @GetMapping
@@ -33,13 +35,15 @@ public class HelloController {
 	@GetMapping(value = "profile_all")
 	@ApiOperation(value = "个人信息")
     public Result<User> profileAll() {
+    	log.info("hello#profileAll");
     	return Result.success(User.create());
 	}
 
 	@GetMapping(value = "profile")
 	@ApiOperation(value = "个人信息")
-	@SerializeField(clazz = User.class, includes = "username,loginAt,registerAt")
+	@SerializeField(clazz = User.class, includes = "username,login_at,register_at")
 	public Result<User> profile() {
+		log.info("hello#profile");
 		return Result.success(User.create());
 	}
 }

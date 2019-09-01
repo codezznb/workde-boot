@@ -2,7 +2,6 @@ package cn.workde.core.secure.handler;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.jdbc.core.JdbcTemplate;
 
 /**
  * @author zhujingang
@@ -13,9 +12,6 @@ import org.springframework.jdbc.core.JdbcTemplate;
 public class WorkdePermissionHandler implements IPermissionHandler{
 
 	private static final String SCOPE_CACHE_CODE = "apiScope:code:";
-
-	private JdbcTemplate jdbcTemplate;
-
 
 	@Override
 	public boolean permissionAll() {

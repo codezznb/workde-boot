@@ -348,7 +348,6 @@ public class Validator {
 				String key = violation.getPropertyPath().toString();
 				String msg = violation.getMessage();
 				paramHint.put(key, msg);
-				System.out.println(key + " " + msg);
 			});
 
 			throw new ValidateException(paramHint.toJSONString());

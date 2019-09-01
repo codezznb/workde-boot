@@ -68,7 +68,7 @@ public class SwaggerAutoConfiguration {
                 .build()
                 .securitySchemes(Collections.singletonList(securitySchema()))
                 .securityContexts(Collections.singletonList(securityContext()))
-                .securityContexts(Lists.newArrayList(securityContext())).securitySchemes(Lists.<SecurityScheme>newArrayList(SwaggerUtil.clientInfo(), SwaggerUtil.bladeAuth()))
+                .securityContexts(Lists.newArrayList(securityContext())).securitySchemes(Lists.<SecurityScheme>newArrayList(SwaggerUtil.workdeAuth()))
                 .pathMapping("/");
     }
 

@@ -2,6 +2,8 @@ package cn.workde.core.token;
 
 import cn.hutool.core.convert.Convert;
 import cn.workde.core.base.result.Kv;
+import cn.workde.core.base.utils.StringUtils;
+import cn.workde.core.base.utils.WebUtils;
 import cn.workde.core.token.constant.TokenConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
@@ -9,6 +11,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 
 import javax.crypto.spec.SecretKeySpec;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.security.Key;
 import java.util.*;
@@ -19,6 +22,8 @@ import java.util.*;
  * @date 2019/8/30 4:58 PM
  */
 public class TokenUtil {
+
+	private static final String WORKDE_USER_REQUEST_ATTR = "_WORKDE_USER_REQUEST_ATTR_";
 
 	public final static String TENANT_HEADER_KEY = "Tenant-Id";
 	public final static String DEFAULT_TENANT_ID = "000000";
@@ -39,7 +44,7 @@ public class TokenUtil {
 	public static Kv createAuthInfo(UserInfo userInfo) {
 		Kv authInfo = Kv.create();
 		//设置jwt参数
-		Map<String, String> param = userInfo.getUserParam();
+		Map<String, Object> param = userInfo.getUserParam();
 
 		//拼装accessToken
 		try {
@@ -66,7 +71,7 @@ public class TokenUtil {
 	 * @return refreshToken
 	 */
 	private static TokenInfo createRefreshToken(UserInfo userInfo) {
-		Map<String, String> param = new HashMap<>(16);
+		Map<String, Object> param = new HashMap<>(16);
 		param.put(TokenConstant.TOKEN_TYPE, TokenConstant.REFRESH_TOKEN);
 		param.put(TokenConstant.USER_ID, Convert.toStr(userInfo.getId()));
 		return createJWT(param, "audience", "issuser", TokenConstant.REFRESH_TOKEN);
@@ -82,7 +87,7 @@ public class TokenUtil {
 		return JwtUtil.parseJWT(jsonWebToken);
 	}
 
-	public static TokenInfo createJWT(Map<String, String> user, String audience, String issuer, String tokenType) {
+	public static TokenInfo createJWT(Map<String, Object> user, String audience, String issuer, String tokenType) {
 		SignatureAlgorithm signatureAlgorithm = SignatureAlgorithm.HS256;
 
 		long nowMillis = System.currentTimeMillis();
@@ -138,4 +143,61 @@ public class TokenUtil {
 		return cal.getTimeInMillis() - System.currentTimeMillis();
 	}
 
+
+	public static UserInfo getUserInfo() {
+		HttpServletRequest request = WebUtils.getRequest();
+		if(request == null) return null;
+
+		// 优先从 request 中获取
+		Object userInfo = request.getAttribute(WORKDE_USER_REQUEST_ATTR);
+		if (userInfo == null) {
+			userInfo = getUserInfo(request);
+			if (userInfo != null) {
+				// 设置到 request 中
+				request.setAttribute(WORKDE_USER_REQUEST_ATTR, userInfo);
+			}
+		}
+		return (UserInfo) userInfo;
+
+	}
+
+	public static UserInfo getUserInfo(HttpServletRequest request) {
+		Claims claims = getClaims(request);
+		if (claims == null) {
+			return null;
+		}
+
+		Long userId = Convert.toLong(claims.get(TokenConstant.USER_ID));
+		String account = Convert.toStr(claims.get(TokenConstant.ACCOUNT));
+		Long expiresIn = Convert.toLong(claims.get(TokenConstant.EXPIRES_IN));
+		UserInfo userInfo = new UserInfo();
+		userInfo.setId(userId);
+		userInfo.setAccount(account);
+		userInfo.setExpiresIn(expiresIn);
+		userInfo.setUserParam(claims);
+
+		return userInfo;
+	}
+
+	/**
+	 * 获取Claims
+	 *
+	 * @param request request
+	 * @return Claims
+	 */
+	public static Claims getClaims(HttpServletRequest request) {
+		String auth = request.getHeader(TokenConstant.HEADER);
+		if (StringUtils.isNotBlank(auth)) {
+			String token = JwtUtil.getToken(auth);
+			if (StringUtils.isNotBlank(token)) {
+				return parseJWT(token);
+			}
+		} else {
+			String parameter = request.getParameter(TokenConstant.HEADER);
+			if (StringUtils.isNotBlank(parameter)) {
+				return parseJWT(parameter);
+			}
+		}
+		return null;
+	}
 }

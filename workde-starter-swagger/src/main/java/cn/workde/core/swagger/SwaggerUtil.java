@@ -45,7 +45,7 @@ public class SwaggerUtil {
         return new ApiKey("ClientInfo", "Authorization", "header");
     }
 
-    public static ApiKey bladeAuth() {
-        return new ApiKey("BladeAuth", "Blade-Auth", "header");
+    public static ApiKey workdeAuth() {
+        return new ApiKey("XToken", "x-token", "header");
     }
 }

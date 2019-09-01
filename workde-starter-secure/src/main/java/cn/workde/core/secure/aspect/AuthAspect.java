@@ -1,6 +1,5 @@
-package cn.workde.core.secure.Aspect;
+package cn.workde.core.secure.aspect;
 
-import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.workde.core.base.exception.ForbiddenException;
 import cn.workde.core.base.result.Result;

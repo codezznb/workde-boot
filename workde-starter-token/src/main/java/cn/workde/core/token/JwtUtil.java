@@ -1,5 +1,6 @@
 package cn.workde.core.token;
 
+import cn.workde.core.token.constant.TokenConstant;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 
@@ -12,11 +13,10 @@ import java.util.Base64;
  */
 public class JwtUtil {
 
-	public static String SIGN_KEY = "Ydool";
 	public static String BEARER = "bearer";
 	public static Integer AUTH_LENGTH = 7;
 
-	public static String BASE64_SECURITY = Base64.getEncoder().encodeToString(SIGN_KEY.getBytes(StandardCharsets.UTF_8));
+	public static String BASE64_SECURITY = Base64.getEncoder().encodeToString(TokenConstant.SIGN_KEY.getBytes(StandardCharsets.UTF_8));
 
 	/**
 	 * 获取token串

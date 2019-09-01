@@ -17,6 +17,7 @@ import org.springframework.validation.BindException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -26,7 +27,7 @@ import java.util.List;
  * @date 2019/8/29 9:23 PM
  */
 @Slf4j
-@ResponseBody
+@RestControllerAdvice
 public class GlobalExceptionHandler {
 
 	/**

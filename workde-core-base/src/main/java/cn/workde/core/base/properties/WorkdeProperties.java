@@ -18,8 +18,6 @@ public class WorkdeProperties {
 
     private WorkdeAsyncProperties workdeAsyncProperties;
 
-    private WorkdeSecureProperties workdeSecureProperties;
-
     /**
      * 装载自定义配置workde.prop.xxx
      */

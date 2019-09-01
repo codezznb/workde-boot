@@ -1,8 +1,7 @@
 package cn.workde.core.boot.json;
 
-import cn.workde.core.base.utils.JsonUtils;
 import cn.workde.core.base.utils.ObjectUtils;
-import cn.workde.core.base.utils.SpringUtils;
+import cn.workde.core.base.utils.jackson.JacksonObjectMapper;
 import cn.workde.core.boot.annotation.SerializeField;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -13,7 +12,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class JsonSerializer {
 
-	private ObjectMapper mapper = SpringUtils.getBean(ObjectMapper.class);
+	private ObjectMapper mapper = new JacksonObjectMapper();
 
 	JacksonJsonFilter jacksonFilter = new JacksonJsonFilter();
 

@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.1.4-SNAPSHOT</revision>
+        <revision>1.1.5-SNAPSHOT</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -44,6 +44,7 @@
         <module>workde-starter-swagger</module>
         <module>workde-starter-redis</module>
         <module>workde-starter-token</module>
+        <module>workde-core-samples</module>
     </modules>
 
     <dependencyManagement>

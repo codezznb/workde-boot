@@ -3,7 +3,7 @@ package cn.workde.core.boot.config;
 import cn.workde.core.base.properties.WorkdeProperties;
 import cn.workde.core.base.utils.SpringUtils;
 import cn.workde.core.base.validation.Validator;
-import cn.workde.core.boot.json.JacksonObjectMapper;
+import cn.workde.core.base.utils.jackson.JacksonObjectMapper;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;

@@ -1,2 +1,8 @@
 server:
   port: 8081
+
+workde:
+  secure:
+    skip:
+      - /hello
+      - /hello/profile

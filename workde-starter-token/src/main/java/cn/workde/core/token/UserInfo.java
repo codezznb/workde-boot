@@ -11,7 +11,7 @@ import java.util.Map;
  * @date 2019/8/30 3:42 PM
  */
 @Data
-public abstract class UserInfo implements Serializable {
+public class UserInfo implements Serializable {
 
 	@ApiModelProperty(value = "用户ID")
 	private Long id;
@@ -34,9 +34,6 @@ public abstract class UserInfo implements Serializable {
 	@ApiModelProperty(value = "许可证")
 	private String license = "powered by blade";
 
-	/**
-	 * 需要加入到token里的参数
-	 * @return
-	 */
-	public abstract Map<String, String> getUserParam();
+	private Map<String, Object> userParam;
+
 }

@@ -6,9 +6,9 @@ package cn.workde.core.token.constant;
  */
 public interface TokenConstant {
 
-	String SIGN_KEY = "BladeX";
+	String SIGN_KEY = "WorkdeX";
 	String AVATAR = "avatar";
-	String HEADER = "Blade-Auth";
+	String HEADER = "x-token";
 	String BEARER = "bearer";
 	String ACCESS_TOKEN = "access_token";
 	String REFRESH_TOKEN = "refresh_token";
@@ -24,7 +24,7 @@ public interface TokenConstant {
 	String TENANT_ID = "tenant_id";
 	String CLIENT_ID = "client_id";
 	String LICENSE = "license";
-	String LICENSE_NAME = "powered by bladex";
+	String LICENSE_NAME = "powered by workde";
 	String DEFAULT_AVATAR = "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png";
 	Integer AUTH_LENGTH = 7;
 

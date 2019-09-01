@@ -1,10 +1,10 @@
-package cn.workde.core.boot.json;
+package cn.workde.core.base.utils.jackson;
 
-import cn.workde.core.base.utils.jackson.WorkdeJavaTimeModule;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategy;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
 import java.text.SimpleDateFormat;
@@ -43,6 +43,7 @@ public class JacksonObjectMapper extends ObjectMapper{
 		super.getDeserializationConfig().withoutFeatures(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
 		super.setSerializationInclusion(JsonInclude.Include.NON_NULL);
+		super.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 		//日期格式化
 		super.registerModule(new WorkdeJavaTimeModule());
 		super.findAndRegisterModules();

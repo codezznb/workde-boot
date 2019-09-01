@@ -1,2 +1,2 @@
 org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
-cn.workde.core.secure.config.SecureConfiguration
+cn.workde.core.secure.config.RegistryConfiguration,cn.workde.core.secure.config.SecureConfiguration

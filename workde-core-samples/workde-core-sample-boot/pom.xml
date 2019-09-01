@@ -23,6 +23,11 @@
             <groupId>cn.workde</groupId>
             <artifactId>workde-starter-swagger</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.workde</groupId>
+            <artifactId>workde-starter-secure</artifactId>
+        </dependency>
     </dependencies>
 
 
