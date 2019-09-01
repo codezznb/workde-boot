@@ -44,6 +44,7 @@
         <module>workde-starter-swagger</module>
         <module>workde-starter-redis</module>
         <module>workde-starter-token</module>
+        <module>workde-core-samples</module>
     </modules>
 
     <dependencyManagement>

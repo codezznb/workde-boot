@@ -31,6 +31,12 @@
             <version>${spring.pagehelper.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>druid-spring-boot-starter</artifactId>
+            <version>1.1.20</version>
+        </dependency>
+
     </dependencies>
 
 

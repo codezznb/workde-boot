@@ -1,8 +1,11 @@
 package cn.workde.core.sample.boot.entity;
 
+import cn.workde.core.tk.base.BaseEntity;
+import lombok.Builder;
 import lombok.Data;
+import lombok.experimental.Tolerate;
 
-import java.time.LocalDate;
+import javax.persistence.Table;
 import java.time.LocalDateTime;
 
 /**
@@ -10,20 +13,29 @@ import java.time.LocalDateTime;
  * @date 2019/9/1 10:00 AM
  */
 @Data
-public class User {
+@Builder
+@Table(name="yd_user")
+public class User extends BaseEntity {
 
-	private String username;
+	private String phone;
 	private String password;
 
-	private LocalDate registerAt;
+	private String regRemote;
+
 	private LocalDateTime loginAt;
 
+	private Integer loginCount;
+
+	private String loginRemote;
+
+	private Integer state;
+
+	@Tolerate
+	public User() {}
 
 	public static User create() {
 		User user = new User();
-		user.setUsername("zhujingang");
 		user.setPassword("123123");
-		user.setRegisterAt(LocalDate.now());
 		user.setLoginAt(LocalDateTime.now());
 		return user;
 	}

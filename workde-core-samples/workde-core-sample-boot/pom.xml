@@ -28,6 +28,18 @@
             <groupId>cn.workde</groupId>
             <artifactId>workde-starter-secure</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.workde</groupId>
+            <artifactId>workde-starter-mybatis-tk</artifactId>
+        </dependency>
+
+        <!-- MySQL -->
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.15</version>
+        </dependency>
     </dependencies>
 
 

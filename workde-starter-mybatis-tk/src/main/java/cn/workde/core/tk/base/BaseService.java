@@ -1,5 +1,8 @@
 package cn.workde.core.tk.base;
 
+import cn.workde.core.base.result.Kv;
+import cn.workde.core.base.utils.ObjectUtils;
+import cn.workde.core.base.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,6 +11,8 @@ import tk.mybatis.mapper.entity.Example;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author zhujingang
@@ -67,11 +72,37 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
         return null;
     }
 
-    public PageInfo<T> page(T entity, int pageNum, int pageSize) {
-        Example example = new Example(entityClass);
-        example.createCriteria().andEqualTo(entity);
-        PageHelper.startPage(pageNum, pageSize);
-        PageInfo<T> pageInfo = new PageInfo<>(mapper.selectByExample(example));
-        return pageInfo;
-    }
+    public List<T> list(Map<String, Object> params) {
+		return list(params, null);
+	}
+
+	public List<T> list(String orderBy) {
+		return list(null, orderBy);
+	}
+
+	public List<T> list(Map<String, Object> params, String orderBy) {
+		Example example = new Example(entityClass);
+		if(ObjectUtils.isNotEmpty(params)) example.createCriteria().andEqualTo(params);
+		if(StringUtils.isNotEmpty(orderBy)) example.setOrderByClause(orderBy);
+		return mapper.selectByExample(example);
+	}
+
+	public PageInfo<T> page(Map<String, Object> params, int pageNum, int pageSize) {
+		return page(params, null, pageNum, pageSize);
+	}
+
+	public PageInfo<T> page(String orderBy, int pageNum, int pageSize) {
+		return page(null, orderBy, pageNum, pageSize);
+	}
+
+
+	public PageInfo<T> page(Map<String, Object> params, String orderBy, int pageNum, int pageSize) {
+		Example example = new Example(entityClass);
+		if(ObjectUtils.isNotEmpty(params)) example.createCriteria().andEqualTo(params);
+		if(StringUtils.isNotEmpty(orderBy)) example.setOrderByClause(orderBy);
+		PageHelper.startPage(pageNum, pageSize);
+		PageInfo<T> pageInfo = new PageInfo<>(mapper.selectByExample(example));
+		return pageInfo;
+	}
+
 }
