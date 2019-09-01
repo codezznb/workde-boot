@@ -169,7 +169,7 @@ public class TokenUtil {
 
 		Long userId = Convert.toLong(claims.get(TokenConstant.USER_ID));
 		String account = Convert.toStr(claims.get(TokenConstant.ACCOUNT));
-		Long expiresIn = Convert.toLong(claims.get(TokenConstant.EXPIRES_IN));
+		Long expiresIn = claims.getExpiration().getTime();
 		UserInfo userInfo = new UserInfo();
 		userInfo.setId(userId);
 		userInfo.setAccount(account);

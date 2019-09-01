@@ -5,4 +5,3 @@ workde:
   secure:
     skip:
       - /hello
-      - /hello/profile

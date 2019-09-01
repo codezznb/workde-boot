@@ -3,6 +3,8 @@ package cn.workde.core.sample.boot;
 import cn.workde.core.base.result.Result;
 import cn.workde.core.boot.annotation.SerializeField;
 import cn.workde.core.sample.boot.entity.User;
+import cn.workde.core.token.TokenUtil;
+import cn.workde.core.token.UserInfo;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
@@ -43,7 +45,8 @@ public class HelloController {
 	@ApiOperation(value = "个人信息")
 	@SerializeField(clazz = User.class, includes = "username,login_at,register_at")
 	public Result<User> profile() {
-		log.info("hello#profile");
+    	UserInfo userInfo = TokenUtil.getUserInfo();
+		log.info("hello#profile {}", userInfo);
 		return Result.success(User.create());
 	}
 }
