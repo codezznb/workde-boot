@@ -19,4 +19,5 @@ public @interface AdminController {
 	String path();
 
 	Class<? extends ModuleDefine> define();
+
 }

@@ -3,10 +3,7 @@ package cn.workde.core.boot.handler;
 import cn.hutool.core.exceptions.ValidateException;
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.StrUtil;
-import cn.workde.core.base.exception.AuthorizeException;
-import cn.workde.core.base.exception.ForbiddenException;
-import cn.workde.core.base.exception.LoginException;
-import cn.workde.core.base.exception.ResultException;
+import cn.workde.core.base.exception.*;
 import cn.workde.core.base.result.Result;
 import cn.workde.core.base.utils.ExceptionUtils;
 import cn.workde.core.base.utils.WebUtils;
@@ -35,11 +32,21 @@ public class GlobalExceptionHandler {
 	 * @param e 异常
 	 * @return 结果
 	 */
-
 	@ExceptionHandler(Exception.class)
 	public Result<?> exceptionHandler(Exception e) {
 		e.printStackTrace();
 		return Result.error(e.toString());
+	}
+
+	/**
+	 * 拦截业务错误
+	 * @param e 异常
+	 * @return 结果
+	 */
+	@ExceptionHandler(BusinessException.class)
+	public Result<?> businessExceptionHandler(BusinessException e) {
+		e.printStackTrace();
+		return Result.fail(e.getMessage());
 	}
 
 	/**

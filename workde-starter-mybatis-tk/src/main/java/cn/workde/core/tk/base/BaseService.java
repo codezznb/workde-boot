@@ -1,6 +1,5 @@
 package cn.workde.core.tk.base;
 
-import cn.workde.core.base.result.Kv;
 import cn.workde.core.base.utils.ObjectUtils;
 import cn.workde.core.base.utils.StringUtils;
 import com.github.pagehelper.PageHelper;
@@ -89,6 +88,10 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
 		if(ObjectUtils.isNotEmpty(params)) example.createCriteria().andEqualTo(params);
 		if(StringUtils.isNotEmpty(orderBy)) example.setOrderByClause(orderBy);
 		return mapper.selectByExample(example);
+	}
+
+	public PageInfo<T> page(int pageNum, int pageSize) {
+		return page(null, null, pageNum, pageSize);
 	}
 
 	public PageInfo<T> page(Map<String, Object> params, int pageNum, int pageSize) {

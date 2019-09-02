@@ -1,6 +1,8 @@
 package cn.workde.core.base.controller;
 
+import cn.hutool.core.convert.Convert;
 import cn.workde.core.base.result.Kv;
+import cn.workde.core.base.utils.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.servlet.http.HttpServletRequest;
@@ -23,17 +25,29 @@ public class WorkdeController {
     /**
      * 获取request
      */
-    public HttpServletRequest getRequest() {
+	protected HttpServletRequest getRequest() {
         return this.request;
     }
 
 
-    public Kv getPermitParams(String ...names){
+	protected Kv getPermitParams(String ...names){
 		Kv kv = Kv.create();
 		Arrays.asList(names).stream().forEach(name -> {
 			String value = getRequest().getParameter(name);
 			if(value != null) kv.put(name, value);
 		});
 		return kv;
+	}
+
+	protected Integer getPageNum() {
+		String pageNum = getRequest().getParameter("page");
+		if(StringUtils.isEmpty(pageNum)) return 1;
+		return Convert.toInt(pageNum);
+	}
+
+	protected Integer getPageSize() {
+		String limit = getRequest().getParameter("limit");
+		if(StringUtils.isEmpty(limit)) return 20;
+		return Convert.toInt(limit);
 	}
 }

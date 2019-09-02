@@ -1,24 +1,24 @@
 package cn.workde.core.admin.logic;
 
-import cn.workde.core.tk.base.BaseEntity;
+
+import java.util.Map;
 
 /**
  * @author zhujingang
  * @date 2019/9/2 12:59 PM
  */
-public interface IModuleLogic<T extends BaseEntity> {
+public interface IModuleLogic<T> {
 
-	default void beforeCreate(T inserted) {}
 
-	default boolean beforeInsert(T updated, String errorMessage) { return true; }
-	default boolean afterInsert(T inserted) { return true; }
+	boolean beforeInsert(T updated);
+	boolean afterInsert(T inserted);
 
-	default void beforeEdit(T updated) {}
+	boolean beforeUpdate(T updated);
+	boolean afterUpdate(T updated);
 
-	default boolean beforeUpdate(T updated, String errorMessage) { return true; }
-	default boolean afterUpdate(T updated) { return true; }
+	boolean beforeDelete(T deleted);
+	boolean afterDelete(T deleted);
 
-	default boolean beforeDelete(T deleted, String errorMessage) { return true; }
-	default boolean afterDelete(T deleted) { return true; }
+	Map<String, Object> getNewDefultValue();
 
 }

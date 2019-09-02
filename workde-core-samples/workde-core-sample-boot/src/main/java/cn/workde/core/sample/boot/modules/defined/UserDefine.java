@@ -2,6 +2,7 @@ package cn.workde.core.sample.boot.modules.defined;
 
 import cn.workde.core.admin.define.ModuleDefine;
 import cn.workde.core.sample.boot.entity.User;
+import cn.workde.core.sample.boot.modules.logic.UserLogic;
 import cn.workde.core.sample.boot.service.UserService;
 import org.springframework.stereotype.Component;
 
@@ -15,5 +16,6 @@ public class UserDefine extends ModuleDefine {
 	public UserDefine() {
 		this.setModel(User.class);
 		this.setBaseService(UserService.class);
+		this.setModuleLogic(UserLogic.class);
 	}
 }
