@@ -5,11 +5,11 @@
   <parent>
     <groupId>cn.workde</groupId>
     <artifactId>workde-core</artifactId>
-    <version>1.1.7-SNAPSHOT</version>
+    <version>1.1.8-SNAPSHOT</version>
   </parent>
   <groupId>cn.workde</groupId>
   <artifactId>workde-starter-mybatis-tk</artifactId>
-  <version>1.1.7-SNAPSHOT</version>
+  <version>1.1.8-SNAPSHOT</version>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -20,7 +20,7 @@
     <dependency>
       <groupId>cn.workde</groupId>
       <artifactId>workde-core-base</artifactId>
-      <version>1.1.7-SNAPSHOT</version>
+      <version>1.1.8-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
@@ -33,6 +33,12 @@
       <groupId>com.github.pagehelper</groupId>
       <artifactId>pagehelper-spring-boot-starter</artifactId>
       <version>1.2.12</version>
+      <scope>compile</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.alibaba</groupId>
+      <artifactId>druid-spring-boot-starter</artifactId>
+      <version>1.1.20</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

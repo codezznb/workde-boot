@@ -34,6 +34,10 @@
             <artifactId>workde-starter-mybatis-tk</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.workde</groupId>
+            <artifactId>workde-starter-admin</artifactId>
+        </dependency>
         <!-- MySQL -->
         <dependency>
             <groupId>mysql</groupId>

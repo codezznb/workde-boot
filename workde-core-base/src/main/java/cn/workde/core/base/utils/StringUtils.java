@@ -43,4 +43,25 @@ public class StringUtils extends StrUtil {
     public static String deleteFirstLastString(String str, int length) {
         return str.substring(length, str.length() - length);
     }
+
+	private static boolean containsText(CharSequence str) {
+		int strLen = str.length();
+
+		for(int i = 0; i < strLen; ++i) {
+			if (!Character.isWhitespace(str.charAt(i))) {
+				return true;
+			}
+		}
+
+		return false;
+	}
+
+	/**
+	 * 如果字符串里面的值为null， ""， "   "，那么返回值为false；否则为true
+	 * @param str
+	 * @return
+	 */
+	public static Boolean hasText(String str){
+		return str != null && !str.isEmpty() && containsText(str);
+	}
 }

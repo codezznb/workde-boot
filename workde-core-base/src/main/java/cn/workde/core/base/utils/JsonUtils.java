@@ -25,6 +25,22 @@ public class JsonUtils {
 		}
 		return null;
 	}
+	/**
+	 * 将json反序列化成对象
+	 *
+	 * @param content   content
+	 * @param valueType class
+	 * @param <T>       T 泛型标记
+	 * @return Bean
+	 */
+	public static <T> T parse(String content, Class<T> valueType) {
+		try {
+			return getInstance().readValue(content, valueType);
+		} catch (Exception e) {
+			log.error(e.getMessage(), e);
+		}
+		return null;
+	}
 
 	public static ObjectMapper getInstance() {
 		return JacksonHolder.INSTANCE;

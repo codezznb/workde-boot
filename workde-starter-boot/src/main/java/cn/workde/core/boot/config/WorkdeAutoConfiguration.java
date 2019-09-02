@@ -33,6 +33,7 @@ public class WorkdeAutoConfiguration {
 	}
 
 	@Bean
+	@ConditionalOnMissingBean(SpringUtils.class)
 	public SpringUtils springUtils() {
 		return new SpringUtils();
 	}

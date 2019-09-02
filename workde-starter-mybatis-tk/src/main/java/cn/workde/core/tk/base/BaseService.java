@@ -25,6 +25,10 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
 
     private Class<T> entityClass = (Class<T>) ((ParameterizedType) getClass().getGenericSuperclass()).getActualTypeArguments()[0];
 
+	public List<T> all() {
+		return mapper.selectAll();
+	}
+
     public boolean unique(String property, String value) {
         Example example = new Example(entityClass);
         example.createCriteria().andEqualTo(property, value);
@@ -103,6 +107,18 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
 		PageHelper.startPage(pageNum, pageSize);
 		PageInfo<T> pageInfo = new PageInfo<>(mapper.selectByExample(example));
 		return pageInfo;
+	}
+
+	public void delete(T entity) {
+		mapper.delete(entity);
+	}
+
+	public void deleteById(Long id) {
+		mapper.deleteByPrimaryKey(id);
+	}
+
+	public void deleteByExample(T entity){
+		mapper.deleteByExample(entity);
 	}
 
 }
