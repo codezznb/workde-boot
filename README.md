@@ -22,7 +22,7 @@ workde-core
 	└── └── workde-core-boot
 ```
 ## 快速使用
-maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![maven-central](https://img.shields.io/maven-central/v/cn.workde/workde-core-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
+maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![maven-central](https://img.shields.io/maven-central/v/cn.workde/workde-core-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/cn.workde/workde-core-dependencies)
 ```xml
 <parent>
 	<groupId>cn.workde</groupId>
@@ -68,14 +68,13 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 - 通过 `@PreAuth` 来实现功能判断（待实现）
 
 ### workde-starter-mybatis-tk
-提供权限相关的注解，拦截器等
 - 基于Mybatis,Tkmybatis进行二次封装，提供了默认的Service，Mapper
-- 默认Service提供 `list`, `page`, `byId`, `one`, `save`, `udpate`, `delete` 方法
+- 默认Service提供 `list`, `page`, `byId`, `one`, `save`, `udpate`, `delete` 等方法
 
 ### workde-starter-admin
 通过配置实体类，提供普通的CRUD接口
 - 启动类增加注解 `@EnableWorkdeAdmin`, `workde.admin.contextPath` 配置后台地址，默认为 admin
-- `Controller` 继承 `ModuleController`，提供 `list`(列表),`newDefault`(默认值),`create`(保存),`edit`(修改),`update`(更新),`delete`(删除)接口
+- `Controller` 继承 `ModuleController`，提供 `list`(列表),`newDefault`(默认值),`create`(保存),`edit`(修改),`update`(更新),`delete`(删除) 接口
 - 增加注解`@AdminController`, 设置`ModuleDefine` 和 `path` (必须)
 - `ModuleDefine` 定义Module的实体类,Service,Logic等
 - Logic 默认提供 `beforeInsert`(插入前),`afterInsert`(插入后),`beforeUpdate`(保存前),`afterUpdate`(保存后),`beforeDelete`(删除前),`afterDelete`(删除后),`getNewDefultValue`(默认值)
