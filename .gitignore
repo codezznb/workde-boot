@@ -21,7 +21,7 @@ rebel.xml
 ## MAC ##
 .DS_Store
 
-## Mavne ##
+## Maven ##
 .flattened-pom.xml
 
 ## Other ##
