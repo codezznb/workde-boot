@@ -5,11 +5,11 @@
   <parent>
     <groupId>cn.workde</groupId>
     <artifactId>workde-core</artifactId>
-    <version>1.1.8-SNAPSHOT</version>
+    <version>1.2.0-RELEASE</version>
   </parent>
   <groupId>cn.workde</groupId>
   <artifactId>workde-starter-boot</artifactId>
-  <version>1.1.8-SNAPSHOT</version>
+  <version>1.2.0-RELEASE</version>
   <licenses>
     <license>
       <name>Apache License, Version 2.0</name>
@@ -20,7 +20,7 @@
     <dependency>
       <groupId>cn.workde</groupId>
       <artifactId>workde-core-base</artifactId>
-      <version>1.1.8-SNAPSHOT</version>
+      <version>1.2.0-RELEASE</version>
       <scope>compile</scope>
     </dependency>
   </dependencies>

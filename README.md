@@ -7,19 +7,19 @@
 ## 工程结构
 
 ```
-. workde-core
-├── workde-core  基础库
-│   ├── workde-core-dependencies  父pom
-│   ├── workde-core-base          基础库提供了丰富的Java工具包
-│   ├── workde-starter-boot       基于SpringBoot进行二次封装，同时也自动装配了一系列基础Bean等
-│   ├── workde-starter-redis      基于SpringRedis进行二次封装，更简单灵活
-│   ├── workde-starter-token      提供token创建与解析
-│   ├── workde-starter-secure     提供权限相关的注解，拦截器等
-│   ├── workde-starter-mybatis-tk 基于Mybatis,Tkmybatis进行二次封装，提供了默认的Service，Mapper
-│   ├── workde-starter-admin      通过配置实体类，提供普通的CRUD接口
-│   └── workde-starter-swagger    基于Swagger，knife4j进行二次封装，提供接口Api文档
-├── workde-core-samples  基础库示例   
-└── └── workde-core-boot
+workde-core
+	├── workde-core  基础库
+	│   ├── workde-core-dependencies  父pom
+	│   ├── workde-core-base          基础库提供了丰富的Java工具包
+	│   ├── workde-starter-boot       基于SpringBoot进行二次封装，同时也自动装配了一系列基础Bean等
+	│   ├── workde-starter-redis      基于SpringRedis进行二次封装，更简单灵活
+	│   ├── workde-starter-token      提供token创建与解析
+	│   ├── workde-starter-secure     提供权限相关的注解，拦截器等
+	│   ├── workde-starter-mybatis-tk 基于Mybatis,Tkmybatis进行二次封装，提供了默认的Service，Mapper
+	│   ├── workde-starter-admin      通过配置实体类，提供普通的CRUD接口
+	│   └── workde-starter-swagger    基于Swagger，knife4j进行二次封装，提供接口Api文档
+	├── workde-core-samples  基础库示例   
+	└── └── workde-core-boot
 ```
 ## 快速使用
 maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![maven-central](https://img.shields.io/maven-central/v/cn.workde/workde-core-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
