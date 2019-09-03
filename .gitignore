@@ -29,4 +29,5 @@ logs/
 temp/
 scripts/docker/docker
 
+deploy.sh
 
