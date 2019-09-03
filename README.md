@@ -68,7 +68,7 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 - 通过 `@PreAuth` 来实现功能判断（待实现）
 
 ### workde-starter-mybatis-tk
-- 基于Mybatis,Tkmybatis进行二次封装，提供了默认的Service，Mapper
+基于Mybatis,Tkmybatis进行二次封装，提供了默认的Service，Mapper
 - 默认Service提供 `list`, `page`, `byId`, `one`, `save`, `udpate`, `delete` 等方法
 
 ### workde-starter-admin
