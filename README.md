@@ -7,7 +7,7 @@
 ## 工程结构
 
 ```
-workde-core
+.workde-core
 	├── workde-core  基础库
 	│   ├── workde-core-dependencies  父pom
 	│   ├── workde-core-base          基础库提供了丰富的Java工具包
