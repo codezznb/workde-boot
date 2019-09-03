@@ -20,7 +20,7 @@
 │   └── workde-starter-swagger    基于Swagger，knife4j进行二次封装，提供接口Api文档
 ├── workde-core-samples  基础库示例   
 └── └── workde-core-boot
-
+```
 ## 快速使用
 maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`替换为对应版本号：[![maven-central](https://img.shields.io/maven-central/v/cn.workde/workde-core-dependencies.svg?label=Maven%20Central)](https://maven-badges.herokuapp.com/maven-central/ai.ylyue/yue-library-dependencies)
 ```xml
