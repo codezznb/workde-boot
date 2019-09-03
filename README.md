@@ -2,7 +2,7 @@
 
 ## 介绍
 
-　　Workde Core是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，并且自动装配了一系列的基础Bea。
+　　Workde Core是一个基于SpringBoot封装的基础库，内置丰富的JDK工具，并且自动装配了一系列的基础Bean
 
 ## 工程结构
 
