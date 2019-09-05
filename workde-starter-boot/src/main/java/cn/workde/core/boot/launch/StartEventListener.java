@@ -1,6 +1,5 @@
 package cn.workde.core.boot.launch;
 
-import cn.hutool.core.net.NetUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.web.context.WebServerInitializedEvent;
 import org.springframework.context.annotation.Configuration;
@@ -30,8 +29,4 @@ public class StartEventListener {
         log.info("---[{}]---启动完成，当前使用的端口:[{}]，环境变量:[{}]---", appName, localPort, profile);
     }
 
-    public static void main(String[] args) {
-
-        System.out.println(NetUtil.getLocalhost().getHostName());
-    }
 }

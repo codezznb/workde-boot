@@ -15,5 +15,6 @@ import java.util.List;
 public class WorkdeSecureProperties {
 
 	private Boolean enable = true;
+	private String loginPage = "/cpanel/login";
 	private final List<String> skip = new ArrayList<>();
 }

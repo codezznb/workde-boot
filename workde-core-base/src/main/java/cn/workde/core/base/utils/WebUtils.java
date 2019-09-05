@@ -34,6 +34,11 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
         return getIP(WebUtils.getRequest());
     }
 
+	public static boolean isAjax() {
+		HttpServletRequest request = getRequest();
+		return (request.getHeader("X-Requested-With") != null && "XMLHttpRequest".equals(request.getHeader("X-Requested-With").toString()));
+	}
+
     private static final String[] IP_HEADER_NAMES = new String[]{
             "x-forwarded-for",
             "Proxy-Client-IP",

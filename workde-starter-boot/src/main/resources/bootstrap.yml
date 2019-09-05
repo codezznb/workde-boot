@@ -48,7 +48,7 @@ spring:
       web-stat-filter:
         enabled: true
         url-pattern: /*
-        exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.css,*.ico,/druid/*'
+        exclusions: '*.js,*.gif,*.jpg,*.bmp,*.png,*.styles,*.ico,/druid/*'
         session-stat-enable: true
         session-stat-max-count: 10
       #hikari:

@@ -14,9 +14,10 @@
     </parent>
 
     <dependencies>
+
         <dependency>
             <groupId>cn.workde</groupId>
-            <artifactId>workde-starter-boot</artifactId>
+            <artifactId>workde-starter-cpanel</artifactId>
         </dependency>
 
         <dependency>
@@ -37,11 +38,6 @@
         <dependency>
             <groupId>cn.workde</groupId>
             <artifactId>workde-starter-admin</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>cn.workde</groupId>
-            <artifactId>workde-starter-cpanel</artifactId>
         </dependency>
 
         <!-- MySQL -->

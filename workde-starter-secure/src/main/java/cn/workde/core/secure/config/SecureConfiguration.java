@@ -32,7 +32,7 @@ public class SecureConfiguration implements WebMvcConfigurer {
     public void addInterceptors(InterceptorRegistry registry) {
     	log.info("secure enable {}", workdeSecureProperties.getEnable());
         if (workdeSecureProperties.getEnable()) {
-            registry.addInterceptor(new TokenInterceptor())
+            registry.addInterceptor(new TokenInterceptor(workdeSecureProperties))
                     .excludePathPatterns(secureRegistry.getExcludePatterns())
                     .excludePathPatterns(secureRegistry.getDefaultExcludePatterns())
                     .excludePathPatterns(workdeSecureProperties.getSkip());

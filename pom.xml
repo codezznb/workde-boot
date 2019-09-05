@@ -37,6 +37,7 @@
     <modules>
         <module>workde-core-dependencies</module>
         <module>workde-core-base</module>
+        <module>workde-core-auto</module>
         <module>workde-starter-boot</module>
         <module>workde-starter-mybatis-tk</module>
         <module>workde-starter-secure</module>
@@ -46,6 +47,7 @@
         <module>workde-starter-admin</module>
         <module>workde-starter-cpanel</module>
         <module>workde-core-samples</module>
+
 
     </modules>
 
@@ -63,6 +65,12 @@
             <dependency>
                 <groupId>cn.workde</groupId>
                 <artifactId>workde-core-base</artifactId>
+                <version>${revision}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>cn.workde</groupId>
+                <artifactId>workde-core-auto</artifactId>
                 <version>${revision}</version>
             </dependency>
 

@@ -15,7 +15,6 @@ workde:
     enable: false
     skip:
       - /hello
-      - /admin/sys/users/list
   admin:
     ui:
       cacheTemplates: false
