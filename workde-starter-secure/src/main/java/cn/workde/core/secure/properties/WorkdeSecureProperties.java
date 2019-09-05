@@ -14,5 +14,6 @@ import java.util.List;
 @ConfigurationProperties("workde.secure")
 public class WorkdeSecureProperties {
 
+	private Boolean enable = true;
 	private final List<String> skip = new ArrayList<>();
 }

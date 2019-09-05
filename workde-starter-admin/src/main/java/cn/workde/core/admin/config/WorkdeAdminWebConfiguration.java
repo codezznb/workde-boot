@@ -1,7 +1,7 @@
 package cn.workde.core.admin.config;
 
 import cn.workde.core.admin.properties.WorkdeAdminProperties;
-import cn.workde.core.admin.web.AdminControllerHandlerMapping;
+import cn.workde.core.admin.web.ApiHandlerMapping;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -33,7 +33,7 @@ public class WorkdeAdminWebConfiguration {
 
 		@Bean
 		public RequestMappingHandlerMapping adminHandlerMapper(ContentNegotiationManager contentNegotiationManager) {
-			RequestMappingHandlerMapping mapping = new AdminControllerHandlerMapping(workdeAdminProperties.getContextPath());
+			RequestMappingHandlerMapping mapping = new ApiHandlerMapping(workdeAdminProperties.getContextPath());
 			mapping.setOrder(0);
 			mapping.setContentNegotiationManager(contentNegotiationManager);
 			return mapping;

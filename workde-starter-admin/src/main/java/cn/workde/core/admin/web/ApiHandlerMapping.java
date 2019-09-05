@@ -16,11 +16,11 @@ import java.util.Set;
  * @date 2019/9/2 4:54 PM
  */
 @Slf4j
-public class AdminControllerHandlerMapping extends RequestMappingHandlerMapping {
+public class ApiHandlerMapping extends RequestMappingHandlerMapping {
 
 	private final String adminContextPath;
 
-	public AdminControllerHandlerMapping(String adminContextPath) {
+	public ApiHandlerMapping(String adminContextPath) {
 		this.adminContextPath = adminContextPath;
 	}
 

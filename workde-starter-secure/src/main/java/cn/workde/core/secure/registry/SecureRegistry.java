@@ -14,8 +14,6 @@ import java.util.List;
 @Data
 public class SecureRegistry {
 
-    private boolean enable = true;
-
     private final List<String> defaultExcludePatterns = new ArrayList<>();
 
     private final List<String> excludePatterns = new ArrayList<>();

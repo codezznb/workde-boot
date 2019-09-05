@@ -46,6 +46,7 @@ public class ModuleController extends WorkdeController {
 	@ApiOperation(value = "列表")
 	public Result list(){
 		BaseService baseService = getBaseService();
+		baseService.page(getPageNum(), getPageSize());
 		if(getModuleDefine().getListPage()) {
 			return Result.success(baseService.page(getPageNum(), getPageSize()));
 		}

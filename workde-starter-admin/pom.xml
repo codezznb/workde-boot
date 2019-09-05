@@ -13,6 +13,7 @@
     </parent>
 
     <dependencies>
+
         <dependency>
             <groupId>cn.workde</groupId>
             <artifactId>workde-starter-mybatis-tk</artifactId>

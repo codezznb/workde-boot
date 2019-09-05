@@ -38,6 +38,12 @@
             <groupId>cn.workde</groupId>
             <artifactId>workde-starter-admin</artifactId>
         </dependency>
+
+        <dependency>
+            <groupId>cn.workde</groupId>
+            <artifactId>workde-starter-cpanel</artifactId>
+        </dependency>
+
         <!-- MySQL -->
         <dependency>
             <groupId>mysql</groupId>

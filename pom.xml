@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.2.0-RELEASE</revision>
+        <revision>1.2.1-RELEASE</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -26,11 +26,9 @@
         <compile.version>8</compile.version>
         <hutool.version>4.6.2</hutool.version>
         <fastjson.version>1.2.59</fastjson.version>
-
         <knife4j.version>1.9.6</knife4j.version>
 
         <spring.boot.version>2.1.7.RELEASE</spring.boot.version>
-
         <spring.tk-mybatis.version>2.1.5</spring.tk-mybatis.version>
         <spring.pagehelper.version>1.2.12</spring.pagehelper.version>
 
@@ -46,6 +44,9 @@
         <module>workde-starter-redis</module>
         <module>workde-starter-token</module>
         <module>workde-starter-admin</module>
+        <module>workde-starter-cpanel</module>
+        <module>workde-core-samples</module>
+
     </modules>
 
     <dependencyManagement>
@@ -106,7 +107,11 @@
                 <artifactId>workde-starter-admin</artifactId>
                 <version>${revision}</version>
             </dependency>
-
+            <dependency>
+                <groupId>cn.workde</groupId>
+                <artifactId>workde-starter-cpanel</artifactId>
+                <version>${revision}</version>
+            </dependency>
             <dependency>
                 <groupId>cn.hutool</groupId>
                 <artifactId>hutool-core</artifactId>
@@ -202,7 +207,8 @@
                             <charset>UTF-8</charset>
                             <encoding>UTF-8</encoding>
                             <docencoding>UTF-8</docencoding>
-                            <additionalparam>-Xdoclint:none</additionalparam>  <!-- TODO 临时解决不规范的javadoc生成报错,后面要规范化后把这行去掉 -->
+                            <!-- TODO 临时解决不规范的javadoc生成报错,后面要规范化后把这行去掉 -->
+                            <additionalparam>-Xdoclint:none</additionalparam>
                         </configuration>
                         <executions>
                             <execution>
@@ -243,5 +249,34 @@
             </build>
         </profile>
     </profiles>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>flatten-maven-plugin</artifactId>
+                <configuration>
+                    <updatePomFile>true</updatePomFile>
+                    <pomElements>
+                        <parent>expand</parent>
+                        <dependencyManagement>interpolate</dependencyManagement>
+                        <properties>interpolate</properties>
+                        <repositories>interpolate</repositories>
+                        <developers>interpolate</developers>
+                        <scm>interpolate</scm>
+                    </pomElements>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>flatten</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>flatten</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

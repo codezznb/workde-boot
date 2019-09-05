@@ -12,4 +12,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 public class WorkdeAdminProperties {
 
 	private String contextPath = "admin";
+
+	public String path(String path) {
+		return this.contextPath + path;
+	}
 }

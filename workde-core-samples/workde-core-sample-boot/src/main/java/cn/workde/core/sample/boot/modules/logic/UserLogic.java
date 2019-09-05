@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserLogic extends BaseLogic<User> {
 
-	@Override
 	public boolean beforeUpdate(User updated, String errorMessage) {
 		System.out.println("come before updated");
 		System.out.println(updated.getPhone());
