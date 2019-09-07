@@ -1,6 +1,7 @@
 package cn.workde.core.admin.web;
 
-import cn.workde.core.admin.define.ModuleDefine;
+import cn.workde.core.admin.module.define.ModuleDefine;
+import cn.workde.core.admin.module.define.NullDefine;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
@@ -18,6 +19,6 @@ public @interface AdminController {
 
 	String path();
 
-	Class<? extends ModuleDefine> define();
+	Class<? extends ModuleDefine> define() default NullDefine.class;
 
 }

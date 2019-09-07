@@ -1,6 +1,6 @@
 package cn.workde.core.sample.boot.modules.logic;
 
-import cn.workde.core.admin.logic.BaseLogic;
+import cn.workde.core.admin.module.logic.BaseLogic;
 import cn.workde.core.base.exception.BusinessException;
 import cn.workde.core.sample.boot.entity.User;
 import org.springframework.stereotype.Component;

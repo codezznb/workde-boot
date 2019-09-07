@@ -17,7 +17,12 @@
 
         <dependency>
             <groupId>cn.workde</groupId>
-            <artifactId>workde-starter-cpanel</artifactId>
+            <artifactId>workde-starter-boot</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.workde</groupId>
+            <artifactId>workde-starter-admin</artifactId>
         </dependency>
 
         <dependency>
@@ -35,10 +40,7 @@
             <artifactId>workde-starter-mybatis-tk</artifactId>
         </dependency>
 
-        <dependency>
-            <groupId>cn.workde</groupId>
-            <artifactId>workde-starter-admin</artifactId>
-        </dependency>
+
 
         <!-- MySQL -->
         <dependency>

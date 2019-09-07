@@ -21,4 +21,4 @@ workde:
 
 logging:
   level:
-    cn.workde.core.sample.boot.mapper: DEBUG
+    cn.workde.core: DEBUG

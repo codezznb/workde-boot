@@ -1,0 +1,72 @@
+.workde-header {
+    background: #fff!important;
+    border-bottom: 1px solid #E7EBEF;
+}
+
+.workde-header .layui-logo {
+    background: #4196E1;
+}
+
+.workde-header .layui-nav .layui-nav-item a {
+    color: #666;
+    font-size: 14px;
+    display: inline;
+    padding: 10px 20px;
+    border-radius: 6px;
+}
+
+.workde-header .layui-nav .layui-nav-item a:hover {
+    background-color: #F6F6F6;
+}
+
+.workde-header .top-menu a.select {
+    color: #4196E1;
+}
+
+.workde-header  .layui-nav-bar {
+    display: none!important;
+}
+
+.workde-side .tops {
+    height: 30px;
+    width: 200px;
+    background-image: url("http://work.fpvol.cn/Application/Admin/View/default/public/images/admin_left_topbg.png");
+    background-repeat:no-repeat;
+    background-position: center center;
+}
+.workde-side {
+    top: 0!important;
+}
+
+.workde-side .layui-side-scroll {
+    height: auto;
+}
+.workde-side .layui-nav {
+    background-color: #2F4050;
+}
+
+.workde-side .layui-nav-tree a:hover {
+    background-color: #23303C;
+}
+
+.workde-side .layui-nav-bar {
+    display: none;
+}
+
+.workde-side .layui-nav-tree a {
+    padding-left: 40px;
+}
+
+.workde-side .layui-nav-tree .select a {
+    background-color: #23303C;
+    border-left: 5px #4196E1 solid;
+    padding-left: 35px;
+}
+
+.workde-side .layui-icon {
+    margin-right: 15px;
+}
+
+.workde-side .layui-icon-right {
+    margin-left: 20px;
+}

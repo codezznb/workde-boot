@@ -45,7 +45,6 @@
         <module>workde-starter-redis</module>
         <module>workde-starter-token</module>
         <module>workde-starter-admin</module>
-        <module>workde-starter-cpanel</module>
         <module>workde-core-samples</module>
 
 
@@ -113,11 +112,6 @@
             <dependency>
                 <groupId>cn.workde</groupId>
                 <artifactId>workde-starter-admin</artifactId>
-                <version>${revision}</version>
-            </dependency>
-            <dependency>
-                <groupId>cn.workde</groupId>
-                <artifactId>workde-starter-cpanel</artifactId>
                 <version>${revision}</version>
             </dependency>
             <dependency>

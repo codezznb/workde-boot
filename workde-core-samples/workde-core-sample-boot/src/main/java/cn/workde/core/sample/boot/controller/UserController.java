@@ -1,9 +1,11 @@
 package cn.workde.core.sample.boot.controller;
 
+import cn.workde.core.admin.module.menu.annotation.AdminMenu;
 import cn.workde.core.base.controller.WorkdeController;
 import cn.workde.core.base.result.Result;
 import cn.workde.core.boot.annotation.SerializeField;
 import cn.workde.core.sample.boot.entity.User;
+import cn.workde.core.sample.boot.modules.menu.ArticleModuleListener;
 import cn.workde.core.sample.boot.service.UserService;
 import com.github.pagehelper.PageInfo;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -12,6 +14,7 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import lombok.AllArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -23,12 +26,18 @@ import java.util.List;
  * @date 2019/8/28 10:24 PM
  */
 @RestController
-@RequestMapping("user")
+@RequestMapping("/admin/user")
 @Api(tags = "用户")
 @AllArgsConstructor
 public class UserController extends WorkdeController {
 
 	private UserService userService;
+
+	@GetMapping(value = "", produces = MediaType.TEXT_HTML_VALUE)
+	@AdminMenu(groupId = ArticleModuleListener.MENU_GROUP_USER, text = "注册用户")
+	public Result index() {
+		return Result.success();
+	}
 
 	@GetMapping(value = "list")
 	@ApiImplicitParams({

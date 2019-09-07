@@ -1,6 +1,6 @@
 package cn.workde.core.sample.boot.modules.defined;
 
-import cn.workde.core.admin.define.ModuleDefine;
+import cn.workde.core.admin.module.define.ModuleDefine;
 import cn.workde.core.sample.boot.entity.User;
 import cn.workde.core.sample.boot.modules.logic.UserLogic;
 import cn.workde.core.sample.boot.service.UserService;
