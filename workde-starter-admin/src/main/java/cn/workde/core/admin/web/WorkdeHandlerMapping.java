@@ -3,6 +3,7 @@ package cn.workde.core.admin.web;
 import cn.workde.core.admin.module.menu.MenuItem;
 import cn.workde.core.admin.module.menu.MenuManager;
 import cn.workde.core.admin.module.menu.annotation.AdminMenu;
+import cn.workde.core.admin.web.annotation.AdminController;
 import cn.workde.core.base.utils.PathUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.annotation.AnnotatedElementUtils;
@@ -21,11 +22,11 @@ import java.util.stream.Collectors;
  * @date 2019/9/2 4:54 PM
  */
 @Slf4j
-public class ApiHandlerMapping extends RequestMappingHandlerMapping {
+public class WorkdeHandlerMapping extends RequestMappingHandlerMapping {
 
 	private final String adminContextPath;
 
-	public ApiHandlerMapping(String adminContextPath) {
+	public WorkdeHandlerMapping(String adminContextPath) {
 		this.adminContextPath = adminContextPath;
 	}
 
@@ -46,16 +47,20 @@ public class ApiHandlerMapping extends RequestMappingHandlerMapping {
 				requestMappingInfo = withPrefix(mapping, adminController);
 				log.debug("{} ----> {}.{}", requestMappingInfo, method.getDeclaringClass(), method.getName());
 				super.registerHandlerMethod(handler, method, requestMappingInfo);
+				// 给CRUD增加菜单
+				AdminMenu[] adminMenus = adminController.adminMenus();
+				if (adminMenus != null && adminMenus.length > 0) {
+					for (AdminMenu adminMenu : adminMenus) {
+						if(method.getName().equals(adminMenu.methodName())) {
+							addMenuItem(requestMappingInfo, adminMenu);
+						}
+					}
+				}
 			}else {
 				requestMappingInfo = mapping;
 			}
 			AdminMenu adminMenu = method.getAnnotation(AdminMenu.class);
-			if(adminMenu != null) {
-				MenuItem menuItem = new MenuItem(adminMenu);
-				if(StringUtils.isEmpty(menuItem.getUrl())) menuItem.setUrl(withUrl(requestMappingInfo.getPatternsCondition().getPatterns()));
-				log.debug("{}",menuItem);
-				MenuManager.getInstance().addMenuItem(menuItem);
-			}
+			if(adminMenu != null) addMenuItem(requestMappingInfo, adminMenu);
 		}
 	}
 
@@ -74,6 +79,14 @@ public class ApiHandlerMapping extends RequestMappingHandlerMapping {
 		return patterns.stream()
 			.map(pattern -> PathUtils.normalizePath(adminContextPath) + PathUtils.normalizePath(adminController.path() +  pattern))
 			.toArray(String[]::new);
+	}
+
+	private void addMenuItem(RequestMappingInfo requestMappingInfo, AdminMenu adminMenu) {
+		MenuItem menuItem = new MenuItem(adminMenu);
+		if(StringUtils.isEmpty(menuItem.getUrl())) menuItem.setUrl(withUrl(requestMappingInfo.getPatternsCondition().getPatterns()));
+		log.debug("{}",menuItem);
+		MenuManager.getInstance().addMenuItem(menuItem);
+
 	}
 
 	private String withUrl(Set<String> patterns) {

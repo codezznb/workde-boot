@@ -62,8 +62,8 @@ spring:
       log-condition-evaluation-delta: false
 
 #配置日志地址
-logging:
-  config: classpath:log/logback-${workde.env}.xml
+#logging:
+#  config: classpath:log/logback-${workde.env}.xml
 
 #swagger公共信息
 swagger:

@@ -18,11 +18,23 @@ public class ModuleDefine {
 
 	private Class<? extends BaseLogic> moduleLogic;
 
+
+	private String listNumberTitle;
+	/**
+	 * 模块名
+	 */
+	private String moduleTitle;
+
+	/**
+	 * 表格尺寸
+	 * sm 小尺寸 lg 大尺寸
+	 */
+	private String tableSize = "sm";
 	/**
 	 * 列表使用分页数据
 	 * true 使用分页 false 返回all 数据
 	 */
-	private Boolean listPage = true;
+	private Boolean page = true;
 
 	/**
 	 * 新增的时候只保存哪些字段

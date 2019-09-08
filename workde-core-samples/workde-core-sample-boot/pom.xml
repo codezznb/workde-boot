@@ -40,8 +40,6 @@
             <artifactId>workde-starter-mybatis-tk</artifactId>
         </dependency>
 
-
-
         <!-- MySQL -->
         <dependency>
             <groupId>mysql</groupId>

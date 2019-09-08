@@ -43,7 +43,7 @@ public class JacksonObjectMapper extends ObjectMapper{
 		super.getDeserializationConfig().withoutFeatures(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
 
 		super.setSerializationInclusion(JsonInclude.Include.NON_NULL);
-		super.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
+		//super.setPropertyNamingStrategy(PropertyNamingStrategy.SNAKE_CASE);
 		//日期格式化
 		super.registerModule(new WorkdeJavaTimeModule());
 		super.findAndRegisterModules();

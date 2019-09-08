@@ -1,1 +1,33 @@
-crud index.html
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>后台管理中心</title>
+    <link rel="stylesheet" href="/styles/cpanel.css" />
+    <link rel="stylesheet" href="/layui/css/layui.css" />
+</head>
+<body class="workde-body">
+<div class="workde-nav">企业 <strong>/</strong>企业管理</div>
+<div class="workde-main">
+<table id="table-list-data" lay-filter="table-list-data"></table>
+</div>
+<script src="/scripts/jquery-2.1.3.min.js"></script>
+<script src="/layui/layui.all.js"></script>
+<script src="/scripts/workde.js"></script>
+<script type="text/html" id="toolbar">
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="show">查看</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">编辑</a>
+    <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="del">删除</a>
+</script>
+<script type="text/html" id="tableSwitchState">
+    <input type="checkbox" value="true" lay-skin="switch" {{# d.}} data-id="{{d.id}}" lay-filter="switch-state" />
+</script>
+<script>
+    $(document).ready(function(){
+        wb.init('${modulePath}');
+    });
+</script>
+</body>
+</html>
+
+

@@ -4,8 +4,9 @@ import cn.workde.core.admin.controller.IndexController;
 import cn.workde.core.admin.controller.LoginController;
 import cn.workde.core.admin.module.ModuleListener;
 import cn.workde.core.admin.module.menu.MenuManager;
+import cn.workde.core.admin.module.service.ModuleService;
 import cn.workde.core.admin.properties.WorkdeAdminProperties;
-import cn.workde.core.admin.web.ApiHandlerMapping;
+import cn.workde.core.admin.web.WorkdeHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -53,6 +54,11 @@ public class WorkdeAdminAutoConfiguration {
 		return new IndexController();
 	}
 
+	@Bean
+	public ModuleService moduleService() {
+		return new ModuleService();
+	}
+
 	@EventListener(WebServerInitializedEvent.class)
 	public void initMenuGroupItems() {
 		List<ModuleListener> moduleListenerList = new ArrayList<>();
@@ -77,7 +83,7 @@ public class WorkdeAdminAutoConfiguration {
 
 		@Bean
 		public RequestMappingHandlerMapping adminHandlerMapper(ContentNegotiationManager contentNegotiationManager) {
-			RequestMappingHandlerMapping mapping = new ApiHandlerMapping(workdeAdminProperties.getContextPath());
+			RequestMappingHandlerMapping mapping = new WorkdeHandlerMapping(workdeAdminProperties.getContextPath());
 			mapping.setOrder(0);
 			mapping.setContentNegotiationManager(contentNegotiationManager);
 			return mapping;

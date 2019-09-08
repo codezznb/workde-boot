@@ -7,18 +7,15 @@ spring:
     url: jdbc:mysql://127.0.0.1/yc-app?useUnicode=true&characterEncoding=utf-8&useSSL=false
     username: root
     password: root
-  thymeleaf:
+  freemarker:
     cache: false
+    settings:
+      template_update_delay: 1ms
+    suffix: .html
+    template-loader-path: classpath:/templates/
 
 workde:
   secure:
     enable: false
     skip:
       - /hello
-  admin:
-    ui:
-      cacheTemplates: false
-
-logging:
-  level:
-    cn.workde.core: DEBUG

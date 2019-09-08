@@ -1,17 +1,24 @@
 package cn.workde.core.admin.controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
+import cn.workde.core.admin.module.ModuleMeta;
 import cn.workde.core.admin.module.define.ModuleDefine;
 import cn.workde.core.admin.module.logic.IModuleLogic;
-import cn.workde.core.admin.web.AdminController;
+import cn.workde.core.admin.module.service.ModuleService;
+import cn.workde.core.admin.properties.WorkdeAdminProperties;
+import cn.workde.core.admin.web.annotation.AdminController;
+import cn.workde.core.auto.service.AutoService;
 import cn.workde.core.base.controller.WorkdeController;
 import cn.workde.core.base.result.Result;
 import cn.workde.core.base.utils.JsonUtils;
+import cn.workde.core.base.utils.PathUtils;
 import cn.workde.core.base.utils.SpringUtils;
 import cn.workde.core.tk.base.BaseEntity;
 import cn.workde.core.tk.base.BaseService;
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -21,6 +28,11 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @ResponseBody
 public class ModuleController extends WorkdeController {
+
+	@Autowired
+	private ModuleService moduleService;
+	@Autowired
+	private WorkdeAdminProperties workdeAdminProperties;
 
 	protected AdminController getAdminController(){
 		AdminController adminController = this.getClass().getAnnotation(AdminController.class);
@@ -46,7 +58,18 @@ public class ModuleController extends WorkdeController {
 
 	@RequestMapping(value = "", method = RequestMethod.GET)
 	public ModelAndView index() {
-		return new ModelAndView("crud/index1.html");
+		AdminController adminController = getAdminController();
+		String modulePath = PathUtils.normalizePath(workdeAdminProperties.getContextPath() + PathUtils.normalizePath(adminController.path()));
+		ModelAndView mv = new ModelAndView("crud/index");
+		mv.addObject("modulePath", modulePath);
+		return mv;
+	}
+
+	@GetMapping(path = "meta")
+	@ApiOperation(value = "模块结构")
+	public Result<ModuleMeta> meta() {
+		ModuleDefine moduleDefine = getModuleDefine();
+		return Result.success(moduleService.getModuleMeta(moduleDefine));
 	}
 
 	@GetMapping(path = "list")
@@ -54,7 +77,7 @@ public class ModuleController extends WorkdeController {
 	public Result list(){
 		BaseService baseService = getBaseService();
 		baseService.page(getPageNum(), getPageSize());
-		if(getModuleDefine().getListPage()) {
+		if(getModuleDefine().getPage()) {
 			return Result.success(baseService.page(getPageNum(), getPageSize()));
 		}
 		return Result.success(baseService.all());

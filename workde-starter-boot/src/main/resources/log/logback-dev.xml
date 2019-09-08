@@ -58,12 +58,5 @@
     <logger name="org.apache.http" level="INFO"/>
     <logger name="com.netflix.discovery" level="INFO"/>
     <logger name="com.netflix.eureka" level="INFO"/>
-    <!-- 业务日志 -->
-    <Logger name="org.springblade" level="DEBUG" />
-    <Logger name="org.springblade.core.version" level="INFO"/>
-
-    <!-- 减少nacos日志 -->
-    <logger name="com.alibaba.nacos" level="ERROR"/>
-
 
 </configuration>

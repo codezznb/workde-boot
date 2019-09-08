@@ -21,9 +21,11 @@ public @interface AdminMenu {
 
 	String url() default "";
 
-	String icon() default "";
+	String icon() default "layui-icon-list";
 
 	String target() default "";
 
 	int order() default 100; //越小在越前面
+
+	String methodName() default "";		//对应CRUD方法名
 }

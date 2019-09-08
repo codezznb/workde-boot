@@ -1,7 +1,8 @@
-package cn.workde.core.admin.web;
+package cn.workde.core.admin.web.annotation;
 
 import cn.workde.core.admin.module.define.ModuleDefine;
 import cn.workde.core.admin.module.define.NullDefine;
+import cn.workde.core.admin.module.menu.annotation.AdminMenu;
 import org.springframework.stereotype.Component;
 
 import java.lang.annotation.*;
@@ -20,5 +21,7 @@ public @interface AdminController {
 	String path();
 
 	Class<? extends ModuleDefine> define() default NullDefine.class;
+
+	AdminMenu[] adminMenus() default {};
 
 }
