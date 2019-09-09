@@ -3,12 +3,10 @@ package cn.workde.core.sample.boot.entity;
 import cn.workde.core.admin.module.Templets;
 import cn.workde.core.admin.web.annotation.FieldDefine;
 import cn.workde.core.tk.base.BaseEntity;
-import com.alibaba.fastjson.annotation.JSONField;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import javax.persistence.Table;
-import java.time.LocalDateTime;
 
 /**
  * @author zhujingang
@@ -41,7 +39,7 @@ public class Article extends BaseEntity {
 	 * 标题
 	 */
 	@ApiModelProperty("标题")
-	@FieldDefine(title = "标题")
+	@FieldDefine(title = "标题", width = "15%")
 	private String title;
 
 	/**
@@ -78,7 +76,7 @@ public class Article extends BaseEntity {
 	 * 内容摘要
 	 */
 	@ApiModelProperty("内容摘要")
-	@FieldDefine(title = "内容摘要")
+	@FieldDefine(title = "内容摘要", listEnable = false)
 	private String zhaiyao;
 
 	/**
