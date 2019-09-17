@@ -37,6 +37,17 @@ public class ListField {
 	 * @param title
 	 * @return
 	 */
+	public static ListField createCheckboxField() {
+		ListField listField = new ListField();
+		listField.setType("checkbox");
+		return listField;
+	}
+
+	/**
+	 * 创建序号列
+	 * @param title
+	 * @return
+	 */
 	public static ListField createNumberField(String title) {
 		ListField listField = new ListField();
 		listField.setTitle(title);

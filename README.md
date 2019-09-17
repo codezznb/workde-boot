@@ -16,6 +16,8 @@
 │   ├── workde-starter-secure     提供权限相关的注解，拦截器等
 │   ├── workde-starter-mybatis-tk 基于Mybatis,Tkmybatis进行二次封装，提供了默认的Service，Mapper
 │   ├── workde-starter-admin      通过配置实体类，提供普通的CRUD接口
+│   ├── workde-starter-cache      基于SpringBootCache进行二次封装，提供简单CacheUtils
+│   ├── workde-starter-oss-qiniu  七牛云存储的封装
 │   └── workde-starter-swagger    基于Swagger，knife4j进行二次封装，提供接口Api文档
 ├── workde-core-samples  基础库示例   
 └── └── workde-core-boot
@@ -77,6 +79,15 @@ maven项目，在pom.xml文件中添加如下一段代码，并将`${version}`�
 - 增加注解`@AdminController`, 设置`ModuleDefine` 和 `path` (必须)
 - `ModuleDefine` 定义Module的实体类,Service,Logic等
 - Logic 默认提供 `beforeInsert`(插入前),`afterInsert`(插入后),`beforeUpdate`(保存前),`afterUpdate`(保存后),`beforeDelete`(删除前),`afterDelete`(删除后),`getNewDefultValue`(默认值)
+
+### workde-starter-cache
+基于SpringBoot Cache进行二次封装，使用ehcache分布式缓存
+- CacheUtils 提供了 `获取缓存对象`, `设置缓存`, `清除缓存`, `清空` 等方法
+
+### workde-starter-oss-qiniu
+七牛云存储的封装
+- 通过IQiniuService getUploadToken 获取上传Token
+
 
 ### workde-starter-swagger
 - 在application.yml文件中添加basePackages来重新定义路径

@@ -9,20 +9,17 @@ var wb = {
     },
     initListTable: function(path, meta) {
         var table = layui.table;
-        meta.fields.push({title:'操作', toolbar: '#toolbar', width:150});
         table.render({
             elem: '#table-list-data'
-            ,height: 312
             ,url: path + '/list'    //数据接口
             ,page: meta.page        //开启分页
             ,cols: [meta.fields]
-            ,toolbar: true
+            ,toolbar: 'default'
             ,defaultToolbar: ['filter', 'print', 'exports']
             ,even: true //开启隔行背景
             ,size: meta.size
             ,limit: 20
             ,limits: [20,50,80,100]
-            ,height: 'full - 20'
             ,parseData: function(res) {
                 return {
                     "code": res.code == 200 ? 0 : res.code,
@@ -31,11 +28,26 @@ var wb = {
                 };
             }
         });
+        table.on('toolbar(table-list-data)', wb.tableToolbarEvent);
+        // table.on('tool(table-list-data)', wb.tableToolEvent);
+    },
+    tableToolbarEvent: function(obj) {
+        if(obj.event == 'add') {
 
-        table.on('tool(table-list-data)', wb.tableToolEvent);
+        }else if(obj.event == 'update') {
+            var checkStatus = layui.table.checkStatus('table-list-data');
+            if(checkStatus.data.length != 1) {
+                wb.alert("请选择一条数据进行修改");
+            }else {
+
+            }
+        }
+
+        console.log(checkStatus);
     },
     tableToolEvent: function(obj) {
-        console.log(obj);
+        var checkStatus = layui.table.checkStatus('table-list-data');
+        console.log(checkStatus);
     },
 
     ajax: function(url, type, data, func) {

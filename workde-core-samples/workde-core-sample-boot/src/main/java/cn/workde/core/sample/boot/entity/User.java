@@ -1,12 +1,11 @@
 package cn.workde.core.sample.boot.entity;
 
-import cn.workde.core.admin.module.Templets;
+import cn.workde.core.admin.module.constant.Templets;
 import cn.workde.core.admin.web.annotation.FieldDefine;
 import cn.workde.core.tk.base.BaseEntity;
 import lombok.Builder;
 import lombok.Data;
 import lombok.experimental.Tolerate;
-import org.jboss.logging.Field;
 
 import javax.persistence.Table;
 import java.time.LocalDateTime;

@@ -64,4 +64,81 @@ public class StringUtils extends StrUtil {
 	public static Boolean hasText(String str){
 		return str != null && !str.isEmpty() && containsText(str);
 	}
+
+	public static String quote(final String string) {
+		return quote(string, true);
+	}
+
+	public static String text(final Object value) {
+		return quote((value == null) ? null : value.toString(), false);
+	}
+
+	public static String quote(final String string, final boolean addQuotes) {
+		final int len;
+		if (string != null && (len = string.length()) != 0) {
+			char curChar = '\0';
+			final StringBuilder sb = new StringBuilder(len + 10);
+			if (addQuotes) {
+				sb.append('\"');
+			}
+			for (int i = 0; i < len; ++i) {
+				final char lastChar = curChar;
+				curChar = string.charAt(i);
+				switch (curChar) {
+					case '\"':
+					case '\\': {
+						sb.append('\\');
+						sb.append(curChar);
+						break;
+					}
+					case '/': {
+						if (lastChar == '<') {
+							sb.append('\\');
+						}
+						sb.append(curChar);
+						break;
+					}
+					case '\b': {
+						sb.append("\\b");
+						break;
+					}
+					case '\t': {
+						sb.append("\\t");
+						break;
+					}
+					case '\n': {
+						sb.append("\\n");
+						break;
+					}
+					case '\f': {
+						sb.append("\\f");
+						break;
+					}
+					case '\r': {
+						sb.append("\\r");
+						break;
+					}
+					default: {
+						if (curChar < ' ' || (curChar >= '\u0080' && curChar < ' ') || (curChar >= '\u2000' && curChar < '\u2100')) {
+							sb.append("\\u");
+							final String str = Integer.toHexString(curChar);
+							sb.append("0000", 0, 4 - str.length());
+							sb.append(str);
+							break;
+						}
+						sb.append(curChar);
+						break;
+					}
+				}
+			}
+			if (addQuotes) {
+				sb.append('\"');
+			}
+			return sb.toString();
+		}
+		if (addQuotes) {
+			return "\"\"";
+		}
+		return "";
+	}
 }

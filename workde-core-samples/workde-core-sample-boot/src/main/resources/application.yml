@@ -19,3 +19,7 @@ workde:
     enable: false
     skip:
       - /hello
+  qiniu:
+    accessKey: 8lWMD94lchZIwft7_Q87rtP9wBG5-dbHobONTdvf   #上传key
+    secretKey: AJ1Jyhr9fzOME-MART4Btgh5OuC6TLUVvQZJ6ePF   #上传秘钥
+    bucket: ydool         #上传空间

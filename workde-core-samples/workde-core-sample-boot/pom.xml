@@ -40,6 +40,15 @@
             <artifactId>workde-starter-mybatis-tk</artifactId>
         </dependency>
 
+        <dependency>
+            <groupId>cn.workde</groupId>
+            <artifactId>workde-starter-oss-qiniu</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>cn.workde</groupId>
+            <artifactId>workde-starter-cache</artifactId>
+        </dependency>
         <!-- MySQL -->
         <dependency>
             <groupId>mysql</groupId>

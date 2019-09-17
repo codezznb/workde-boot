@@ -63,7 +63,7 @@ public class UserController extends WorkdeController {
 	@ApiOperation(value = "分页", notes = "传入user")
 	@SerializeField(clazz = User.class, includes = "id,phone,reg_remote,login_at,login_count,login_remote,state")
 	public Result<List<User>> page(Integer pageNum, Integer pageSize) {
-		PageInfo<User> pageInfo = userService.page(getPermitParams("phone", "state"), "id desc", pageNum, pageSize);
+		PageInfo<User> pageInfo = userService.page(getPermitParams("phone", "state"), "id desc", getPageNum(), getPageSize());
 		return Result.success(pageInfo.getList(), pageInfo.getTotal());
 
 	}

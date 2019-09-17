@@ -19,12 +19,20 @@ public class ModuleDefine {
 	private Class<? extends BaseLogic> moduleLogic;
 
 
+	/**
+	 * 设置序号列名称
+	 */
 	private String listNumberTitle;
+
 	/**
 	 * 模块名
 	 */
 	private String moduleTitle;
 
+	/**
+	 * 列表页显示复选框
+	 */
+	private Boolean checkbox;
 	/**
 	 * 表格尺寸
 	 * sm 小尺寸 lg 大尺寸

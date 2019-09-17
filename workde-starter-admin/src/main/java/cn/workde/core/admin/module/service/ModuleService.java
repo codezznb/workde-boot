@@ -6,6 +6,7 @@ import cn.workde.core.admin.module.define.ListField;
 import cn.workde.core.admin.module.define.ModuleDefine;
 import cn.workde.core.admin.module.define.ModuleField;
 import cn.workde.core.admin.web.annotation.FieldDefine;
+import cn.workde.core.base.utils.ObjectUtils;
 import cn.workde.core.base.utils.StringUtils;
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,6 +29,9 @@ public class ModuleService {
 
 	private List<ListField> getListFieldList(ModuleDefine moduleDefine, List<ModuleField> fieldDefineList) {
 		List<ListField> listFields = new ArrayList<>();
+		if(ObjectUtils.isNotEmpty(moduleDefine.getCheckbox()) && moduleDefine.getCheckbox()) {
+			listFields.add(ListField.createCheckboxField());
+		}
 		if(StringUtils.isNotEmpty(moduleDefine.getListNumberTitle())) {
 			listFields.add(ListField.createNumberField(moduleDefine.getListNumberTitle()));
 		}

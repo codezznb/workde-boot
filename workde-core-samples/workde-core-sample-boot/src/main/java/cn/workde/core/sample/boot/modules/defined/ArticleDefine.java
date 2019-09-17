@@ -16,6 +16,7 @@ public class ArticleDefine extends ModuleDefine {
 		this.setModuleTitle("内容");
 		this.setModel(Article.class);
 		this.setListNumberTitle("序号");
+		this.setCheckbox(true);
 		this.setBaseService(ArticleService.class);
 	}
 }
