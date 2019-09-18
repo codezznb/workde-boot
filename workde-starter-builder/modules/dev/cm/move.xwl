@@ -1,1 +1,1 @@
-{"hidden":false,"children":[{"configs":{"itemId":"module","serverMethod":"com.wb.interact.Controls.moveControls"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1},"title":"移动","iconCls":""}
+{"hidden":false,"children":[{"configs":{"itemId":"module","serviceMethod":"controlService.moveControls"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1},"title":"移动","iconCls":"","inframe":null,"pageLink":""}

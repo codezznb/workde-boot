@@ -1,1 +1,1 @@
-{"hidden":false,"children":[{"configs":{"itemId":"module","serverMethod":"com.wb.interact.Controls.deleteControls"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1},"title":"删除","iconCls":""}
+{"hidden":false,"children":[{"configs":{"itemId":"module","serviceMethod":"controlService.deleteControls"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1},"title":"删除","iconCls":"","inframe":null,"pageLink":""}

@@ -9,10 +9,7 @@ import cn.workde.core.builder.controls.ServerScript;
 import cn.workde.core.builder.engine.ControlBuffer;
 import cn.workde.core.builder.engine.ModuleBuffer;
 import cn.workde.core.builder.engine.ScriptBuffer;
-import cn.workde.core.builder.utils.JsonUtil;
-import cn.workde.core.builder.utils.StringUtil;
-import cn.workde.core.builder.utils.SysUtil;
-import cn.workde.core.builder.utils.WebUtil;
+import cn.workde.core.builder.utils.*;
 import lombok.extern.slf4j.Slf4j;
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -37,8 +34,8 @@ public class BuilderService {
 	@Autowired
 	private ControlBuffer controlBuffer;
 
-	@Autowired
-	private ScriptBuffer scriptBuffer;
+	//@Autowired
+	//private ScriptBuffer scriptBuffer;
 
 	private HttpServletRequest request;
 	private HttpServletResponse response;
@@ -61,10 +58,10 @@ public class BuilderService {
 
 		final boolean isInvoke = this.request.getParameter("xwlt") != null;
 		int runMode  = (isInvoke ? 3 : 0);
-		this.execute(moduleFile, runMode);
+		this.execute(moduleFile, runMode, null, null);
 	}
 
-	public void execute(final String moduleFile, final int runMode) throws Exception {
+	public void execute(final String moduleFile, final int runMode, final String xwlId, final String params) throws Exception {
 		final JSONObject root = moduleBuffer.get(moduleFile + ".xwl");
 		final JSONObject module = (JSONObject) ((JSONArray) root.opt("children")).opt(0);
 		final JSONObject configs = (JSONObject) module.opt("configs");
@@ -79,6 +76,12 @@ public class BuilderService {
 		final boolean hasChildren = module.has("children");
 		final boolean hasEvents = events != null;
 
+		if (runMode == 4) {
+			runNormal = true;
+		} else if (runMode == 5) {
+			runInvoke = true;
+		}
+
 		String content = this.getString(configs, "logMessage");
 		if (!content.isEmpty()) {
 			log.info(content);
@@ -86,11 +89,10 @@ public class BuilderService {
 
 		content = ServerScript.getScript(configs, "initScript");
 		if (!content.isEmpty()) {
-			scriptBuffer.run(StringUtil.concat((String)configs.opt("id"), ".is"), content, this.request, this.response, moduleFile);
+			//scriptBuffer.run(StringUtil.concat(moduleFile, ".is"), content, this.request, this.response, moduleFile);
 		}
 
 		content = this.getString(configs, "serviceMethod");
-		System.out.println(content);
 		if(!content.isEmpty()) {
 			String[] services = content.split("\\.");
 			if(services.length == 2) {
@@ -154,6 +156,8 @@ public class BuilderService {
 			}
 
 			this.headerScript.append("\napp.contextOwner=contextOwner;");
+
+
 			if (runNormal) {
 				this.headerScript.append("\nwindow.app=app;");
 				if (this.notLoadNone) {
@@ -165,7 +169,21 @@ public class BuilderService {
 					//@TODO
 					this.headerScript.append("});");
 				}
+			}else if ((runMode == 2 || runMode == 1) && xwlId != null) {
+				this.headerScript.append("\ncontextOwner[");
+				this.headerScript.append(StringUtil.quote(xwlId));
+				this.headerScript.append("]=app;");
 			}
+		}
+
+		content = this.getString(configs, "importModules");
+		if (!content.isEmpty()) {
+			this.importModules(content);
+		}
+
+		content = ServerScript.getScript(configs, "serverScript");
+		if (!content.isEmpty()) {
+			//scriptBuffer.run(StringUtil.concat(moduleFile, ".ss"), content, this.request, this.response, moduleFile);
 		}
 
 		if (hasEvents) {
@@ -187,7 +205,6 @@ public class BuilderService {
 		if (hasEvents) {
 			this.appendScript(this.headerScript, this.getString(events, "finalize"));
 		}
-
 		if (createFrame) {
 			if (runNormal) {
 				if (libTypes[1]) {
@@ -197,7 +214,11 @@ public class BuilderService {
 				} else {
 					this.headerScript.append("\n})({});");
 				}
-			}else if (runMode == 1) {
+			}else if (runMode == 2) {
+				this.headerScript.append("\nreturn Wb.optMain(app);\n})(");
+				this.headerScript.append((params == null) ? "{}" : params);
+				this.headerScript.append(",app)");
+			} else if (runMode == 1) {
 				this.headerScript.append("\n})({},app);");
 			}
 			else {
@@ -212,6 +233,13 @@ public class BuilderService {
 		}
 		else if (runInvoke) {
 			this.output();
+		}
+	}
+
+	private void importModules(final String modules) throws Exception {
+		final JSONArray moduleArray = new JSONArray(modules);
+		for (int j = moduleArray.length(), i = 0; i < j; ++i) {
+			this.execute(FileUtil.getModulePath((String)moduleArray.opt(i)), 1, "importXwl" + (i + 1), null);
 		}
 	}
 

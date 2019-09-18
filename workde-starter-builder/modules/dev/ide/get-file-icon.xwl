@@ -1,1 +1,1 @@
-{"hidden":false,"children":[{"configs":{"itemId":"module","serverMethod":"com.wb.interact.IDE.getFileIcon"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1,"demo":1},"title":"获取文件图标","iconCls":""}
+{"hidden":false,"children":[{"configs":{"itemId":"module","serviceMethod":"ideService.getFileIcon"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1,"demo":1},"title":"获取文件图标","iconCls":"","inframe":null,"pageLink":""}

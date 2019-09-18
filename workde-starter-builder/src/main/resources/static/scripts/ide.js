@@ -481,7 +481,7 @@ var Ide = {
                 f.path = app.getPath(g);
                 f.frameType = b;
                 Wb.request({
-                    url: "m?xwl=dev/ide/add-frame",
+                    url: "builder?xwl=dev/ide/add-frame",
                     params: f,
                     success: function(l) {
                         var k, i, j = g.data.loaded;
@@ -2559,7 +2559,7 @@ var Ide = {
                         e = d.modifyDate;
                         break
                 }
-                Wb.download("m?xwl=dev/ide/export-modules", {
+                Wb.download("builder?xwl=dev/ide/export-modules", {
                     filename: d.filename,
                     fileRange: a(),
                     lastModified: e
@@ -2574,7 +2574,7 @@ var Ide = {
             single: true,
             success: function(a) {
                 a.upload({
-                    url: "m?xwl=dev/ide/import-modules",
+                    url: "builder?xwl=dev/ide/import-modules",
                     iconCls: "import_icon",
                     title: "导入模块包",
                     success: function() {
@@ -2889,7 +2889,7 @@ var Ide = {
     refreshThread: function() {
         var a = new Date();
         Wb.request({
-            url: "m?xwl=dev/ide/get-thread-list",
+            url: "builder?xwl=dev/ide/get-thread-list",
             success: function(b) {
                 Ide.threadCard.update(b.responseText)
             }
@@ -2898,7 +2898,7 @@ var Ide = {
     refreshConnection: function() {
         var a = new Date();
         Wb.request({
-            url: "m?xwl=dev/ide/get-conn-list",
+            url: "builder?xwl=dev/ide/get-conn-list",
             success: function(b) {
                 Ide.connCard.update(b.responseText)
             }
@@ -3141,7 +3141,7 @@ var Ide = {
                 }
                 var l = h.down("#url");
                 Wb.request({
-                    url: "m?xwl=dev/ide/set-property",
+                    url: "builder?xwl=dev/ide/set-property",
                     timeout: -1,
                     params: Ext.apply({
                         isModule: i,
@@ -3152,7 +3152,7 @@ var Ide = {
                         var n, o = Wb.decode(p.responseText);
                         h.close();
                         if (a && Wb.extractFileExt(e.text) != Wb.extractFileExt(k.text)) {
-                            k.icon = "m?xwl=dev/ide/get-file-icon&file=" + encodeURIComponent(o.path);
+                            k.icon = "builder?xwl=dev/ide/get-file-icon&file=" + encodeURIComponent(o.path);
                             k.iconCls = ""
                         }
                         k.cls = k.hidden ? "x-highlight" : "";
@@ -3185,7 +3185,7 @@ var Ide = {
             g.selectText(0, k)
         });
         Wb.request({
-            url: "m?xwl=dev/ide/total",
+            url: "builder?xwl=dev/ide/total",
             params: {
                 path: j
             },
@@ -3402,7 +3402,7 @@ var Ide = {
                     j = b.data.text
                 }
                 Wb.request({
-                    url: "m?xwl=dev/ide/add-module",
+                    url: "builder?xwl=dev/ide/add-module",
                     params: Ext.apply(d, {
                         isDir: c,
                         path: Ide.getPath(g),
@@ -3482,7 +3482,7 @@ var Ide = {
                     c = c.parentNode
                 }
                 Wb.request({
-                    url: "m?xwl=dev/ide/add-file",
+                    url: "builder?xwl=dev/ide/add-file",
                     params: {
                         isDir: a,
                         path: Ide.getPath(c),
@@ -3877,7 +3877,7 @@ var Ide = {
             a.push(Ide.getPath(h))
         });
         Wb.request({
-            url: "m?xwl=dev/ide/move",
+            url: "builder?xwl=dev/ide/move",
             showError: false,
             timeout: -1,
             params: {
@@ -4098,7 +4098,7 @@ var Ide = {
         }
         Wb.confirm(a.length === 1 ? '确定要删除 "' + a[0].data.text + '" 吗？' : "确定要删除选择的 " + a.length + " 项吗？", function() {
             Wb.request({
-                url: "m?xwl=dev/ide/delete",
+                url: "builder?xwl=dev/ide/delete",
                 timeout: -1,
                 params: {
                     files: Wb.encode(c)
@@ -4122,7 +4122,7 @@ var Ide = {
     setTheme: function(a) {
         var b = a.itemId.slice(0, -3);
         Wb.request({
-            url: "m?xwl=dev/ide/set-options",
+            url: "builder?xwl=dev/ide/set-options",
             params: {
                 name: "theme",
                 value: b,
@@ -4138,7 +4138,7 @@ var Ide = {
     setEditTheme: function(b) {
         var a = b.itemId.slice(0, -5);
         Wb.request({
-            url: "m?xwl=dev/ide/set-options",
+            url: "builder?xwl=dev/ide/set-options",
             params: {
                 name: "editTheme",
                 value: a,
@@ -4670,12 +4670,12 @@ var Ide = {
             return
         }
         Wb.run({
-            url: "m?xwl=dev/ide/version/check-in-win",
+            url: "builder?xwl=dev/ide/version/check-in-win",
             single: true,
             success: function(d) {
                 d.show(function(e, f) {
                     Wb.request({
-                        url: "m?xwl=dev/ide/version/check-in",
+                        url: "builder?xwl=dev/ide/version/check-in",
                         params: f,
                         timeout: -1,
                         success: function(g) {
@@ -4703,12 +4703,12 @@ var Ide = {
             return
         }
         Wb.run({
-            url: "m?xwl=dev/ide/version/check-out-win",
+            url: "builder?xwl=dev/ide/version/check-out-win",
             single: true,
             success: function(c) {
                 c.show(function(d) {
                     Wb.request({
-                        url: "m?xwl=dev/ide/version/check-out",
+                        url: "builder?xwl=dev/ide/version/check-out",
                         params: {
                             files: b
                         },
@@ -6055,7 +6055,7 @@ var Ide = {
     },
     getPack: function(a) {
         Wb.request({
-            url: "m?xwl=dev/ide/get-pack",
+            url: "builder?xwl=dev/ide/get-pack",
             params: {
                 type: a
             },
@@ -6135,7 +6135,7 @@ var Ide = {
                             iconCls: "file_edit_icon",
                             handler: function() {
                                 Wb.open({
-                                    url: "m?xwl=dev/ide/version/version-mng",
+                                    url: "builder?xwl=dev/ide/version/version-mng",
                                     title: "版本文件管理",
                                     iconCls: "file_edit_icon"
                                 })
@@ -6682,7 +6682,7 @@ var Ide = {
                                 Wb.choose("确定要压缩应用目录下以“-debug”结尾的所有调试文件吗？<br>警告：压缩生成的新文件名为去除“-debug”的文件名，如果文件存在将被覆盖。<br>[是]：压缩所有文件，[否]：压缩修改过的文件，[取消]：取消操作。", function(a) {
                                     if (a != "cancel") {
                                         Wb.request({
-                                            url: "m?xwl=dev/ide/compress",
+                                            url: "builder?xwl=dev/ide/compress",
                                             params: {
                                                 compressAll: a == "yes"
                                             },
@@ -6699,7 +6699,7 @@ var Ide = {
                             iconCls: "start_icon",
                             handler: function() {
                                 Wb.request({
-                                    url: "m?xwl=dev/ide/reload",
+                                    url: "builder?xwl=dev/ide/reload",
                                     success: function() {
                                         Wb.tip("已经成功刷新系统。")
                                     }
@@ -6984,7 +6984,7 @@ var Ide = {
                             itemTpl: ["<div>{text}</div>"]
                         },
                         store: {
-                            url: "m?xwl=dev/ide/search-file",
+                            url: "builder?xwl=dev/ide/search-file",
                             fields: ["path", {
                                 name: "text",
                                 convert: function(a, b) {

@@ -2,7 +2,6 @@ package cn.workde.core.builder.config;
 
 import cn.workde.core.builder.engine.ControlBuffer;
 import cn.workde.core.builder.engine.ModuleBuffer;
-import cn.workde.core.builder.engine.ScriptBuffer;
 import cn.workde.core.builder.engine.service.BuilderService;
 import cn.workde.core.builder.engine.service.ControlService;
 import cn.workde.core.builder.engine.service.IdeService;
@@ -17,14 +16,20 @@ import org.springframework.core.annotation.Order;
 @Configuration
 public class WorkdeBuilderAutoConfiguration {
 
+//	@Bean
+//	@Order(1)
+//	public ScriptBuffer scriptBuffer() {
+//		return new ScriptBuffer();
+//	}
+
 	@Bean
-	@Order(1)
+	@Order(2)
 	public ControlBuffer controlBuffer() {
 		return new ControlBuffer();
 	}
 
 	@Bean
-	@Order(2)
+	@Order(3)
 	public ModuleBuffer moduleBuffer() {
 		return new ModuleBuffer();
 	}
@@ -37,11 +42,6 @@ public class WorkdeBuilderAutoConfiguration {
 	@Bean
 	public ControlService controlService() {
 		return new ControlService();
-	}
-
-	@Bean
-	public ScriptBuffer scriptBuffer() {
-		return new ScriptBuffer();
 	}
 
 	@Bean

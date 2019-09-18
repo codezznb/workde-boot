@@ -1,12 +1,16 @@
 package cn.workde.core.builder.engine;
 
 import cn.workde.core.base.utils.StringUtils;
+import cn.workde.core.builder.utils.FileUtil;
 
 import javax.annotation.PostConstruct;
 import javax.script.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -57,8 +61,24 @@ public class ScriptBuffer {
 			this.compilable = (Compilable) engine;
 			this.buffer = new ConcurrentHashMap<String, CompiledScript>();
 			this.globalMembers = new ArrayList<String>();
+
+			this.loadUtils();
 		} catch (Throwable e) {
 			throw new RuntimeException(e);
+		}
+	}
+
+	private void loadUtils() throws Exception {
+		String text = FileUtil.readString(new File(Builder.getInstance().getSystemFolder(), "server.js"));
+		text = String.valueOf(text) + "\n//# sourceURL=server.js";
+		final CompiledScript script = compilable.compile(text);
+		final Bindings bindings = engine.createBindings();
+		script.eval(bindings);
+		final Set<Map.Entry<String, Object>> es = bindings.entrySet();
+		for (final Map.Entry<String, Object> e : es) {
+			final String key = e.getKey();
+			manager.put(e.getKey(), e.getValue());
+			globalMembers.add(key);
 		}
 	}
 }

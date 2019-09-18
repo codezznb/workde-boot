@@ -1,1 +1,1 @@
-{"hidden":false,"children":[{"configs":{"itemId":"module","serverMethod":"com.wb.interact.IDE.setData"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1},"title":"设置用户选项","iconCls":"","inframe":false,"pageLink":""}
+{"hidden":false,"children":[{"configs":{"itemId":"module","serviceMethod":"ideService.setData"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1},"title":"设置用户选项","iconCls":"","inframe":false,"pageLink":""}

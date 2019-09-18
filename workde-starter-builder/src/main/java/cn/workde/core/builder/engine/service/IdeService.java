@@ -1,5 +1,6 @@
 package cn.workde.core.builder.engine.service;
 
+import cn.hutool.core.io.resource.ResourceUtil;
 import cn.workde.core.base.utils.FileUtils;
 import cn.workde.core.base.utils.StringUtils;
 import cn.workde.core.builder.engine.Builder;
@@ -9,16 +10,12 @@ import cn.workde.core.builder.utils.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.io.*;
+import java.util.*;
 
 /**
  * @author zhujingang
@@ -42,6 +39,47 @@ public class IdeService {
 		final JSONObject config = new JSONObject();
 		config.put("fileTitle", true);
 		request.setAttribute("initParams", (Object) StringUtil.text(config.toString()));
+	}
+
+	public List<String> getIconList() throws FileNotFoundException {
+		final File iconPath = ResourceUtils.getFile("classpath:static/images");
+		final File[] files = FileUtil.listFiles(iconPath);
+		final List<String> list = new ArrayList<String>();
+		SortUtil.sort(files);
+		File[] array;
+		for (int length = (array = files).length, i = 0; i < length; ++i) {
+			final File file = array[i];
+			if (!file.isDirectory()) {
+				list.add(String.valueOf(FileUtil.removeExtension(file.getName())) + "_icon");
+			}
+		}
+		return list;
+	}
+
+	public List<String[]> getGlyphClasses() throws Exception {
+		final File file = ResourceUtils.getFile("classpath:static/libs/fa/css/font-awesome-debug.css");
+		final String script = FileUtil.readString(file);
+		String[] lines = script.substring(script.indexOf(".fa-glass")).split("}");
+		int j = lines.length;
+		List<String[]> result = new ArrayList<>();
+		for (int i = 0; i < j; i++) {
+			String line = lines[i];
+			System.out.println(line);
+			System.out.println(line.length());
+			System.out.println(line.indexOf("content:"));
+			String[] item = new String[2];
+			item[0] = line.substring(line.indexOf("content:") + 11, line.indexOf("content:") + 15);
+			item[1] = line.substring(4, line.indexOf(":"));
+			result.add(item);
+		}
+		return result;
+	}
+
+	public void getSysData(HttpServletRequest request, HttpServletResponse response) throws Exception {
+		Map<String, Object> sysData = new HashMap<>();
+		sysData.put("iconData", getIconList());
+		sysData.put("glyphClasses", getGlyphClasses());
+		WebUtil.send(response, new JSONObject(sysData));
 	}
 
 	public void getList(HttpServletRequest request, HttpServletResponse response) throws Exception {
@@ -164,6 +202,137 @@ public class IdeService {
 			}
 		}
 		return false;
+	}
+
+	public synchronized void addModule(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		String name = request.getParameter("name");
+		final String title = request.getParameter("title");
+		final String iconCls = request.getParameter("iconCls");
+		String url = null;
+		final boolean hidden = Boolean.parseBoolean(request.getParameter("hidden"));
+		final boolean isDir = Boolean.parseBoolean(request.getParameter("isDir"));
+		final JSONObject content = new JSONObject();
+		final JSONObject moduleMeta;
+		JSONObject moduleConfigs = moduleMeta = controlBuffer.get("module").optJSONObject("configs");
+		content.put("title", title);
+		content.put("iconCls", iconCls);
+		content.put("hidden", hidden);
+		if (!isDir) {
+			content.put("roles", new JSONObject().put("default", 1));
+			content.put("inframe", Boolean.parseBoolean(request.getParameter("inframe")));
+			content.put("pageLink", request.getParameter("pageLink"));
+			url = request.getParameter("url");
+//			if (!UrlBuffer.exists(url, null)) {
+//				throw new IllegalArgumentException("URL\u6377\u5f84 \"" + url + "\" \u5df2\u7ecf\u5b58\u5728\u3002");
+//			}
+			if (!name.endsWith(".xwl")) {
+				if (name.toLowerCase().endsWith(".xwl")) {
+					name = String.valueOf(name.substring(0, name.length() - 3)) + "xwl";
+				}
+				else {
+					name = String.valueOf(name) + ".xwl";
+				}
+			}
+			final JSONObject module = new JSONObject();
+			moduleConfigs = new JSONObject();
+			moduleConfigs.put("itemId", "module");
+			final Set<String> moduleConfigEntries = moduleMeta.keySet();
+			for (final String key : moduleConfigEntries) {
+				final Object value = moduleMeta.optJSONObject(key).opt("value");
+				if (value != null) {
+					System.out.println(value);
+					moduleConfigs.put(key, value.toString());
+				}
+			}
+			module.put("children", new JSONArray());
+			module.put("configs", moduleConfigs);
+			module.put("type", "module");
+			content.put("children", new JSONArray().put(module));
+		}
+		final File base = new File(request.getParameter("path"));
+		final File file = addModule(base, name, isDir, content);
+		setFileIndex(base, request.getParameter("indexName"), new JSONArray().put((Object)name), request.getParameter("type"));
+		if (isDir) {
+			final JSONObject fileInfo = new JSONObject();
+			fileInfo.put("file", name);
+			fileInfo.put("title", title);
+			fileInfo.put("iconCls", iconCls);
+			fileInfo.put("hidden", hidden);
+			WebUtil.send(response, fileInfo);
+		}
+		else {
+//			if (!url.isEmpty()) {
+//				UrlBuffer.put(String.valueOf('/') + url, FileUtil.getModulePath(file));
+//				UrlBuffer.save();
+//			}
+			doOpen(new JSONArray().put(FileUtil.getPath(file)), null, null, request, response);
+		}
+	}
+
+	private void setFileIndex(final File folder, final String indexFileName, final JSONArray insertFileNames, final String type) throws Exception {
+		final File file = new File(folder, "folder.json");
+		final int j = insertFileNames.length();
+		JSONObject content;
+		JSONArray indexArray;
+		int index;
+		if (file.exists()) {
+			content = JsonUtil.readObject(file);
+			indexArray = content.getJSONArray("index");
+			for (int i = 0; i < j; ++i) {
+				index = indexArray.toList().indexOf(insertFileNames.getString(i));
+				if (index != -1) {
+					indexArray.remove(index);
+				}
+			}
+			final int k = indexArray.length();
+			for (int i = k - 1; i >= 0; --i) {
+				final File checkFile = new File(folder, indexArray.getString(i));
+				if (!checkFile.exists()) {
+					indexArray.remove(i);
+				}
+			}
+			if (StringUtil.isEmpty(indexFileName) || "append".equals(type)) {
+				index = -1;
+			}
+			else {
+				index = indexArray.toList().indexOf(indexFileName);
+				if (index != -1 && "after".equals(type)) {
+					++index;
+				}
+			}
+		}
+		else {
+			content = new JSONObject();
+			indexArray = new JSONArray();
+			content.put("index", indexArray);
+			index = -1;
+		}
+		if (index == -1) {
+			for (int i = j - 1; i >= 0; --i) {
+				indexArray.put(insertFileNames.getString(i));
+			}
+		}
+		else {
+			for (int i = 0; i < j; ++i) {
+				indexArray.toList().add(index, insertFileNames.getString(i));
+			}
+		}
+		FileUtil.syncSave(file, content.toString());
+	}
+
+	private File addModule(final File base, final String name, final boolean isDir, final JSONObject content) throws Exception {
+		final File file = new File(base, name);
+		if (isDir) {
+			FileUtil.syncCreate(file, true);
+			final File configFile = new File(file, "folder.json");
+			content.put("index", new JSONArray());
+			FileUtil.syncSave(configFile, content.toString());
+		}
+		else {
+			FileUtil.syncCreate(file, false);
+			FileUtil.syncSave(file, content.toString());
+		}
+		return file;
 	}
 
 	public void openFile(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
@@ -313,4 +482,13 @@ public class IdeService {
 		}
 	}
 
+	public synchronized void deleteFiles(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		final JSONArray files = new JSONArray(request.getParameter("files"));
+		for (int j = files.length(), i = 0; i < j; ++i) {
+			final String filename = files.getString(i);
+			final File file = new File(filename);
+			FileUtil.syncDelete(file);
+			clearModuleBuffer(file);
+		}
+	}
 }

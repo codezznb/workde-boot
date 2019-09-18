@@ -41,7 +41,7 @@
 			"description": {
 				"type": "text"
 			},
-			"serverMethod": {
+			"serviceMethod": {
 				"type": "string"
 			},
 			"title": {

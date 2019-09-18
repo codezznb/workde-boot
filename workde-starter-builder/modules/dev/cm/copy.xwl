@@ -1,1 +1,1 @@
-{"hidden":false,"children":[{"configs":{"itemId":"module","serverMethod":"com.wb.interact.Controls.copyControl"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1},"title":"复制","iconCls":""}
+{"hidden":false,"children":[{"configs":{"itemId":"module","serviceMethod":"controlService.copyControl"},"expanded":false,"children":[],"type":"module"}],"roles":{"developer":1},"title":"复制","iconCls":"","inframe":null,"pageLink":""}

@@ -2,6 +2,7 @@ package cn.workde.core.builder.utils;
 
 import cn.workde.core.base.utils.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.json.JSONObject;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -68,6 +69,10 @@ public class WebUtil {
 			return null;
 		}
 		return object.toString();
+	}
+
+	public static void sendObject(final HttpServletResponse response, Object o) throws IOException {
+		send(response, new JSONObject(o));
 	}
 
 	public static void send(final HttpServletResponse response, final Object object) throws IOException {
