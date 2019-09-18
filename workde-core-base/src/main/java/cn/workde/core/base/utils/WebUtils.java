@@ -29,6 +29,11 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
         return (requestAttributes == null) ? null : ((ServletRequestAttributes) requestAttributes).getRequest();
     }
 
+    public static HttpServletResponse getResponse() {
+		RequestAttributes requestAttributes = RequestContextHolder.getRequestAttributes();
+		return (requestAttributes == null) ? null : ((ServletRequestAttributes) requestAttributes).getResponse();
+	}
+
     /**
      * 获取ip
      *
@@ -76,46 +81,5 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
         }
         return StringUtils.isBlank(ip) ? null : StringUtils.splitTrim(ip, ",").get(0);
     }
-
-	public static void send(HttpServletResponse response, Object object) throws IOException {
-		final InputStream inputStream = (object instanceof InputStream) ? ((InputStream)object) : null;
-		try {
-			if (response.isCommitted()) {
-				return;
-			}
-
-			final OutputStream outputStream = (OutputStream) response.getOutputStream();
-
-			if (inputStream == null) {
-				byte[] bytes;
-				if (object instanceof byte[]) {
-					bytes = (byte[]) object;
-				} else {
-					String text;
-					if (object == null) {
-						text = "";
-					} else {
-						text = object.toString();
-					}
-					bytes = text.getBytes("utf-8");
-					if (StringUtils.isEmpty(response.getContentType())) {
-						response.setContentType("text/html;charset=utf-8");
-					}
-				}
-				final int len = bytes.length;
-
-				response.setContentLength(len);
-				outputStream.write(bytes);
-				response.flushBuffer();
-			}
-		}finally {
-			if (inputStream != null) {
-				inputStream.close();
-			}
-		}
-		if (inputStream != null) {
-			inputStream.close();
-		}
-	}
 
 }

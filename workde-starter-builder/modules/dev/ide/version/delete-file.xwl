@@ -1,0 +1,1 @@
+{"hidden":false,"children":[{"configs":{"itemId":"module"},"expanded":true,"children":[{"configs":{"itemId":"updater1","whereFields":"S_ID","tableName":"WB_VERSION"},"expanded":false,"children":[],"type":"updater"}],"type":"module"}],"roles":{"developer":1},"title":"删除文件","iconCls":"","inframe":false,"pageLink":""}

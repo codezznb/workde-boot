@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.2.2-SNAPSHOT</revision>
+        <revision>1.2.3-SNAPSHOT</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -45,10 +45,10 @@
         <module>workde-starter-redis</module>
         <module>workde-starter-token</module>
         <module>workde-starter-oss-qiniu</module>
-        <module>workde-starter-admin</module>
-        <module>workde-core-samples</module>
-        <module>workde-starter-builder</module>
         <module>workde-starter-cache</module>
+        <!--<engine>workde-starter-admin</engine>-->
+        <!--<engine>workde-core-samples</engine>-->
+        <module>workde-starter-builder</module>
 
     </modules>
 
