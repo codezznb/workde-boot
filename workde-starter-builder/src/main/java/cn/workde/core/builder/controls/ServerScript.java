@@ -15,7 +15,7 @@ public class ServerScript extends Control{
 		final String script = getScript(this.configs, "script");
 		if (!script.isEmpty()) {
 			ScriptBuffer scriptBuffer = SpringUtils.getBean(ScriptBuffer.class);
-			scriptBuffer.run(this.gs("id"), script, this.request, this.response, this.gs("sourceURL"));
+			scriptBuffer.run(script, this.request, this.response, this.gs("sourceURL"));
 		}
 	}
 

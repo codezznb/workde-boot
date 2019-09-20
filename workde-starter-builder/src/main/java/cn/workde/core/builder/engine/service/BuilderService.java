@@ -34,8 +34,8 @@ public class BuilderService {
 	@Autowired
 	private ControlBuffer controlBuffer;
 
-	//@Autowired
-	//private ScriptBuffer scriptBuffer;
+	@Autowired
+	private ScriptBuffer scriptBuffer;
 
 	private HttpServletRequest request;
 	private HttpServletResponse response;
@@ -89,7 +89,7 @@ public class BuilderService {
 
 		content = ServerScript.getScript(configs, "initScript");
 		if (!content.isEmpty()) {
-			//scriptBuffer.run(StringUtil.concat(moduleFile, ".is"), content, this.request, this.response, moduleFile);
+			scriptBuffer.run(content, this.request, this.response, moduleFile);
 		}
 
 		content = this.getString(configs, "serviceMethod");
@@ -183,7 +183,8 @@ public class BuilderService {
 
 		content = ServerScript.getScript(configs, "serverScript");
 		if (!content.isEmpty()) {
-			//scriptBuffer.run(StringUtil.concat(moduleFile, ".ss"), content, this.request, this.response, moduleFile);
+
+			scriptBuffer.run(content, this.request, this.response, moduleFile);
 		}
 
 		if (hasEvents) {

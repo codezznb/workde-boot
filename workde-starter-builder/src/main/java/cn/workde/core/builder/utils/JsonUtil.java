@@ -7,6 +7,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author zhujingang
@@ -22,6 +23,12 @@ public class JsonUtil {
 		}catch (Throwable e) {
 			throw new JSONException("错误的JSON格式: " + StringUtils.sub(text, 0, 50));
 		}
+	}
+
+	public static JSONArray add(JSONArray ja, int index, Object value) {
+		List<Object> list = ja.toList();
+		list.add(index, value);
+		return new JSONArray(list);
 	}
 
 	public static String join(final JSONArray array, final String separator) {

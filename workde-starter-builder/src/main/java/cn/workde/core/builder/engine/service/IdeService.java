@@ -16,6 +16,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.*;
 import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author zhujingang
@@ -64,9 +66,6 @@ public class IdeService {
 		List<String[]> result = new ArrayList<>();
 		for (int i = 0; i < j; i++) {
 			String line = lines[i];
-			System.out.println(line);
-			System.out.println(line.length());
-			System.out.println(line.indexOf("content:"));
 			String[] item = new String[2];
 			item[0] = line.substring(line.indexOf("content:") + 11, line.indexOf("content:") + 15);
 			item[1] = line.substring(4, line.indexOf(":"));
@@ -240,7 +239,6 @@ public class IdeService {
 			for (final String key : moduleConfigEntries) {
 				final Object value = moduleMeta.optJSONObject(key).opt("value");
 				if (value != null) {
-					System.out.println(value);
 					moduleConfigs.put(key, value.toString());
 				}
 			}
@@ -304,7 +302,6 @@ public class IdeService {
 		else {
 			content = new JSONObject();
 			indexArray = new JSONArray();
-			content.put("index", indexArray);
 			index = -1;
 		}
 		if (index == -1) {
@@ -314,9 +311,10 @@ public class IdeService {
 		}
 		else {
 			for (int i = 0; i < j; ++i) {
-				indexArray.toList().add(index, insertFileNames.getString(i));
+				indexArray = JsonUtil.add(indexArray, index, insertFileNames.getString(i));
 			}
 		}
+		content.put("index", indexArray);
 		FileUtil.syncSave(file, content.toString());
 	}
 
@@ -489,6 +487,311 @@ public class IdeService {
 			final File file = new File(filename);
 			FileUtil.syncDelete(file);
 			clearModuleBuffer(file);
+		}
+	}
+
+	public synchronized void setProperty(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		final JSONObject map = WebUtil.fetch(request);
+		File configFile = null;
+		final File oldFile = new File(map.getString("path"));
+		final String url = map.optString("url");
+		final String oldName = oldFile.getName();
+		final String newName = map.getString("text");
+		final boolean nameModified = !oldName.equals(newName);
+		final boolean urlValid = map.optBoolean("urlValid");
+		JSONObject indexContent = null;
+		final boolean isDir = oldFile.isDirectory();
+//		if (urlValid && !UrlBuffer.exists(url, oldFile)) {
+//			throw new IllegalArgumentException("URL\u6377\u5f84 \"" + url + "\" \u5df2\u7ecf\u5b58\u5728\u3002");
+//		}
+		File newFile;
+		if (nameModified) {
+			newFile = new File(oldFile.getParent(), newName);
+		}
+		else {
+			newFile = oldFile;
+		}
+		if (nameModified) {
+			FileUtil.syncRename(oldFile, newFile);
+		}
+		final File indexFile = new File(newFile.getParentFile(), "folder.json");
+		final boolean indexFileExists = indexFile.exists();
+		final boolean isModule = map.getBoolean("isModule");
+		final boolean needConfig = isModule || indexFileExists;
+		if (needConfig) {
+			if (indexFileExists) {
+				indexContent = JsonUtil.readObject(indexFile);
+			}
+			else if (isModule) {
+				indexContent = new JSONObject();
+				indexContent.put("index", (Object)new JSONArray());
+			}
+			if (isModule) {
+				JSONObject content;
+				if (isDir) {
+					configFile = new File(newFile, "folder.json");
+					if (configFile.exists()) {
+						content = JsonUtil.readObject(configFile);
+					}
+					else {
+						content = new JSONObject();
+						content.put("index", (Object)new JSONArray());
+					}
+				}
+				else {
+					content = JsonUtil.readObject(newFile);
+				}
+				content.put("title", (Object)map.getString("title"));
+				content.put("iconCls", (Object)map.getString("iconCls"));
+				content.put("hidden", map.getBoolean("hidden"));
+				if (isDir) {
+					FileUtil.syncSave(configFile, content.toString());
+				}
+				else {
+					content.put("inframe", map.getBoolean("inframe"));
+					content.put("pageLink", (Object)map.getString("pageLink"));
+					updateModule(newFile, content, null, false);
+				}
+			}
+			if (nameModified && indexFileExists) {
+				final JSONArray idxArray = indexContent.getJSONArray("index");
+				final int index = idxArray.toList().indexOf((Object)oldName);
+				if (index != -1) {
+					idxArray.put(index, (Object)newName);
+					FileUtil.syncSave(indexFile, indexContent.toString());
+				}
+			}
+		}
+		final JSONObject result = new JSONObject();
+		result.put("lastModified", DateUtil.getTimestamp(newFile.lastModified()));
+		result.put("path", FileUtil.getPath(newFile));
+		if (nameModified) {
+			final JSONObject resp = new JSONObject();
+			final JSONArray src = new JSONArray();
+			final JSONArray moveTo = new JSONArray();
+			src.put(FileUtil.getPath(oldFile));
+			moveTo.put(FileUtil.getPath(newFile));
+			final Object[] changeInfo = changePath(src, moveTo);
+			resp.put("files", changeInfo[0]);
+			resp.put("change", changeInfo[1]);
+			resp.put("moveTo", moveTo);
+			result.put("refactorInfo", resp);
+		}
+		WebUtil.send(response, result);
+	}
+
+	private Object[] changePath(final JSONArray source, final JSONArray dest) throws Exception {
+		final JSONArray rows = new JSONArray();
+		final ArrayList<Object[]> changes = new ArrayList<Object[]>();
+		boolean changed = false;
+		for (int j = source.length(), i = 0; i < j; ++i) {
+			final File srcFile = new File(source.getString(i));
+			final Object value = dest.opt(i);
+			File dstFile;
+			if (value instanceof String) {
+				dstFile = new File((String)value);
+			}
+			else {
+				dstFile = new File((String)((Object[])value)[0]);
+			}
+			final boolean isDir = dstFile.isDirectory();
+			if (isDir || (srcFile.getName().endsWith(".xwl") && dstFile.getName().endsWith(".xwl"))) {
+				String srcPath = FileUtil.getModulePath(srcFile);
+				String dstPath = FileUtil.getModulePath(dstFile);
+				if (!isDir) {
+					srcPath = srcPath.substring(0, srcPath.length() - 4);
+					dstPath = dstPath.substring(0, dstPath.length() - 4);
+				}
+				final Object[] change = new Object[2];
+				if (isDir) {
+					change[0] = Pattern.compile("\\bxwl=" + srcPath + "\\b/");
+					change[1] = "xwl=" + dstPath + "/";
+				}
+				else {
+					change[0] = Pattern.compile("(\\bxwl=" + srcPath + "\\b)(?![/\\-\\.])");
+					change[1] = "xwl=" + dstPath;
+				}
+				changes.add(change);
+			}
+		}
+		doChangePath(Builder.getInstance().getModuleFolder(), changes, rows);
+		//doChangePath(new File(Base.path, "script"), changes, rows);
+		final Object[] result = { rows, changes };
+		return result;
+	}
+
+	private void doChangePath(final File folder, final ArrayList<Object[]> changes, final JSONArray rows) throws Exception {
+		final File[] files = FileUtil.listFiles(folder);
+		File[] array;
+		for (int length = (array = files).length, i = 0; i < length; ++i) {
+			final File file = array[i];
+			if (file.isDirectory()) {
+				doChangePath(file, changes, rows);
+			}
+			else {
+				final String fileExt = FileUtil.getFileExt(file).toLowerCase();
+				if (fileExt.equals("xwl") || fileExt.equals("js")) {
+					String replacedText;
+					final String text = replacedText = FileUtil.readString(file);
+					for (final Object[] change : changes) {
+						replacedText = ((Pattern)change[0]).matcher(replacedText).replaceAll(Matcher.quoteReplacement((String)change[1]));
+					}
+					if (!replacedText.equals(text)) {
+						FileUtil.syncSave(file, replacedText);
+						final JSONObject row = new JSONObject();
+						row.put("path", (Object)FileUtil.getPath(file));
+						row.put("lastModified", (Object)DateUtil.getTimestamp(file.lastModified()));
+						rows.put((Object)row);
+					}
+				}
+			}
+		}
+	}
+
+	public synchronized void moveFiles(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		final String isCopyStr = request.getParameter("isCopy");
+		final boolean fromPaste = !StringUtil.isEmpty(isCopyStr);
+		final boolean isCopy = "true".equals(isCopyStr);
+		final boolean confirm = !Boolean.parseBoolean(request.getParameter("noConfirm"));
+		final JSONArray src = new JSONArray(request.getParameter("src"));
+		JSONArray moveTo = null;
+		final File dstFile = new File(request.getParameter("dst"));
+		final String dropPosition = request.getParameter("dropPosition");
+		String overwriteFilename = null;
+		int j = src.length();
+		int overwriteCount = 0;
+		File folder;
+		if (dropPosition.equals("append")) {
+			folder = dstFile;
+		} else {
+			folder = dstFile.getParentFile();
+		}
+		if (folder == null) {
+			throw new Exception("无法复制到此目录.");
+		}
+
+		for (int i = 0; i < j; ++i) {
+			if (src.getString(i).isEmpty()) {
+				throw new IllegalArgumentException("复制源含无效目录.");
+			}
+			final File srcFile = new File(src.getString(i));
+			final String filename = srcFile.getName();
+			final File newDstFile = new File(folder, filename);
+			if (FileUtil.isAncestor(srcFile, newDstFile, false)) {
+				throw new IllegalArgumentException("上级目录 \"" + filename + "\" 不能复制到下级目录.");
+			}
+			if (newDstFile.exists()) {
+				final boolean sameFolder = folder.equals(srcFile.getParentFile());
+				if (fromPaste) {
+					if (!isCopy && sameFolder) {
+						throw new IllegalArgumentException("同一目录内剪切 \"" + filename + "\" 无效.");
+					}
+					if (confirm && !sameFolder) {
+						if (overwriteFilename == null) {
+							overwriteFilename = filename;
+						}
+						++overwriteCount;
+					}
+				} else if (!sameFolder) {
+					throw new IllegalArgumentException("\"" + filename + "\" 已经存在.");
+				}
+			}
+		}
+
+		final JSONArray srcNames = new JSONArray();
+		if (fromPaste) {
+			moveTo = copyFiles(src, folder, !isCopy);
+			j = moveTo.length();
+			for (int i = j - 1; i >= 0; --i) {
+				final Object[] moveInfo = (Object[])moveTo.get(i);
+				if (!(boolean)moveInfo[1]) {
+					srcNames.put(FileUtil.getFilename((String)moveInfo[0]));
+				}
+			}
+		}
+		else {
+			for (int i = j - 1; i >= 0; --i) {
+				srcNames.put(FileUtil.getFilename(src.getString(i)));
+				if (folder.equals(new File(src.getString(i)).getParentFile())) {
+					src.remove(i);
+				}
+			}
+			moveTo = doMoveFiles(src, folder);
+		}
+		if ("module".equals(request.getParameter("type"))) {
+			setFileIndex(folder, dstFile.getName(), srcNames, dropPosition);
+		}
+		final JSONObject resp = new JSONObject();
+		if (!isCopy) {
+			final Object[] result = changePath(src, moveTo);
+			resp.put("files", result[0]);
+			resp.put("change", result[1]);
+		}
+		resp.put("moveTo", (Object)moveTo);
+		WebUtil.send(response, resp);
+
+	}
+
+	private JSONArray copyFiles(final JSONArray src, final File dstFolder, final boolean deleteOld) throws Exception {
+		final int j = src.length();
+		final JSONArray newNames = new JSONArray();
+		for (int i = 0; i < j; ++i) {
+			final File file = new File(src.getString(i));
+			final Object[] object = FileUtil.syncCopy(file, dstFolder);
+			if (deleteOld) {
+				FileUtil.syncDelete(file);
+			}
+			newNames.put((Object)object);
+		}
+		return newNames;
+	}
+
+	private JSONArray doMoveFiles(final JSONArray src, final File dstFile) throws Exception {
+		final int j = src.length();
+		final JSONArray result = new JSONArray();
+		for (int i = 0; i < j; ++i) {
+			final File file = new File(src.getString(i));
+			FileUtil.syncMove(file, dstFile);
+			final Object[] object = { FileUtil.getPath(new File(dstFile, file.getName())), false };
+			result.put((Object)object);
+		}
+		return result;
+	}
+
+	public void total(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		final File file = new File(request.getParameter("path"));
+		final JSONObject result = new JSONObject();
+		final boolean isDir = file.isDirectory();
+		result.put("lastModified", (Object)DateUtil.getTimestamp(file.lastModified()));
+		result.put("fileSize", file.length());
+		if (isDir && FileUtil.isAncestor(Builder.getInstance().getModuleFolder(), file)) {
+			final int[] info = new int[4];
+			total(file, info);
+			result.put("total", (Object)info);
+		}
+		WebUtil.send(response, result);
+	}
+
+	private void total(final File folder, final int[] info) {
+		final File[] files = FileUtil.listFiles(folder);
+		File[] array;
+		for (int length = (array = files).length, i = 0; i < length; ++i) {
+			final File file = array[i];
+			if (file.isDirectory()) {
+				final int n = 2;
+				++info[n];
+				total(file, info);
+			}
+			else {
+				if (file.getName().endsWith(".xwl")) {
+					final int n2 = 0;
+					++info[n2];
+				}
+				final int n3 = 1;
+				++info[n3];
+				final int n4 = 3;
+				info[n4] += (int)file.length();
+			}
 		}
 	}
 }

@@ -11,6 +11,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.URLEncoder;
+import java.util.Enumeration;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhujingang
@@ -71,6 +75,33 @@ public class WebUtil {
 		return object.toString();
 	}
 
+	public static JSONObject fetch(final HttpServletRequest request) {
+		final JSONObject json = new JSONObject();
+		final Iterator<?> requestParams = (Iterator<?>)request.getParameterMap().entrySet().iterator();
+		final Enumeration<?> requestAttrs = (Enumeration<?>)request.getAttributeNames();
+		while (requestParams.hasNext()) {
+			final Map.Entry<?, ?> entry = (Map.Entry<?, ?>)requestParams.next();
+			json.put((String)entry.getKey(), (Object)((String[])(Object)entry.getValue())[0]);
+		}
+		while (requestAttrs.hasMoreElements()) {
+			final String name = requestAttrs.nextElement().toString();
+			if (!name.startsWith("sysx.")) {
+				json.put(name, request.getAttribute(name));
+			}
+		}
+		final HttpSession session = request.getSession(false);
+		if (session != null) {
+			final Enumeration<?> sessionAttrs = (Enumeration<?>)session.getAttributeNames();
+			while (sessionAttrs.hasMoreElements()) {
+				final String name = sessionAttrs.nextElement().toString();
+				if (!name.startsWith("sysx.")) {
+					json.put(name, session.getAttribute(name));
+				}
+			}
+		}
+		return json;
+	}
+
 	public static void sendObject(final HttpServletResponse response, Object o) throws IOException {
 		send(response, new JSONObject(o));
 	}
@@ -116,6 +147,5 @@ public class WebUtil {
 			inputStream.close();
 		}
 	}
-
 
 }

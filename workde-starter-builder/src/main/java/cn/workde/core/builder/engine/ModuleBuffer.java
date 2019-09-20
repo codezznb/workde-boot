@@ -5,6 +5,7 @@ import cn.workde.core.builder.utils.FileUtil;
 import cn.workde.core.builder.utils.JsonUtil;
 import cn.workde.core.builder.utils.StringUtil;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -17,6 +18,9 @@ import java.util.concurrent.ConcurrentHashMap;
  * @date 2019/9/17 10:05 PM
  */
 public class ModuleBuffer {
+
+	@Autowired
+	private ScriptBuffer scriptBuffer;
 
 	private ConcurrentHashMap<String, Object[]> buffer;
 
@@ -56,7 +60,7 @@ public class ModuleBuffer {
 			final String modulePath = StringUtil.concat(key, "/");
 			if (modulePath.startsWith(delPath)) {
 				final Object[] value = e.getValue();
-				//ScriptBuffer.remove(((JSONObject)value[0]).getJSONArray("children").getJSONObject(0).getJSONObject("configs").getString("id"));
+				scriptBuffer.remove(key);
 				buffer.remove(key);
 			}
 		}

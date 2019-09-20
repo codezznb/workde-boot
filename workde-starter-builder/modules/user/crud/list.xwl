@@ -1,0 +1,1 @@
+{"hidden":false,"children":[{"configs":{"itemId":"module"},"expanded":true,"children":[{"configs":{"itemId":"dataprovider1","autoPage":"true","sql":"select * from yd_user where 1=1 and phone like {?phone?}\n\n"},"expanded":false,"children":[],"type":"dataprovider"}],"type":"module"}],"roles":{"default":1},"title":"查询列表","iconCls":"","inframe":false,"pageLink":""}

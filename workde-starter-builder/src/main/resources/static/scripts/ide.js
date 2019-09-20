@@ -1400,7 +1400,7 @@ var Ide = {
                     g.autoScroll = true
                 }
                 g.cls = "wb_design";
-                g.bodyStyle = "background-color:white;background-image:url(wb/images/app/dot.png);";
+                g.bodyStyle = "background-color:white;background-image:url(images/app/dot.png);";
                 if (Ext.String.startsWith(f.layout, "@")) {
                     g.layout = Wb.decode(f.layout.substring(1))
                 } else {
@@ -3633,7 +3633,7 @@ var Ide = {
         }
         var a = b.toLowerCase();
         if (Ide.isChild(b, Ide.modulePath) && Ext.String.endsWith(a, ".xwl")) {
-            return "m?xwl=" + b.substring(Ide.modulePath.length).slice(0, -4)
+            return "builder?xwl=" + b.substring(Ide.modulePath.length).slice(0, -4)
         } else {
             if (Ide.isChild(b, Ide.webPath)) {
                 return b.substring(Ide.webPath.length)

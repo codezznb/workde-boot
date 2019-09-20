@@ -16,6 +16,46 @@ import java.io.IOException;
  */
 public class FileUtil {
 
+	public static File getUniqueFile(File file) {
+		if (file.exists()) {
+			final File parent = file.getParentFile();
+			final String fullName = file.getName();
+			final String namePart = removeExtension(fullName);
+			String extPart = getFileExt(fullName);
+			final boolean emptyExt = extPart.isEmpty();
+			int i = 1;
+			if (!emptyExt) {
+				extPart = String.valueOf('.') + extPart;
+			}
+			do {
+				if (emptyExt) {
+					file = new File(parent, StringUtil.concat(namePart, Integer.toString(i)));
+				}
+				else {
+					file = new File(parent, StringUtil.concat(namePart, Integer.toString(i), extPart));
+				}
+				++i;
+			} while (file.exists());
+		}
+		return file;
+	}
+
+	public static boolean isAncestor(final File parent, final File child) throws IOException {
+		return isAncestor(parent, child, true);
+	}
+
+	public static boolean isAncestor(final File parent, final File child, final boolean includeSelf) throws IOException {
+		String parentPath = parent.getCanonicalPath();
+		String childPath = child.getCanonicalPath();
+		if (!parentPath.endsWith(new StringBuilder(String.valueOf(File.separatorChar)).toString())) {
+			parentPath = String.valueOf(parentPath) + File.separatorChar;
+		}
+		if (!childPath.endsWith(new StringBuilder(String.valueOf(File.separatorChar)).toString())) {
+			childPath = String.valueOf(childPath) + File.separatorChar;
+		}
+		return childPath.startsWith(parentPath) && (includeSelf || childPath.length() > parentPath.length());
+	}
+
 	public static String readString(final File file) throws Exception {
 		return FileUtils.readString(file, "utf-8");
 	}
@@ -137,6 +177,12 @@ public class FileUtil {
 //		}
 	}
 
+	public static void syncRename(final File file, final File newFile) throws IOException {
+		if (!file.renameTo(newFile)) {
+			throw new IOException("Cannot rename \"" + file.getName() + "\".");
+		}
+	}
+
 	public static void syncSave(final File file, final String content) throws Exception {
 		syncSave(file, content, "utf-8");
 	}
@@ -160,6 +206,31 @@ public class FileUtil {
 		clearFiles(file);
 	}
 
+	public static Object[] syncCopy(final File src, File dst) throws IOException {
+		final String name = src.getName();
+		dst = new File(dst, name);
+
+		final boolean isDir = src.isDirectory();
+		final boolean sameParent = src.getParentFile().equals(dst.getParentFile());
+		if (sameParent) {
+			dst = getUniqueFile(dst);
+		}
+		final boolean dstExists = dst.exists();
+		if (isDir) {
+			FileUtils.copy(src, dst, true);
+		}
+		else {
+			FileUtils.copyFile(src, dst);
+		}
+		final Object[] result = { getPath(dst), dstExists };
+		return result;
+	}
+
+	public static void syncMove(final File src, final File dst) throws Exception {
+		FileUtils.move(src, dst, true);
+		clearFiles(src);
+	}
+
 	private static void clearFiles(final File file) throws Exception {
 		final File folder = file.getParentFile();
 		final File configFile = new File(folder, "folder.json");
@@ -174,7 +245,6 @@ public class FileUtil {
 						index.remove(i);
 					}
 				}
-				System.out.println(object.toString());
 				syncSave(configFile, object.toString());
 			}
 		}

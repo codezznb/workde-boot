@@ -19,7 +19,7 @@ public class Builder {
 	public Builder() {
 		this.projectPath = new ApplicationHome(getClass()).getSource().getParentFile().getParentFile().getAbsolutePath();
 		this.modulePath = new File(projectPath, "modules").getAbsolutePath();
-		
+
 		File moduleFolder = getModuleFolder();
 		if(!moduleFolder.exists()) moduleFolder.mkdir();
 

@@ -4,6 +4,9 @@ import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 
 import java.io.*;
+import java.sql.Time;
+import java.sql.Timestamp;
+import java.util.Date;
 
 /**
  * @author zhujingang
@@ -25,6 +28,47 @@ public class StringUtil {
 			}
 		}
 		return -1;
+	}
+
+	public static boolean checkName(final String name) {
+		for (int j = name.length(), i = 0; i < j; ++i) {
+			final char c = name.charAt(i);
+			if ((c < 'a' || c > 'z') && (c < 'A' || c > 'Z') && c != '_' && (c < '0' || c > '9')) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isInteger(final String string) {
+		if (string == null) {
+			return false;
+		}
+		final int j = string.length();
+		if (j == 0) {
+			return false;
+		}
+		for (int i = 0; i < j; ++i) {
+			final char ch = string.charAt(i);
+			if ((ch < '0' || ch > '9') && (i != 0 || ch != '-')) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public static boolean isSame(final String string1, final String string2) {
+		if (string1 != null) {
+			return string1.equalsIgnoreCase(string2);
+		}
+		return string2 == null || string2.equalsIgnoreCase(string1);
+	}
+
+	public static boolean isEqual(final String string1, final String string2) {
+		if (string1 != null) {
+			return string1.equals(string2);
+		}
+		return string2 == null || string2.equals(string1);
 	}
 
 	public static String concat(final String... string) {
@@ -203,6 +247,26 @@ public class StringUtil {
 		base64is.close();
 		return os.toByteArray();
 	}
+
+	public static String encode(final Object object) throws Exception {
+		if (object == null) {
+			return "null";
+		}
+		if (object instanceof InputStream) {
+			return quote(encodeBase64((InputStream)object));
+		}
+		if (object instanceof Number || object instanceof Boolean) {
+			return object.toString();
+		}
+		if (object instanceof Timestamp || object instanceof java.sql.Date || object instanceof Time) {
+			return quote(object.toString());
+		}
+		if (object instanceof Date) {
+			return quote(DateUtil.dateToStr((Date)object));
+		}
+		return quote(object.toString());
+	}
+
 
 	public static String getString(final InputStream stream) throws IOException {
 		return getString(stream, "utf-8");

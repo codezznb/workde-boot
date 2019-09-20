@@ -5,9 +5,9 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
+import java.util.Map;
 
 /**
  * @author zhujingang
@@ -67,5 +67,17 @@ public class SysUtil {
 				ReflectionUtils.invokeMethod(method, service, request, response);
 			}
 		}
+	}
+
+	public static boolean isArray(final Object object) {
+		return object != null && object.getClass().isArray();
+	}
+
+	public static boolean isMap(final Object object) {
+		return object instanceof Map;
+	}
+
+	public static boolean isIterable(final Object object) {
+		return object instanceof Iterable;
 	}
 }

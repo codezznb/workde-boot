@@ -26,15 +26,16 @@ public class ScriptBuffer {
 
 	private static ConcurrentHashMap<String, CompiledScript> buffer;
 
-	public void run(final String id, final String scriptText, final HttpServletRequest request, final HttpServletResponse response, final String sourceURL) throws Exception {
-		CompiledScript script = ScriptBuffer.buffer.get(id);
-		if (script == null) {
-			script = compilable.compile(encScript(scriptText, sourceURL, true));
-			ScriptBuffer.buffer.put(id, script);
-		}
+	public void run(final String scriptText, final HttpServletRequest request, final HttpServletResponse response, final String sourceURL) throws Exception {
+//		CompiledScript script = ScriptBuffer.buffer.get(id);
+//		if (script == null) {
+//			script = compilable.compile(encScript(scriptText, sourceURL, true));
+//			ScriptBuffer.buffer.put(id, script);
+//		}
+		CompiledScript script = compilable.compile(encScript(scriptText, sourceURL, true));
 		final Bindings bindings = engine.createBindings();
-		bindings.put("request", (Object)request);
-		bindings.put("response", (Object)response);
+		bindings.put("request", request);
+		bindings.put("response", response);
 		script.eval(bindings);
 	}
 
@@ -68,7 +69,19 @@ public class ScriptBuffer {
 		}
 	}
 
+	public static void remove(final String id) {
+		final Set<Map.Entry<String, CompiledScript>> es = ScriptBuffer.buffer.entrySet();
+		for (final Map.Entry<String, CompiledScript> e : es) {
+			final String k = e.getKey() + ".ss";
+			System.out.println(k);
+			if (k.startsWith(id)) {
+				ScriptBuffer.buffer.remove(k);
+			}
+		}
+	}
+
 	private void loadUtils() throws Exception {
+		Builder.getInstance();
 		String text = FileUtil.readString(new File(Builder.getInstance().getSystemFolder(), "server.js"));
 		text = String.valueOf(text) + "\n//# sourceURL=server.js";
 		final CompiledScript script = compilable.compile(text);
