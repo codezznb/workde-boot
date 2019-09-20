@@ -43,7 +43,6 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
                 },
                 query: function(sql, config, returnScript) {
                     var configText, newConfig, dp = new Packages.cn.workde.core.builder.controls.DpControl();
-                    app.log(config);
                     dp.request = request;
                     dp.response = response;
                     if (config) {
@@ -62,6 +61,53 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
                     dp.configs.put('sql', sql);
                     if (returnScript) return dp.getContent(false);
                     else dp.create();
+                },
+                /**
+                 * 运行SQL语句，并获取返回结果对象。
+                 * @param {String} sql 运行的SQL语句。
+                 * @param {Object} [config] 配置对象。
+                 * @param {String} config.arrayName 执行批处理时，指定数据源来自request中存储的该变量。
+                 * @param {JSONArray/Array/String} config.arrayData 执行批处理时，指定数据源来自该值。
+                 * @param {Boolean} config.batchUpdate 是否允许批处理操作。
+                 * @param {String} config.errorText 当该值不为空且查询结果集不为空，系统将抛出该信息的异常。
+                 * @param {String} config.type  执行何种SQL操作，可为"query","update","execute","call"，默认为自动。
+                 * @param {String} config.transaction 执行何种数据库事务操作，可为"start","commit","none"。
+                 * @param {String} config.isolation 数据库事务隔离级别，可为"readCommitted","readUncommitted","repeatableRead","serializable"。
+                 * @param {Boolean} config.uniqueUpdate 指定插入、更改或删除记录操作是否有且只有1条。
+                 * @return {Object} 运行SQL语句获得的结果，可能值为结果集，影响记录数或输出参数结果Map。
+                 */
+                run: function(sql, config) {
+                    var arrayData,
+                        query = new Packages.cn.workde.core.builder.db.Query();
+                    if (config && config.arrayData) {
+                        arrayData = config.arrayData;
+                        if (!(arrayData instanceof JSONArray)) {
+                            if (Wb.isArray(arrayData))
+                                arrayData = Wb.reverse(arrayData);
+                            else
+                                arrayData = new JSONArray(arrayData);
+                            config.arrayData = arrayData;
+                        }
+                    }
+                    Wb.apply(query, {
+                        request: request,
+                        sql: sql
+                    }, config);
+                    return query.run();
+                },
+                /**
+                 * 执行上下文绑定的insert, update, delete数据库更新操作。
+                 * @param {Object} config 配置参数对象，见Updater控件的使用。
+                 */
+                update: function(configs) {
+                    var updater = new Packages.cn.workde.core.builder.db.Updater();
+
+                    if (Wb.isObject(configs.fieldsMap))
+                        configs.fieldsMap = Wb.toJSONObject(configs.fieldsMap);
+                    Wb.apply(updater, {
+                        request: request
+                    }, configs);
+                    updater.run();
                 }
 
             };
@@ -264,6 +310,83 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
                 }
             }
             return true;
+        },
+        apply: function(object, config, defaults) {
+            if (defaults)
+                Wb.apply(object, defaults);
+            if (object && config) {
+                var name;
+                for (name in config)
+                    object[name] = config[name];
+            }
+            return object;
+        },
+        /**
+         * 在JS和Java类型之间反转指定值类型。返转的值类型为Date/JavaDate,Object/JSONObject,Array/JSONArray,其他按原值返回。
+         * @param {Object} value 需要反转类型的值。
+         * @return {Object} 反转类型后的值。
+         */
+        reverse: function(value) {
+            if (value instanceof JavaDate)
+                return Wb.createDate(value.getTime());
+            else if (Wb.isDate(value))
+                return new JavaDate(value.getTime());
+            else if (Wb.isObject(value))
+                return Wb.toJSONObject(value);
+            else if (Wb.isArray(value))
+                return Wb.toJSONArray(value);
+            else if (value instanceof JSONArray || value instanceof JSONObject)
+                return Wb.decode(value.toString());
+            else
+                return value;
+        },
+        /**
+         * 把JS的Object对象转换为Java的JSONObject对象。如果参数不是Object对象，将直接返回此参数。
+         * 如果object中的值为原始值，可以使用new JSONObject(object)替代。
+         * @param {Object} object 需要转换的对象。
+         * @return {JSONObject} 转换后的JSONObject对象或object参数原值。
+         */
+        toJSONObject: function(object) {
+            if (Wb.isObject(object)) {
+                var jo = new JSONObject();
+                Wb.each(object, function(k, v) {
+                    if (v === null || v === undefined || Wb.isFunction(v))
+                        v = null;
+                    else if (Wb.isObject(v))
+                        v = Wb.toJSONObject(v);
+                    else if (Wb.isArray(v))
+                        v = Wb.toJSONArray(v);
+                    else if (Wb.isDate(v))
+                        v = new JavaDate(v.getTime());
+                    jo.put(k, v);
+                });
+                return jo;
+            }
+            return object;
+        },
+        /**
+         * 把JS的Array对象转换为Java的JSONArray对象。如果参数不是Array对象，将直接返回此参数。
+         * 如果array中的值为原始值，可以使用new JSONArray(array)替代。
+         * @param {Array} array 需要转换的数组。
+         * @return {JSONArray} 转换后的JSONArray对象或array参数原值。
+         */
+        toJSONArray: function(array) {
+            if (Wb.isArray(array)) {
+                var ja = new JSONArray();
+                Wb.each(array, function(v) {
+                    if (v === null || v === undefined || Wb.isFunction(v))
+                        v = null;
+                    else if (Wb.isObject(v))
+                        v = Wb.toJSONObject(v);
+                    else if (Wb.isArray(v))
+                        v = Wb.toJSONArray(v);
+                    else if (Wb.isDate(v))
+                        v = new JavaDate(v.getTime());
+                    ja.put(v);
+                });
+                return ja;
+            }
+            return array;
         },
 
     };

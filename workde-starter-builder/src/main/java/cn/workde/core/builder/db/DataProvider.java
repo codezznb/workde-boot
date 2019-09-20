@@ -6,11 +6,11 @@ import cn.workde.core.builder.utils.WebUtil;
 import lombok.Data;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.sql.ResultSet;
+import java.sql.ResultSetMetaData;
 
 /**
  * @author zhujingang
@@ -22,7 +22,7 @@ public class DataProvider {
 	private HttpServletRequest request;
 	private HttpServletResponse response;
 
-	private SqlRowSet resultSet;
+	private ResultSet resultSet;
 	public Long totalCount;
 	public long startTime;
 	public long beginIndex;
@@ -63,14 +63,14 @@ public class DataProvider {
 		boolean first = true;
 		final boolean hasTotal = this.totalCount != null;
 		final StringBuilder buf = new StringBuilder();
-		final SqlRowSetMetaData meta = this.resultSet.getMetaData();
+		final ResultSetMetaData meta = this.getResultSet().getMetaData();
 		final int j = meta.getColumnCount();
 		final String[] names = new String[j];
 		final String[] keyNames = new String[j];
 		final int[] types = new int[j];
 		int maxRecs;
 
-		if(getLimitRecords() == null) maxRecs = 20;
+		if(getLimitRecords() == null) maxRecs = 1000;	//查询时默认最多允许条数
 		else if(getLimitRecords() == -1) maxRecs = Integer.MAX_VALUE;
 		else maxRecs = getLimitRecords();
 
@@ -196,7 +196,7 @@ public class DataProvider {
 			}
 		}
 		for (int k = 0; k < l; ++k) {
-			source.put((Object)dest.getJSONObject(k));
+			source.put(dest.getJSONObject(k));
 		}
 		return source;
 	}

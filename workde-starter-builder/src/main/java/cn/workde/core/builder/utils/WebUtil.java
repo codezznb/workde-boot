@@ -3,6 +3,7 @@ package cn.workde.core.builder.utils;
 import cn.workde.core.base.utils.StringUtils;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.json.JSONObject;
+import org.springframework.http.HttpStatus;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -121,6 +122,9 @@ public class WebUtil {
 					String text;
 					if (object == null) {
 						text = "";
+					} else if( object instanceof  Exception) {
+						text = ((Exception) object).getMessage();
+						response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 					} else {
 						text = object.toString();
 					}
@@ -132,8 +136,7 @@ public class WebUtil {
 				final int len = bytes.length;
 				response.setContentLength(len);
 				outputStream.write(bytes);
-			}
-			else {
+			} else {
 				IOUtils.copy(inputStream, outputStream);
 			}
 			response.flushBuffer();
@@ -146,6 +149,24 @@ public class WebUtil {
 		if (inputStream != null) {
 			inputStream.close();
 		}
+	}
+
+	public static void setObject(final HttpServletRequest request, final String name, final Object value) {
+		final Object object = request.getAttribute("sysx.varMap");
+		final ConcurrentHashMap<String, Object> map = (ConcurrentHashMap<String, Object>) object;
+		if (map.containsKey(name)) {
+			throw new IllegalArgumentException("Key \"" + name + "\" already exists.");
+		}
+		map.put(name, value);
+	}
+
+	public static Object getObject(final HttpServletRequest request, final String name) {
+		final Object object = request.getAttribute("sysx.varMap");
+		if (object != null) {
+			final ConcurrentHashMap<String, Object> map = (ConcurrentHashMap<String, Object>) object;
+			return map.get(name);
+		}
+		return null;
 	}
 
 }

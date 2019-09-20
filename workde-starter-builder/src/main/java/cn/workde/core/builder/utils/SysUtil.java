@@ -5,6 +5,8 @@ import org.springframework.util.ReflectionUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Reader;
 import java.lang.reflect.Method;
 import java.util.Date;
 import java.util.Map;
@@ -79,5 +81,20 @@ public class SysUtil {
 
 	public static boolean isIterable(final Object object) {
 		return object instanceof Iterable;
+	}
+
+	public static String readString(final Reader reader) throws IOException {
+		try {
+			final char[] buf = new char[4096];
+			final StringBuilder sb = new StringBuilder();
+			int len;
+			while ((len = reader.read(buf)) > 0) {
+				sb.append(buf, 0, len);
+			}
+			return sb.toString();
+		}
+		finally {
+			reader.close();
+		}
 	}
 }

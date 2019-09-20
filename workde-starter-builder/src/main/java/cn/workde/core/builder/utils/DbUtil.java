@@ -1,16 +1,24 @@
 package cn.workde.core.builder.utils;
 
+import cn.workde.core.base.utils.SpringUtils;
+import cn.workde.core.base.utils.StringUtils;
 import cn.workde.core.builder.db.Query;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.support.rowset.ResultSetWrappingSqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSet;
 import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.sql.DataSource;
+import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import java.io.Reader;
-import java.sql.Connection;
-import java.sql.ResultSet;
+import java.io.StringReader;
+import java.math.BigDecimal;
+import java.sql.*;
 
 /**
  * @author zhujingang
@@ -77,6 +85,211 @@ public class DbUtil {
 		}
 	}
 
+	public static String[] buildSQLs(final String tableName, final boolean ignoreBlob, final int scriptType, final HttpServletRequest request, final JSONObject fields, final JSONObject whereFields, final JSONObject fieldsMap, final String pk) throws Exception {
+		final String[] sqls = new String[4];
+		final StringBuilder selectFields = new StringBuilder();
+		final StringBuilder insertFields = new StringBuilder();
+		final StringBuilder insertParams = new StringBuilder();
+		final StringBuilder condition = new StringBuilder();
+		final StringBuilder updateParams = new StringBuilder();
+		boolean isFirstSelect = true;
+		boolean isFirstUpdate = true;
+		boolean isFirstCondi = true;
+		final boolean hasRequest = request != null;
+		final boolean useDouble = true;
+		final boolean whereUseDate = false;
+		final boolean whereUseFloat = false;
+
+		JdbcTemplate jdbcTemplate = SpringUtils.getBean(JdbcTemplate.class);
+		ResultSetWrappingSqlRowSet rs = (ResultSetWrappingSqlRowSet) jdbcTemplate.queryForRowSet("select * from " + tableName + " where 1 = 0");
+		ResultSetMetaData meta = rs.getResultSet().getMetaData();
+
+		for (int j = meta.getColumnCount() + 1, i = 1; i < j; ++i) {
+			int type = meta.getColumnType(i);
+			String typeName = getTypeName(type);
+			int precision = meta.getPrecision(i);
+			if (precision <= 0) {
+				precision = 100;
+			}
+			final boolean isText = isTextField(type) || precision > 10000;
+			final boolean isBlob = isBlobField(type);
+			final boolean isDateTime = type == 92 || type == 91 || type == 93;
+			int scale = meta.getScale(i);
+			if (scale < 0) {
+				scale = 100;
+			}
+			final boolean isFloat = maybeFloatField(type) && scale > 0;
+			if (isFloat && useDouble) {
+				type = 8;
+				typeName = "double";
+			}
+
+			final boolean required = meta.isNullable(i) == 0;
+			final boolean readOnly = meta.isReadOnly(i);
+			String fieldName = meta.getColumnLabel(i);
+			String fieldValueName;
+			fieldName = (fieldValueName = getFieldName(fieldName));
+			fieldName = StringUtil.quoteIf(fieldName);
+			if (fieldsMap != null) {
+				final String mapName = fieldsMap.optString(fieldValueName, (String)null);
+				if (mapName != null) {
+					fieldValueName = mapName;
+				}
+			}
+			if (!isBlob || !hasRequest || !StringUtil.isEmpty(WebUtil.fetch(request, fieldValueName)) || "1".equals(WebUtil.fetch(request, "$" + fieldValueName))) {
+				if ((!ignoreBlob || !isBlob) && (fields == null || fields.has(fieldValueName) || fields.has("$" + fieldValueName))) {
+					if (isFirstSelect) {
+						isFirstSelect = false;
+					}
+					else {
+						selectFields.append(',');
+					}
+					selectFields.append(fieldName);
+					if (!readOnly) {
+						if (isFirstUpdate) {
+							isFirstUpdate = false;
+						}
+						else {
+							insertFields.append(',');
+							insertParams.append(',');
+							updateParams.append(',');
+						}
+						String param = null;
+						switch (scriptType) {
+							case 1: {
+								if (typeName == null) {
+									param = StringUtil.concat("{?", fieldValueName, "?}");
+									break;
+								}
+								param = StringUtil.concat("{?", typeName, ".", fieldValueName, "?}");
+								break;
+							}
+							case 2: {
+								param = StringUtil.concat("{#", fieldValueName, "#}");
+								break;
+							}
+							default: {
+								param = fieldValueName;
+								break;
+							}
+						}
+						insertFields.append(fieldName);
+						insertParams.append(param);
+						updateParams.append(fieldName);
+						updateParams.append('=');
+						updateParams.append(param);
+					}
+				}
+				if (!isText && !isBlob && (!isFloat || whereUseFloat) && (!isDateTime || whereUseDate) && (whereFields == null || whereFields.has(fieldValueName) || whereFields.has("#" + fieldValueName))) {
+					if (isFirstCondi) isFirstCondi = false;
+					else condition.append(" and ");
+					condition.append(getCondition(fieldName, fieldValueName, isStringField(type), typeName, required, scriptType));
+				}
+			}
+		}
+
+//		if (!StringUtils.isEmpty(pk)) {
+//			condition.append( pk + " = {?"+pk+"?}");
+//		}
+
+
+		//preparePagingData();
+		sqls[0] = StringUtil.concat("insert into ", tableName, " (", insertFields.toString(), ") values (", insertParams.toString(), ")");
+		sqls[1] = StringUtil.concat("update ", tableName, " set ", updateParams.toString(), " where ", condition.toString());
+		sqls[2] = StringUtil.concat("delete from ", tableName, " where ", condition.toString());
+		sqls[3] = StringUtil.concat("select ", selectFields.toString(), " from ", tableName, " where ", condition.toString());
+
+		return sqls;
+	}
+
+	private static String getCondition(final String fieldName, final String fieldValueName, final boolean isStringField, final String typeName, final boolean required, final int scriptType) {
+		final StringBuilder buf = new StringBuilder();
+		switch (scriptType) {
+			case 1: {
+				if (isStringField) {
+					buf.append("({?#");
+					buf.append(fieldValueName);
+					buf.append("?} is null and (");
+					buf.append(fieldName);
+					buf.append(" is null or ");
+					buf.append(fieldName);
+					buf.append("='') or ");
+					buf.append(fieldName);
+					buf.append("={?");
+					if (typeName == null) {
+						buf.append('#');
+					}
+					else {
+						buf.append(typeName);
+						buf.append(".#");
+					}
+					buf.append(fieldValueName);
+					buf.append("?})");
+					break;
+				}
+				if (!required) {
+					buf.append("({?#");
+					buf.append(fieldValueName);
+					buf.append("?} is null and ");
+					buf.append(fieldName);
+					buf.append(" is null or ");
+				}
+				buf.append(fieldName);
+				buf.append("={?");
+				if (typeName == null) {
+					buf.append('#');
+				}
+				else {
+					buf.append(typeName);
+					buf.append(".#");
+				}
+				buf.append(fieldValueName);
+				if (required) {
+					buf.append("?}");
+					break;
+				}
+				buf.append("?})");
+				break;
+			}
+			case 2: {
+				if (!required) {
+					buf.append("({##");
+					buf.append(fieldValueName);
+					buf.append("#} is null and ");
+					buf.append(fieldName);
+					buf.append(" is null or ");
+				}
+				buf.append(fieldName);
+				buf.append("={##");
+				buf.append(fieldValueName);
+				if (required) {
+					buf.append("#}");
+					break;
+				}
+				buf.append("#})");
+				break;
+			}
+			default: {
+				if (!required) {
+					buf.append("(#");
+					buf.append(fieldValueName);
+					buf.append(" is null and ");
+					buf.append(fieldName);
+					buf.append(" is null or ");
+				}
+				buf.append(fieldName);
+				buf.append("=#");
+				buf.append(fieldValueName);
+				if (!required) {
+					buf.append(')');
+					break;
+				}
+				break;
+			}
+		}
+		return buf.toString();
+	}
+
 	public static String getOrderSql(final String sort, final String orderFields) {
 		final JSONArray ja = new JSONArray(sort);
 		final int j = ja.length();
@@ -122,7 +335,7 @@ public class DbUtil {
 		return null;
 	}
 
-	public static SqlRowSet run(final HttpServletRequest request, final String sql) throws Exception {
+	public static Object run(final HttpServletRequest request, final String sql) throws Exception {
 		final Query query = new Query();
 		query.setRequest(request);
 		query.setSql(sql);
@@ -137,7 +350,7 @@ public class DbUtil {
 //		return fieldName.toUpperCase();
 	}
 
-	public static JSONArray getFields(final SqlRowSetMetaData meta) throws Exception {
+	public static JSONArray getFields(final ResultSetMetaData meta) throws Exception {
 		final int j = meta.getColumnCount();
 		final String[] mapTable = { null };
 		final JSONArray ja = new JSONArray();
@@ -211,7 +424,204 @@ public class DbUtil {
 		}
 	}
 
-	public static Object getObject(final SqlRowSet rs, final int index, final int type) throws Exception {
+	public static void setObject(final PreparedStatement statement, final int index, final int type, Object object) throws Exception {
+		if (object == null || object instanceof String) {
+			String value;
+			if (object == null) {
+				value = null;
+			}
+			else {
+				value = (String)object;
+			}
+			if (StringUtil.isEmpty(value)) {
+				statement.setNull(index, type);
+			}
+			else {
+				switch (type) {
+					case -15:
+					case -9:
+					case 1:
+					case 12: {
+						if ("__@".equals(value)) {
+							statement.setString(index, "");
+							break;
+						}
+						statement.setString(index, value);
+						break;
+					}
+					case 4: {
+						statement.setInt(index, Integer.parseInt(StringUtil.convertBool(value)));
+						break;
+					}
+					case -6: {
+						statement.setByte(index, Byte.parseByte(StringUtil.convertBool(value)));
+						break;
+					}
+					case 5: {
+						statement.setShort(index, Short.parseShort(StringUtil.convertBool(value)));
+						break;
+					}
+					case -5: {
+						statement.setLong(index, Long.parseLong(StringUtil.convertBool(value)));
+						break;
+					}
+					case 6:
+					case 7: {
+						statement.setFloat(index, Float.parseFloat(StringUtil.convertBool(value)));
+						break;
+					}
+					case 8: {
+						statement.setDouble(index, Double.parseDouble(StringUtil.convertBool(value)));
+						break;
+					}
+					case 2:
+					case 3: {
+						statement.setBigDecimal(index, new BigDecimal(StringUtil.convertBool(value)));
+						break;
+					}
+					case 93: {
+						statement.setTimestamp(index, Timestamp.valueOf(DateUtil.fixTimestamp(value, false)));
+						break;
+					}
+					case 91: {
+						if (value.indexOf(32) != -1) {
+							statement.setTimestamp(index, Timestamp.valueOf(DateUtil.fixTimestamp(value, false)));
+							break;
+						}
+						statement.setDate(index, java.sql.Date.valueOf(DateUtil.fixTimestamp(value, true)));
+						break;
+					}
+					case 92: {
+						if (value.indexOf(32) != -1) {
+							statement.setTimestamp(index, Timestamp.valueOf(DateUtil.fixTimestamp(value, false)));
+							break;
+						}
+						statement.setTime(index, Time.valueOf(DateUtil.fixTime(value)));
+						break;
+					}
+					case -7:
+					case 16: {
+						statement.setBoolean(index, StringUtil.getBool(value));
+						break;
+					}
+					case -16:
+					case -1:
+					case 2005:
+					case 2011: {
+						statement.setCharacterStream(index, new StringReader(value), value.length());
+						break;
+					}
+					case -4:
+					case -3:
+					case -2:
+					case 2004: {
+						final InputStream is = new ByteArrayInputStream(StringUtil.decodeBase64(value));
+						statement.setBinaryStream(index, is, is.available());
+						break;
+					}
+					default: {
+						statement.setObject(index, value, type);
+						break;
+					}
+				}
+			}
+		}
+		else if (object instanceof InputStream) {
+			statement.setBinaryStream(index, (InputStream)object, ((InputStream)object).available());
+		}
+		else if (object instanceof Date) {
+			statement.setTimestamp(index, new Timestamp(((Date)object).getTime()));
+		}
+		else if (object instanceof Double && !maybeFloatField(type)) {
+			object = ((Double)object).intValue();
+			statement.setObject(index, object, type);
+		}
+		else {
+			statement.setObject(index, object, type);
+		}
+	}
+
+	public static Object getObject(final CallableStatement statement, final int index, final int type) throws Exception {
+		Object obj = null;
+		switch (type) {
+			case -15:
+			case -9:
+			case 1:
+			case 12: {
+				obj = statement.getString(index);
+				break;
+			}
+			case 4: {
+				obj = statement.getInt(index);
+				break;
+			}
+			case -6: {
+				obj = statement.getByte(index);
+				break;
+			}
+			case 5: {
+				obj = statement.getShort(index);
+				break;
+			}
+			case -5: {
+				obj = statement.getLong(index);
+				break;
+			}
+			case 6:
+			case 7: {
+				obj = statement.getFloat(index);
+				break;
+			}
+			case 8: {
+				obj = statement.getDouble(index);
+				break;
+			}
+			case 2:
+			case 3: {
+				obj = statement.getBigDecimal(index);
+				break;
+			}
+			case 93: {
+				obj = statement.getTimestamp(index);
+				break;
+			}
+			case 91: {
+				obj = statement.getDate(index);
+				break;
+			}
+			case 92: {
+				obj = statement.getTime(index);
+				break;
+			}
+			case -7:
+			case 16: {
+				obj = (statement.getBoolean(index) ? 1 : 0);
+				break;
+			}
+			case -16:
+			case -1:
+			case 2005:
+			case 2011: {
+				final Reader rd = statement.getCharacterStream(index);
+				if (rd == null) {
+					obj = null;
+					break;
+				}
+				obj = SysUtil.readString(rd);
+				break;
+			}
+			default: {
+				obj = statement.getObject(index);
+				break;
+			}
+		}
+		if (statement.wasNull()) {
+			return null;
+		}
+		return obj;
+	}
+
+	public static Object getObject(final ResultSet rs, final int index, final int type) throws Exception {
 		Object obj = null;
 		switch (type) {
 			case -15:
@@ -271,26 +681,26 @@ public class DbUtil {
 			case -16:
 			case -1:
 			case 2005:
-//			case 2011: {
-//				final Reader rd = rs.getCharacterStream(index);
-//				if (rd == null) {
-//					obj = null;
-//					break;
-//				}
-//				obj = SysUtil.readString(rd);
-//				break;
-//			}
+			case 2011: {
+				final Reader rd = rs.getCharacterStream(index);
+				if (rd == null) {
+					obj = null;
+					break;
+				}
+				obj = SysUtil.readString(rd);
+				break;
+			}
 			case -4:
 			case -3:
 			case -2:
-//			case 2004: {
-//				final InputStream is = rs.getBinaryStream(index);
-//				if (is != null) {
-//					is.close();
-//				}
-//				obj = "(blob)";
-//				break;
-//			}
+			case 2004: {
+				final InputStream is = rs.getBinaryStream(index);
+				if (is != null) {
+					is.close();
+				}
+				obj = "(blob)";
+				break;
+			}
 			default: {
 				obj = rs.getObject(index);
 				break;
@@ -302,7 +712,7 @@ public class DbUtil {
 		return obj;
 	}
 
-	public static Object getObject(final SqlRowSet rs, final String fieldName, final int type) throws Exception {
+	public static Object getObject(final ResultSet rs, final String fieldName, final int type) throws Exception {
 		Object obj = null;
 		switch (type) {
 			case -15:
@@ -362,26 +772,26 @@ public class DbUtil {
 			case -16:
 			case -1:
 			case 2005:
-//			case 2011: {
-//				final Reader rd = rs.getCharacterStream(fieldName);
-//				if (rd == null) {
-//					obj = null;
-//					break;
-//				}
-//				obj = SysUtil.readString(rd);
-//				break;
-//			}
+			case 2011: {
+				final Reader rd = rs.getCharacterStream(fieldName);
+				if (rd == null) {
+					obj = null;
+					break;
+				}
+				obj = SysUtil.readString(rd);
+				break;
+			}
 			case -4:
 			case -3:
 			case -2:
-//			case 2004: {
-//				final InputStream is = rs.getBinaryStream(fieldName);
-//				if (is != null) {
-//					is.close();
-//				}
-//				obj = "(blob)";
-//				break;
-//			}
+			case 2004: {
+				final InputStream is = rs.getBinaryStream(fieldName);
+				if (is != null) {
+					is.close();
+				}
+				obj = "(blob)";
+				break;
+			}
 			default: {
 				obj = rs.getObject(fieldName);
 				break;
@@ -391,5 +801,108 @@ public class DbUtil {
 			return null;
 		}
 		return obj;
+	}
+
+	public static boolean isBlobField(final int type) {
+		switch (type) {
+			case -4:
+			case -3:
+			case -2:
+			case 2004: {
+				return true;
+			}
+			default: {
+				return false;
+			}
+		}
+	}
+
+	public static boolean isTextField(final int type) {
+		switch (type) {
+			case -16:
+			case -1:
+			case 2005:
+			case 2011: {
+				return true;
+			}
+			default: {
+				return false;
+			}
+		}
+	}
+
+	public static boolean isStringField(final int type) {
+		switch (type) {
+			case -15:
+			case -9:
+			case 1:
+			case 12: {
+				return true;
+			}
+			default: {
+				return false;
+			}
+		}
+	}
+
+	public static boolean maybeFloatField(final int type) {
+		switch (type) {
+			case 2:
+			case 3:
+			case 6:
+			case 7:
+			case 8: {
+				return true;
+			}
+			default: {
+				return false;
+			}
+		}
+	}
+
+	public static Connection getConnection(HttpServletRequest request) throws SQLException {
+		String storeName = "conn@@";
+		final Object obj = WebUtil.getObject(request, storeName);
+		Connection conn;
+		if (obj == null) {
+			JdbcTemplate jdbcTemplate = SpringUtils.getBean(JdbcTemplate.class);
+			conn = jdbcTemplate.getDataSource().getConnection();
+			WebUtil.setObject(request, storeName, conn);
+		}
+		else {
+			conn = (Connection)obj;
+		}
+		return conn;
+	}
+
+	public static void closeCommit(final Connection connection, DataSource dataSource) {
+		if (connection != null) {
+			closeConnection(connection, false, dataSource);
+		}
+	}
+
+	private static void closeConnection(Connection connection, final boolean rollback, DataSource dataSource) {
+		try {
+			if (connection.isClosed()) {
+				return;
+			}
+			try {
+				if (!connection.getAutoCommit()) {
+					if (rollback) connection.rollback();
+					else connection.commit();
+				}
+			}
+			catch (Throwable e) {
+				if (!rollback) {
+					connection.rollback();
+				}
+				return;
+			}
+			finally {
+				DataSourceUtils.releaseConnection(connection, dataSource);
+			}
+
+		}
+		catch (Throwable t) {}
 	}
 }

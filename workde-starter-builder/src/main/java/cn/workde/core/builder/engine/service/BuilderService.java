@@ -1,5 +1,6 @@
 package cn.workde.core.builder.engine.service;
 
+import cn.workde.core.base.utils.SpringUtils;
 import cn.workde.core.base.utils.StringUtils;
 import cn.workde.core.base.utils.WebUtils;
 import cn.workde.core.builder.controls.Control;
@@ -11,15 +12,27 @@ import cn.workde.core.builder.engine.ModuleBuffer;
 import cn.workde.core.builder.engine.ScriptBuffer;
 import cn.workde.core.builder.utils.*;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.tomcat.util.http.fileupload.IOUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.jdbc.datasource.DataSourceUtils;
+import org.springframework.jdbc.support.JdbcUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * @author zhujingang
@@ -55,13 +68,32 @@ public class BuilderService {
 		this.footerHtml = new ArrayList<>(15);
 		this.headerScript = new StringBuilder();
 		this.footerScript = new ArrayList<>(15);
-
+		boolean hasExcept = false;
 		final boolean isInvoke = this.request.getParameter("xwlt") != null;
 		int runMode  = (isInvoke ? 3 : 0);
-		this.execute(moduleFile, runMode, null, null);
+
+		ConcurrentHashMap<String, Object> varMap = null;
+		final Object object = this.request.getAttribute("sysx.varMap");
+		if (object == null) {
+			varMap = new ConcurrentHashMap<String, Object>();
+			this.request.setAttribute("sysx.varMap", (Object)varMap);
+		}
+		try {
+			this.execute(moduleFile, runMode, null, null);
+		}catch (Throwable e) {
+			hasExcept = true;
+			// 错误处理
+			throw new Exception(e);
+		}finally {
+			this.closeObjects(varMap, hasExcept);
+		}
+
+		this.closeObjects(varMap, hasExcept);
 	}
 
 	public void execute(final String moduleFile, final int runMode, final String xwlId, final String params) throws Exception {
+
+
 		final JSONObject root = moduleBuffer.get(moduleFile + ".xwl");
 		final JSONObject module = (JSONObject) ((JSONArray) root.opt("children")).opt(0);
 		final JSONObject configs = (JSONObject) module.opt("configs");
@@ -437,6 +469,50 @@ public class BuilderService {
 			return defaultValue;
 		}
 		return Boolean.parseBoolean(value);
+	}
+
+	private void closeObjects(final ConcurrentHashMap<String, Object> map, final boolean isExcept) {
+		final Set<Map.Entry<String, Object>> es = map.entrySet();
+		final ArrayList<Connection> connList = new ArrayList<Connection>();
+		final ArrayList<Statement> stList = new ArrayList<Statement>();
+
+		for (final Map.Entry<String, Object> e : es) {
+			final Object object = e.getValue();
+
+			if (object != null) {
+				if (object instanceof ResultSet) {
+					JdbcUtils.closeResultSet((ResultSet) object);
+				}
+				else if (object instanceof Statement) {
+					stList.add((Statement)object);
+				}
+				else if (object instanceof Connection) {
+					connList.add((Connection)object);
+				}
+				else if (object instanceof InputStream) {
+					IOUtils.closeQuietly((InputStream)object);
+				}
+				else {
+					if (!(object instanceof OutputStream)) {
+						continue;
+					}
+					IOUtils.closeQuietly((OutputStream)object);
+				}
+			}
+
+		}
+
+		for (final Statement st : stList) {
+			JdbcUtils.closeStatement(st);
+		}
+		final JdbcTemplate jdbcTemplate = SpringUtils.getBean(JdbcTemplate.class);
+		for (final Connection conn : connList) {
+			if (isExcept) {
+				DataSourceUtils.releaseConnection(conn, jdbcTemplate.getDataSource());
+			} else {
+				DbUtil.closeCommit(conn, jdbcTemplate.getDataSource());
+			}
+		}
 	}
 
 }

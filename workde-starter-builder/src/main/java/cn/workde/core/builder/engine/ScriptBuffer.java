@@ -27,11 +27,6 @@ public class ScriptBuffer {
 	private static ConcurrentHashMap<String, CompiledScript> buffer;
 
 	public void run(final String scriptText, final HttpServletRequest request, final HttpServletResponse response, final String sourceURL) throws Exception {
-//		CompiledScript script = ScriptBuffer.buffer.get(id);
-//		if (script == null) {
-//			script = compilable.compile(encScript(scriptText, sourceURL, true));
-//			ScriptBuffer.buffer.put(id, script);
-//		}
 		CompiledScript script = compilable.compile(encScript(scriptText, sourceURL, true));
 		final Bindings bindings = engine.createBindings();
 		bindings.put("request", request);

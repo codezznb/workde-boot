@@ -6,6 +6,7 @@ import org.apache.tomcat.util.http.fileupload.IOUtils;
 import java.io.*;
 import java.sql.Time;
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
@@ -13,6 +14,69 @@ import java.util.Date;
  * @date 2019/9/18 9:49 AM
  */
 public class StringUtil {
+
+	public static String[] split(final String string, final String separator) {
+		return split(string, separator, false);
+	}
+
+	public static String[] split(String string, final String separator, final boolean trim) {
+		int pos = 0;
+		int oldPos = 0;
+		int index = 0;
+		final int separatorLen = separator.length();
+		final ArrayList<Integer> posData = new ArrayList<Integer>();
+		if (string == null) {
+			string = "";
+		}
+		while ((pos = string.indexOf(separator, pos)) != -1) {
+			posData.add(pos);
+			pos += separatorLen;
+		}
+		posData.add(string.length());
+		final String[] result = new String[posData.size()];
+		for (final int p : posData) {
+			if (trim) {
+				result[index] = string.substring(oldPos, p).trim();
+			}
+			else {
+				result[index] = string.substring(oldPos, p);
+			}
+			oldPos = p + separatorLen;
+			++index;
+		}
+		return result;
+	}
+
+	public static String[] split(final String string, final char separator) {
+		return split(string, separator, false);
+	}
+
+	public static String[] split(String string, final char separator, final boolean trim) {
+		int pos = 0;
+		int oldPos = 0;
+		int index = 0;
+		final ArrayList<Integer> posData = new ArrayList<Integer>();
+		if (string == null) {
+			string = "";
+		}
+		while ((pos = string.indexOf(separator, pos)) != -1) {
+			posData.add(pos);
+			++pos;
+		}
+		posData.add(string.length());
+		final String[] result = new String[posData.size()];
+		for (final int p : posData) {
+			if (trim) {
+				result[index] = string.substring(oldPos, p).trim();
+			}
+			else {
+				result[index] = string.substring(oldPos, p);
+			}
+			oldPos = p + 1;
+			++index;
+		}
+		return result;
+	}
 
 	public static boolean isEmpty(final String string) {
 		return string == null || string.length() == 0;
@@ -81,6 +145,13 @@ public class StringUtil {
 			buf.append(str2);
 		}
 		return buf.toString();
+	}
+
+	public static String quoteIf(final String name) {
+		if (checkName(name)) {
+			return name;
+		}
+		return quote(name);
 	}
 
 	public static String quote(final String string) {
@@ -297,5 +368,68 @@ public class StringUtil {
 				stream.close();
 			}
 		}
+	}
+
+	public static String select(final String... string) {
+		for (final String s : string) {
+			if (!isEmpty(s)) {
+				return s;
+			}
+		}
+		return "";
+	}
+
+	public static String toString(final Object object) {
+		if (object == null) {
+			return "";
+		}
+		if (object instanceof Date) {
+			return DateUtil.dateToStr((Date)object);
+		}
+		return object.toString();
+	}
+
+	public static String getNamePart(final String string) {
+		return getNamePart(string, '=');
+	}
+
+	public static String getValuePart(final String string) {
+		return getValuePart(string, '=');
+	}
+
+	public static String getNamePart(final String string, final char separator) {
+		if (string == null) {
+			return "";
+		}
+		final int index = string.indexOf(separator);
+		if (index == -1) {
+			return string;
+		}
+		return string.substring(0, index);
+	}
+
+	public static String getValuePart(final String string, final char separator) {
+		if (string == null) {
+			return "";
+		}
+		final int index = string.indexOf(separator);
+		if (index == -1) {
+			return "";
+		}
+		return string.substring(index + 1);
+	}
+
+	public static String convertBool(final String value) {
+		if ("true".equalsIgnoreCase(value)) {
+			return "1";
+		}
+		if ("false".equalsIgnoreCase(value)) {
+			return "0";
+		}
+		return value;
+	}
+
+	public static boolean getBool(final String value) {
+		return value != null && !value.equalsIgnoreCase("false") && !value.equals("0") && !value.isEmpty();
 	}
 }

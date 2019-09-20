@@ -1,0 +1,1 @@
+{"hidden":false,"children":[{"configs":{"itemId":"module","serverScript":"app.update({\n  tableName: 'yd_user'\n});"},"expanded":false,"children":[],"type":"module"}],"roles":{"default":1},"title":"删除用户信息","iconCls":"","inframe":false,"pageLink":""}
