@@ -57,6 +57,7 @@ public class FileUtil {
 	}
 
 	public static String readString(final File file) throws Exception {
+		if(file == null || !file.exists()) return "";
 		return FileUtils.readString(file, "utf-8");
 	}
 
@@ -135,6 +136,14 @@ public class FileUtil {
 			return url;
 		}
 
+		return null;
+	}
+
+	public static String getModuleUrl(final File file) {
+		final String path = getPath(file);
+		if (path.startsWith(Builder.getInstance().getModulePath()) && path.toLowerCase().endsWith(".xwl")) {
+			return "builder?xwl=" + path.substring(Builder.getInstance().getModulePath().length() + 1, path.length() - 4);
+		}
 		return null;
 	}
 
@@ -224,6 +233,14 @@ public class FileUtil {
 		}
 		final Object[] result = { getPath(dst), dstExists };
 		return result;
+	}
+
+	public static void syncCopyA(final File src, final File dst) throws IOException {
+		FileUtils.copy(src, dst, false);
+	}
+
+	public static void syncCopyFiles(final File src, final File dst) {
+		FileUtils.copyFilesFromDir(src, dst, false);
 	}
 
 	public static void syncMove(final File src, final File dst) throws Exception {

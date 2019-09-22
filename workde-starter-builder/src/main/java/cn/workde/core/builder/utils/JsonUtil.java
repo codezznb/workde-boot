@@ -32,6 +32,7 @@ public class JsonUtil {
 	}
 
 	public static JSONObject readObject(File file) {
+		if(!file.exists()) return new JSONObject();
 		String text = FileUtils.readString(file, "UTF-8");
 		if(text.isEmpty()) return new JSONObject();
 		try {

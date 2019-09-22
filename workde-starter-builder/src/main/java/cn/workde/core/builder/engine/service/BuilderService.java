@@ -83,7 +83,7 @@ public class BuilderService {
 		}catch (Throwable e) {
 			hasExcept = true;
 			// 错误处理
-			throw new Exception(e);
+			throw e;
 		}finally {
 			this.closeObjects(varMap, hasExcept);
 		}
@@ -125,6 +125,7 @@ public class BuilderService {
 		}
 
 		content = this.getString(configs, "serviceMethod");
+		System.out.println(content);
 		if(!content.isEmpty()) {
 			String[] services = content.split("\\.");
 			if(services.length == 2) {

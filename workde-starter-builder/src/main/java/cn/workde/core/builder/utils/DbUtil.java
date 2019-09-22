@@ -1,15 +1,12 @@
 package cn.workde.core.builder.utils;
 
 import cn.workde.core.base.utils.SpringUtils;
-import cn.workde.core.base.utils.StringUtils;
 import cn.workde.core.builder.db.Query;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DataSourceUtils;
 import org.springframework.jdbc.support.rowset.ResultSetWrappingSqlRowSet;
-import org.springframework.jdbc.support.rowset.SqlRowSet;
-import org.springframework.jdbc.support.rowset.SqlRowSetMetaData;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.sql.DataSource;
@@ -288,6 +285,23 @@ public class DbUtil {
 			}
 		}
 		return buf.toString();
+	}
+
+	public static String getOrderBySql(final HttpServletRequest request, final String orderFields) {
+		final String sort = request.getParameter("sort");
+		if (StringUtil.isEmpty(sort)) {
+			return "";
+		}
+		final String orderExp = getOrderSql(sort, orderFields);
+		return " order by " + orderExp;
+	}
+
+	public static String getOrderSql(final HttpServletRequest request, final String orderFields) {
+		final String sort = request.getParameter("sort");
+		if (StringUtil.isEmpty(sort)) {
+			return "";
+		}
+		return "," + getOrderSql(sort, orderFields);
 	}
 
 	public static String getOrderSql(final String sort, final String orderFields) {

@@ -1,7 +1,8 @@
 package cn.workde.core.builder.utils;
 
-import com.sun.xml.internal.messaging.saaj.packaging.mime.internet.MimeUtility;
+import cn.hutool.core.codec.Base64;
 import org.apache.tomcat.util.http.fileupload.IOUtils;
+import org.json.JSONObject;
 
 import java.io.*;
 import java.sql.Time;
@@ -263,6 +264,35 @@ public class StringUtil {
 		return buffer.toString();
 	}
 
+	public static String replaceParams(final JSONObject jo, final String text) {
+		System.out.println("text:" + text);
+		if (jo == null || isEmpty(text)) {
+			return text;
+		}
+		int start = 0;
+		int startPos = text.indexOf("${", start);
+		int endPos = text.indexOf("}", startPos + 2);
+		if (startPos != -1 && endPos != -1) {
+			final StringBuilder buf = new StringBuilder(text.length());
+			while (startPos != -1 && endPos != -1) {
+				final String paramName = text.substring(startPos + 2, endPos);
+				String paramValue = jo.optString(paramName);
+
+				buf.append(text.substring(start, startPos));
+				if (paramValue != null) {
+					buf.append(paramValue);
+				}
+				start = endPos + 1;
+				startPos = text.indexOf("${", start);
+				endPos = text.indexOf("}", startPos + 2);
+			}
+			buf.append(text.substring(start));
+			return buf.toString();
+		}
+		System.out.println("return text:" + text);
+		return text;
+	}
+
 	public static String opt(final String string) {
 		if (string == null) {
 			return "";
@@ -271,52 +301,15 @@ public class StringUtil {
 	}
 
 	public static String encodeBase64(final byte[] bytes) throws Exception {
-		OutputStream os = null;
-		ByteArrayOutputStream data;
-		try {
-			data = new ByteArrayOutputStream();
-			os = MimeUtility.encode((OutputStream)data, "base64");
-			os.write(bytes);
-		}
-		finally {
-			os.close();
-		}
-		os.close();
-		return new String(data.toByteArray());
+		return Base64.encode(bytes);
 	}
 
 	public static String encodeBase64(final InputStream is) throws Exception {
-		OutputStream os = null;
-		ByteArrayOutputStream inData = null;
-		ByteArrayOutputStream outData = null;
-		try {
-			inData = new ByteArrayOutputStream();
-			outData = new ByteArrayOutputStream();
-			IOUtils.copy(is, (OutputStream)inData);
-			os = MimeUtility.encode((OutputStream)outData, "base64");
-			os.write(inData.toByteArray());
-		}
-		finally {
-			IOUtils.closeQuietly(is);
-			IOUtils.closeQuietly(os);
-		}
-		IOUtils.closeQuietly(is);
-		IOUtils.closeQuietly(os);
-		return new String(outData.toByteArray());
+		return Base64.encode(is);
 	}
 
 	public static byte[] decodeBase64(final String data) throws Exception {
-		final ByteArrayInputStream is = new ByteArrayInputStream(data.getBytes());
-		final ByteArrayOutputStream os = new ByteArrayOutputStream();
-		final InputStream base64is = MimeUtility.decode((InputStream)is, "base64");
-		try {
-			IOUtils.copy(base64is, (OutputStream)os);
-		}
-		finally {
-			base64is.close();
-		}
-		base64is.close();
-		return os.toByteArray();
+		return Base64.decode(data);
 	}
 
 	public static String encode(final Object object) throws Exception {
@@ -357,7 +350,7 @@ public class StringUtil {
 		}
 		try {
 			final ByteArrayOutputStream os = new ByteArrayOutputStream();
-			IOUtils.copy(stream, (OutputStream)os);
+			IOUtils.copy(stream, os);
 			if (isEmpty(charset)) {
 				return new String(os.toByteArray());
 			}

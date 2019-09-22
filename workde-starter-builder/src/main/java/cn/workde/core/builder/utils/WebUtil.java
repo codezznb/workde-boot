@@ -113,7 +113,7 @@ public class WebUtil {
 			if (response.isCommitted()) {
 				return;
 			}
-			final OutputStream outputStream = (OutputStream)response.getOutputStream();
+			final OutputStream outputStream = response.getOutputStream();
 			if (inputStream == null) {
 				byte[] bytes;
 				if (object instanceof byte[]) {
@@ -124,6 +124,7 @@ public class WebUtil {
 						text = "";
 					} else if( object instanceof  Exception) {
 						text = ((Exception) object).getMessage();
+						System.out.println(text);
 						response.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
 					} else {
 						text = object.toString();

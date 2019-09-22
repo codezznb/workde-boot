@@ -99,9 +99,8 @@ public class IdeService {
 
 		for (final Map.Entry<String, Integer> entry : fileNames) {
 			final String fileName = entry.getKey();
-			if ("folder.json".equalsIgnoreCase(fileName)) {
-				continue;
-			}
+			if ("folder.json".equalsIgnoreCase(fileName)) continue;
+			if(".ds_store".equalsIgnoreCase(fileName)) continue;
 
 			final File file = new File(base, fileName);
 			if (!file.exists()) {
@@ -154,6 +153,145 @@ public class IdeService {
 			fileArray.put(fileObject);
 		}
 		WebUtil.send(response, new JSONObject().put("children", fileArray));
+	}
+
+	public void addFrame(final HttpServletRequest request, final HttpServletResponse response) throws Exception {
+		final String name = request.getParameter("name");
+		final String title = request.getParameter("title");
+		final String iconCls = request.getParameter("iconCls");
+		final File path = new File(request.getParameter("path"));
+		final String frameType = request.getParameter("frameType");
+		if(!FileUtil.isAncestor(Builder.getInstance().getModuleFolder(), path)) {
+			throw new Exception("模块文件必须创建于模块目录.");
+		}
+
+		if("crud".equals(frameType)) {
+			addCRUDFrame(name, title, iconCls, path, request.getParameter("tableName"), request.getParameter("keyField"), request.getParameter("codeField"), request.getParameter("nameField"), Boolean.parseBoolean(request.getParameter("dialog")), Boolean.parseBoolean(request.getParameter("hasUpload")));
+		}else if (frameType != null && frameType.startsWith("x")) {
+			addSimpleFrame(name, title, iconCls, path, frameType.substring(1));
+		}
+	}
+
+	private void addCRUDFrame(final String name, final String title, final String iconCls, final File path, final String tableName, final String keyField, String codeField, String nameField, final boolean isDialog, final boolean hasUpload) throws Exception {
+		final File destFolder = new File(path, name);
+		final File destModule = new File(path, name + ".xwl");
+
+		if(destModule.exists()) throw new RuntimeException("模块“" + name + ".xwl”已经存在.");
+		if(destFolder.exists()) throw new RuntimeException("目录“" + name + ".xwl”已经存在.");
+
+		if(!StringUtil.isEmpty(codeField) && StringUtil.isEmpty(nameField)) {
+			nameField = codeField;
+		}
+
+		File sourcePath;
+		if(isDialog) {
+			if(hasUpload) sourcePath = new File(Builder.getInstance().getProjectPath(), "system/template/dialogEditFile");
+			else sourcePath = new File(Builder.getInstance().getProjectPath(), "system/template/dialogEdit");
+		}else {
+			sourcePath = new File(Builder.getInstance().getProjectPath(), "system/template/gridEdit");
+		}
+		FileUtil.syncCopyA(new File(sourcePath, "main.xwl"), destModule);
+		FileUtil.syncCopyFiles(new File(sourcePath, "main"), destFolder);
+
+		File file = new File(path, "folder.json");
+		JSONObject json = JsonUtil.readObject(file);
+		final JSONArray array = json.optJSONArray("index");
+		array.put(name + ".xwl");
+		array.put(name);
+		FileUtil.syncSave(file, json.toString());
+		file = new File(destFolder, "folder.json");
+		json = JsonUtil.readObject(file);
+		json.put("title", title);
+		FileUtil.syncSave(file, json.toString());
+		final String baseUrl = String.valueOf(FileUtil.getModuleUrl(destModule)) + "/";
+		String content = FileUtil.readString(destModule);
+		json = new JSONObject();
+		json.put("selectUrl", baseUrl + "select");
+		json.put("searchUrl", baseUrl+ "search");
+		json.put("title", title);
+		json.put("iconCls", iconCls);
+		if (isDialog) {
+			json.put("insertUrl", baseUrl + "insert");
+			json.put("updateUrl", baseUrl + "update");
+			json.put("deleteUrl", baseUrl + "delete");
+		} else {
+			json.put("saveUrl", baseUrl + "save");
+		}
+		json.put("nameField", nameField);
+		json.put("codeField", codeField);
+		final boolean emptyCodeField = StringUtil.isEmpty(codeField);
+		final boolean hasSearch = !emptyCodeField || !StringUtil.isEmpty(nameField);
+		if (hasSearch) {
+			if (emptyCodeField) {
+				json.put("searchKeyField", nameField);
+			}
+			else {
+				json.put("searchKeyField", codeField);
+				json.put("codeFieldExp", codeField + ", ");
+			}
+		}
+		content = StringUtil.replaceParams(json, content);
+		final JSONObject module = new JSONObject(content);
+		final JSONArray mainBar = module.getJSONArray("children").getJSONObject(0).optJSONArray("children").getJSONObject((int)(isDialog ? 1 : 0)).optJSONArray("children").getJSONObject(0).optJSONArray("children");
+		if (hasSearch) {
+			if (emptyCodeField) {
+				final JSONObject comboNode = mainBar.getJSONObject(isDialog ? 4 : 5);
+				final JSONObject configs = comboNode.getJSONObject("configs");
+				configs.remove("tpl");
+				configs.put("emptyText", "名称");
+				json.put("whereClause", " where " + nameField + " like {?searchText?}");
+			}
+			else {
+				json.put("whereClause", " where " + codeField + " like {?searchText?} or " + nameField + " like {?searchText?}");
+			}
+		} else {
+			if (!isDialog) mainBar.remove(6);
+			mainBar.remove(5);
+			mainBar.remove(4);
+			if (isDialog) {
+				mainBar.remove(3);
+			}
+			new File(destFolder, "search.xwl").delete();
+		}
+		FileUtil.syncSave(destModule, module.toString());
+		json.put("tableName", tableName);
+		json.put("keyField", keyField);
+		if (hasSearch) {
+			file = new File(destFolder, "search.xwl");
+			FileUtil.syncSave(file, StringUtil.replaceParams(json, FileUtil.readString(file)));
+		}
+		file = new File(destFolder, "select.xwl");
+		FileUtil.syncSave(file, StringUtil.replaceParams(json, FileUtil.readString(file)));
+		if (isDialog) {
+			file = new File(destFolder, "delete.xwl");
+			FileUtil.syncSave(file, StringUtil.replaceParams(json, FileUtil.readString(file)));
+			file = new File(destFolder, "insert.xwl");
+			FileUtil.syncSave(file, StringUtil.replaceParams(json, FileUtil.readString(file)));
+			file = new File(destFolder, "update.xwl");
+			FileUtil.syncSave(file, StringUtil.replaceParams(json, FileUtil.readString(file)));
+		} else {
+			file = new File(destFolder, "save.xwl");
+			FileUtil.syncSave(file, StringUtil.replaceParams(json, FileUtil.readString(file)));
+		}
+	}
+
+	private void addSimpleFrame(final String name, final String title, final String iconCls, final File path, final String baseUrl) throws Exception {
+		final File destModule = new File(path, String.valueOf(name) + ".xwl");
+		final File sourcePath = new File(Builder.getInstance().getProjectPath(), "system/template/" + baseUrl);
+		if(destModule.exists()) throw new RuntimeException("模块“" + name + ".xwl”已经存在.");
+		FileUtil.syncCopyA(new File(sourcePath, "main.xwl"), destModule);
+		final File file = new File(path, "folder.json");
+		JSONObject json = JsonUtil.readObject(file);
+		final JSONArray array = json.optJSONArray("index");
+		array.put(name + ".xwl");
+		array.put(name);
+		FileUtil.syncSave(file, json.toString());
+		String content = FileUtil.readString(destModule);
+		json = new JSONObject();
+		json.put("title", title);
+		json.put("iconCls", iconCls);
+		content = StringUtil.replaceParams(json, content);
+		FileUtil.syncSave(destModule, content);
 	}
 
 	private void getBaseList(final HttpServletRequest request, final HttpServletResponse response) throws Exception {

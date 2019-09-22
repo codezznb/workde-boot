@@ -3,6 +3,7 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
     DateUtil = Packages.cn.workde.core.builder.utils.DateUtil,
     WebUtil = Packages.cn.workde.core.builder.utils.WebUtil,
     SysUtil = Packages.cn.workde.core.builder.utils.SysUtil,
+    DbUtil = Packages.cn.workde.core.builder.utils.DbUtil,
     System = java.lang.System,
     StringBuilder = java.lang.StringBuilder,
     File = java.io.File,
@@ -29,6 +30,20 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
                 sendObject: function(object){
                     WebUtil.sendObject(response, object);
                 },
+                /**
+                 * 遍历对象，并把对象中每个条目的值设置到request的attribute对象，attribute名称为对象中条目的名称。
+                 * 如果首个参数不是对象，将以第1个参数为名称，第2个参数为值，设置到attribute。
+                 * @param {Object/String/Map/JSONObject} object 设置的对象。
+                 * @param {Object} [val] 如果object为字符串，该项为设置的值。
+                 */
+                set: function(object, val) {
+                    if (Wb.isObject(object) || ((SysUtil.isMap(object) || object instanceof JSONObject) && object.toMap().entrySet)) {
+                        Wb.each(object, function(k, v) {
+                            request.setAttribute(k, v);
+                        });
+                    } else if (object)
+                        request.setAttribute(object, val);
+                },
                 get: function(name, returnString) {
                     if(name == undefined) {
                         var jo = WebUtil.fetch(request),
@@ -41,7 +56,7 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
                         return returnString ? WebUtil.fetch(request, name) : WebUtil.fetchObject(request, name);
                     }
                 },
-                query: function(sql, config, returnScript) {
+                output: function(sql, config, returnScript) {
                     var configText, newConfig, dp = new Packages.cn.workde.core.builder.controls.DpControl();
                     dp.request = request;
                     dp.response = response;
@@ -117,20 +132,6 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
             request.setAttribute('sysx.resp', response);
             return app;
 
-        },
-        /**
-         * 遍历对象，并把对象中每个条目的值设置到request的attribute对象，attribute名称为对象中条目的名称。
-         * 如果首个参数不是对象，将以第1个参数为名称，第2个参数为值，设置到attribute。
-         * @param {Object/String/Map/JSONObject} object 设置的对象。
-         * @param {Object} [val] 如果object为字符串，该项为设置的值。
-         */
-        set: function(object, val) {
-            if (Wb.isObject(object) || ((SysUtil.isMap(object) || object instanceof JSONObject) && object.toMap().entrySet)) {
-                Wb.each(object, function(k, v) {
-                    request.setAttribute(k, v);
-                });
-            } else if (object)
-                request.setAttribute(object, val);
         },
         /**
          * 把对象转换成以字符串形式表示的值。

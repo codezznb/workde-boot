@@ -1,0 +1,1 @@
+{"hidden":false,"children":[{"configs":{"itemId":"module","serverScript":"app.set('searchText', (app.get('query') || '') + '%');\napp.output('select id, title from dt_article where title like {?searchText?} order by title');"},"expanded":true,"children":[],"type":"module"}],"roles":{"demo":1},"title":"搜索","iconCls":"","inframe":false,"pageLink":""}
