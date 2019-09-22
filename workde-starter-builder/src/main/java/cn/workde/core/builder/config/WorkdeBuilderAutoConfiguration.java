@@ -6,6 +6,7 @@ import cn.workde.core.builder.engine.ScriptBuffer;
 import cn.workde.core.builder.engine.service.BuilderService;
 import cn.workde.core.builder.engine.service.ControlService;
 import cn.workde.core.builder.engine.service.IdeService;
+import cn.workde.core.builder.engine.service.PortalService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
@@ -47,4 +48,9 @@ public class WorkdeBuilderAutoConfiguration {
 
 	@Bean
 	public IdeService ideService() { return new IdeService(); }
+
+	@Bean
+	public PortalService portalService() {
+		return new PortalService();
+	}
 }

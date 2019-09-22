@@ -119,6 +119,20 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
 
         },
         /**
+         * 遍历对象，并把对象中每个条目的值设置到request的attribute对象，attribute名称为对象中条目的名称。
+         * 如果首个参数不是对象，将以第1个参数为名称，第2个参数为值，设置到attribute。
+         * @param {Object/String/Map/JSONObject} object 设置的对象。
+         * @param {Object} [val] 如果object为字符串，该项为设置的值。
+         */
+        set: function(object, val) {
+            if (Wb.isObject(object) || ((SysUtil.isMap(object) || object instanceof JSONObject) && object.toMap().entrySet)) {
+                Wb.each(object, function(k, v) {
+                    request.setAttribute(k, v);
+                });
+            } else if (object)
+                request.setAttribute(object, val);
+        },
+        /**
          * 把对象转换成以字符串形式表示的值。
          * @param {Object} object 转换的对象。
          * @return {String} 字符串形式表示的值。

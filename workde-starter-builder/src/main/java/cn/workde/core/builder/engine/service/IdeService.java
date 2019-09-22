@@ -168,7 +168,7 @@ public class IdeService {
 		WebUtil.send(response, list);
 	}
 
-	private List<Map.Entry<String, Integer>> getSortedFile(final File dir) throws Exception {
+	public List<Map.Entry<String, Integer>> getSortedFile(final File dir) throws Exception {
 		final Map<String, Integer> jsonMap = new HashMap<String, Integer>();
 		final String[] fileNames = dir.list();
 		SortUtil.sort(fileNames);

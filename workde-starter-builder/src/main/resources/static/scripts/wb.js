@@ -3990,9 +3990,9 @@ var Wb = {
 			return
 		}
 		var PortalVars = {};
-		PortalVars.xwlCall = Ext.String.startsWith(PortalConfigs.url, "m?xwl=");
+		PortalVars.xwlCall = Ext.String.startsWith(PortalConfigs.url, "builder?xwl=");
 		if (PortalVars.xwlCall) {
-			PortalVars.path = PortalConfigs.url.substring(6) + ".xwl"
+			PortalVars.path = PortalConfigs.url.substring(12) + ".xwl"
 		} else {
 			PortalVars.path = PortalConfigs.url
 		}
@@ -4111,7 +4111,7 @@ var Wb = {
 			} else {
 				var doRequest = function() {
 					if (PortalVars.path && PortalVars.path.indexOf("?") == -1 && Ext.String.endsWith(PortalVars.path, ".xwl")) {
-						PortalVars.requestUrl = "m?xwl=" + PortalVars.path.slice(0, -4)
+						PortalVars.requestUrl = "builder?xwl=" + PortalVars.path.slice(0, -4)
 					} else {
 						PortalVars.requestUrl = PortalVars.path
 					}
@@ -4231,6 +4231,7 @@ var Wb = {
 				return PortalVars.card
 			}
 		} else {
+		    console.log(PortalConfigs);
 			if (Ext.util.Format.uppercase(PortalConfigs.method) == "GET" && !PortalConfigs.params) {
 				window.open(PortalConfigs.url)
 			} else {

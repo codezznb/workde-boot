@@ -66,6 +66,23 @@ public class ModuleBuffer {
 		}
 	}
 
+	public boolean canDisplay(final File file) {
+		if(file.isDirectory()) {
+			final File configFile = new File(file, "folder.json");
+			if(configFile.exists()) {
+				final JSONObject content = JsonUtil.readObject(configFile);
+				if(Boolean.TRUE.equals(content.opt("hidden"))) {
+					return false;
+				}
+				return true;
+			}
+		}else if(file.getName().endsWith(".xwl")) {
+			return true;
+		}
+
+		return false;
+	}
+
 	@PostConstruct
 	public void initialize() {
 		this.buffer = new ConcurrentHashMap<>();
