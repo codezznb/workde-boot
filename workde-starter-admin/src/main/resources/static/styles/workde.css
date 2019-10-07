@@ -1,3 +1,6 @@
+.layui-btn {
+    background-color: #428bca!important;
+}
 .layui-form-onswitch {
     background-color: #428bca!important;
     border-color: #428bca!important;
@@ -110,4 +113,45 @@
     background: #fff;
     margin-left: 20px;
     padding: 10px 20px;
+}
+
+.workde-tit {
+    padding-top: 0px;
+    padding-bottom: 18px;
+    padding-left: 20px;
+}
+
+.workde-tit h3 {
+    font-size: 18px;
+    color: #666666;
+    width: auto;
+    float: left;
+    margin-right: 25px;
+    line-height: 35px;
+    padding-left: 6px;
+}
+
+.workde-form-group {
+    padding-left: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    border-bottom: 1px #DFDFDF solid;
+    border-top: 1px #DFDFDF solid;
+    background-color: #F5F7F8;
+    height: 50px;
+    line-height: 50px;
+    margin-bottom: 20px;
+    color: #666666;
+}
+
+.workde-main .workde-form {
+    width: 900px;
+}
+
+.workde-main .layui-form .layui-form-label {
+    width: 150px;
+}
+
+.workde-main .layui-form .layui-input-block {
+    margin-left: 180px;
 }

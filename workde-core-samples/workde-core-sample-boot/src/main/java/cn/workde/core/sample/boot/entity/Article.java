@@ -20,14 +20,14 @@ public class Article extends BaseEntity {
 	 * 频道ID
 	 */
 	@ApiModelProperty("频道id(6:公告 7:政策 8:发文 14:热门服务)")
-	@FieldDefine(title = "频道", listEnable = false)
+	@FieldDefine(label = "频道", listEnable = false, help = "6:公告 7:政策 8:发文 14:热门服务", required = true)
 	private Integer channelId;
 
 	/**
 	 * 类别ID
 	 */
 	@ApiModelProperty("类别id(3:公告 40:政策 29:发文 663:热门服务)")
-	@FieldDefine(title = "类别", listEnable = false)
+	@FieldDefine(label = "类别", listEnable = false, required = true)
 	private Integer categoryId;
 
 	/**
@@ -39,7 +39,7 @@ public class Article extends BaseEntity {
 	 * 标题
 	 */
 	@ApiModelProperty("标题")
-	@FieldDefine(title = "标题", width = "15%")
+	@FieldDefine(label = "标题", width = "20%")
 	private String title;
 
 	/**
@@ -76,63 +76,63 @@ public class Article extends BaseEntity {
 	 * 内容摘要
 	 */
 	@ApiModelProperty("内容摘要")
-	@FieldDefine(title = "内容摘要", listEnable = false)
+	@FieldDefine(label = "内容摘要", listEnable = false, group = 2)
 	private String zhaiyao;
 
 	/**
 	 * 详细内容
 	 */
 	@ApiModelProperty("详细内容")
-	@FieldDefine(title = "详细内容", listEnable = false)
+	@FieldDefine(label = "详细内容", listEnable = false, group = 2)
 	private String content;
 
 	/**
 	 * 排序
 	 */
 	@ApiModelProperty("排序")
-	@FieldDefine(title = "排序")
+	@FieldDefine(label = "排序")
 	private Integer sortId;
 
 	/**
 	 * 浏览次数
 	 */
 	@ApiModelProperty("浏览次数")
-	@FieldDefine(title = "浏览次数")
+	@FieldDefine(label = "浏览次数")
 	private Integer click;
 
 	/**
 	 * 状态0正常1未审核2锁定
 	 */
 	@ApiModelProperty("状态0正常1未审核2锁定")
-	@FieldDefine(title = "状态")
+	@FieldDefine(label = "状态")
 	private Integer status;
 
 	/**
 	 * 是否允许评论
 	 */
 	@ApiModelProperty("是否允许评论")
-	@FieldDefine(title = "是否允许评论", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "是否允许评论", listTemplet = Templets.TEMPLET_SWITCH_STATE)
 	private Integer isMsg;
 
 	/**
 	 * 是否置顶
 	 */
 	@ApiModelProperty("是否置顶")
-	@FieldDefine(title = "是否置顶", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "是否置顶", listTemplet = Templets.TEMPLET_SWITCH_STATE)
 	private Integer isTop;
 
 	/**
 	 * 是否推荐
 	 */
 	@ApiModelProperty("是否推荐")
-	@FieldDefine(title = "是否推荐", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "是否推荐", listTemplet = Templets.TEMPLET_SWITCH_STATE)
 	private Integer isRed;
 
 	/**
 	 * 是否热门
 	 */
 	@ApiModelProperty("是否热门")
-	@FieldDefine(title = "是否热门", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "是否热门", listTemplet = Templets.TEMPLET_SWITCH_STATE)
 	private Integer isHot;
 
 	/**
@@ -151,7 +151,7 @@ public class Article extends BaseEntity {
 	 * 用户名
 	 */
 	@ApiModelProperty("用户名")
-	@FieldDefine(title = "用户名", listEnable = false)
+	@FieldDefine(label = "用户名", listEnable = false)
 	private String userName;
 
 	private Integer userId;

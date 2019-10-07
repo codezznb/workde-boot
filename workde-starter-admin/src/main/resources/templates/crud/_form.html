@@ -1,0 +1,8 @@
+<#list 1..mm.groupSize as idx>
+    <div class="workde-form-group">${mm.getGroupName(idx)}</div>
+    <div class="workde-form">
+        <#list mm.getNewFormFields(idx) as field>
+            <@ui.field field />
+        </#list>
+    </div>
+</#list>

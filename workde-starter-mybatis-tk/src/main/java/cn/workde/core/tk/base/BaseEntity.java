@@ -20,8 +20,8 @@ public class BaseEntity implements Serializable {
      * 该注解需要保留，用于 tk.mybatis 回显 ID
      */
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+   // @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private String id;
 
     /**
      * 格式化日期，由于是北京时间（我们是在东八区），所以时区 +8

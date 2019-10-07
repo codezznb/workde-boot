@@ -11,7 +11,7 @@ import cn.workde.core.sample.boot.modules.menu.ArticleModuleListener;
  * @date 2019/9/9 12:28 AM
  */
 @AdminController(define = ArticleDefine.class, path = "sys/article", adminMenus = {
-	@AdminMenu(groupId = ArticleModuleListener.MENU_GROUP_CONTENT, text = "内容管理", methodName = "index")
+	@AdminMenu(groupId = ArticleModuleListener.MENU_GROUP_CONTENT, text = "内容管理", methodName = "list")
 })
 public class SysArticleController extends ModuleController {
 }

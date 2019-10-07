@@ -1,5 +1,7 @@
 package cn.workde.core.builder.config;
 
+import cn.workde.core.base.properties.WorkdeProperties;
+import cn.workde.core.builder.controller.BuilderController;
 import cn.workde.core.builder.engine.ControlBuffer;
 import cn.workde.core.builder.engine.ModuleBuffer;
 import cn.workde.core.builder.engine.ScriptBuffer;
@@ -52,5 +54,10 @@ public class WorkdeBuilderAutoConfiguration {
 	@Bean
 	public PortalService portalService() {
 		return new PortalService();
+	}
+
+	@Bean
+	public BuilderController builderController() {
+		return new BuilderController();
 	}
 }

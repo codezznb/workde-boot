@@ -2,6 +2,7 @@ package cn.workde.core.tk.base;
 
 import cn.workde.core.base.utils.ObjectUtils;
 import cn.workde.core.base.utils.StringUtils;
+import cn.workde.core.base.utils.IdUtils;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,7 +43,7 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
         return mapper.selectOne(entity);
     }
 
-    public T byId(Long id) { return mapper.selectByPrimaryKey(id); }
+    public T byId(String id) { return mapper.selectByPrimaryKey(id); }
 
     public T save(T entity) {
         int result = 0;
@@ -51,14 +52,15 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
 
         // 创建
         if (entity.getId() == null) {
-
+			entity.setId(IdUtils.getId().toString());
             entity.setCreated(currentDate);
 
             /**
              * 用于自动回显 ID，领域模型中需要 @ID 注解的支持
              * {@link AbstractBaseDomain}
              */
-            result = mapper.insertUseGeneratedKeys(entity);
+            //result = mapper.insertUseGeneratedKeys(entity);
+			result = mapper.insert(entity);
         }
 
         // 更新
@@ -116,7 +118,7 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
 		mapper.delete(entity);
 	}
 
-	public void deleteById(Long id) {
+	public void deleteById(String id) {
 		mapper.deleteByPrimaryKey(id);
 	}
 

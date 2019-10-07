@@ -142,6 +142,22 @@ var builder = Packages.cn.workde.core.builder.engine.Builder.getInstance(),
             return toString.call(object);
         },
         /**
+         * 判断值是否为空。如果值为null, undefined, 空字符串，空对象或空数组，则为空。
+         * @param {Object} value 需要判断的值，可以为字符串或数组等。
+         * @return {Boolean} 如果为空则返回true，否则返回false。
+         */
+        isEmpty: function(value) {
+            if (Wb.isObject(value)) {
+                for (var key in value) {
+                    if (value.hasOwnProperty(key)) {
+                        return false;
+                    }
+                }
+                return true;
+            } else
+                return value === null || value === undefined || value.length === 0;
+        },
+        /**
          * 判断是否是JS字符串。
          * @return {Boolean} true是，false不是。
          */

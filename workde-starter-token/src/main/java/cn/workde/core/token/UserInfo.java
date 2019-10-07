@@ -14,7 +14,7 @@ import java.util.Map;
 public class UserInfo implements Serializable {
 
 	@ApiModelProperty(value = "用户ID")
-	private Long id;
+	private String id;
 	@ApiModelProperty(value = "令牌")
 	private String accessToken;
 	@ApiModelProperty(value = "令牌类型")

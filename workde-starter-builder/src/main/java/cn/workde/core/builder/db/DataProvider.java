@@ -96,8 +96,7 @@ public class DataProvider {
 			buf.append(",\"metaData\":{\"fields\":");
 			if (isTree) {
 				buf.append(this.mergeFields(sysMeta, DataProvider.treeMeta).toString());
-			}
-			else {
+			} else {
 				buf.append(sysMeta.toString());
 			}
 			if (!StringUtil.isEmpty(this.fieldsTag)) {

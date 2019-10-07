@@ -18,6 +18,16 @@ public class WorkdeProperties {
 
     private WorkdeAsyncProperties workdeAsyncProperties;
 
+	/**
+	 * 集群环境下任意两位字符的服务器编号
+	 */
+	private String serverId = "00";
+
+	/**
+	 * workde builder project 路径
+	 */
+	private String projectPath;
+
     /**
      * 装载自定义配置workde.prop.xxx
      */

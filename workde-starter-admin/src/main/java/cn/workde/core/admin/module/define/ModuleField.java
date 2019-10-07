@@ -29,8 +29,6 @@ public class ModuleField {
 		this.setFieldDefine(fieldDefine);
 		this.setName(field.getName());
 		this.setOrder(fieldDefine.order());
-		this.setNewOrder(fieldDefine.newOrder());
-		this.setEdtOrder(fieldDefine.edtOrder());
 	}
 
 }

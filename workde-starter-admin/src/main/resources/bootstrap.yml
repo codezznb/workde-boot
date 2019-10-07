@@ -1,0 +1,20 @@
+spring:
+  freemarker:
+    cache: false
+    settings:
+      template_update_delay: 1ms
+      tag_syntax: auto_detect
+      defaultEncoding: UTF-8
+      url_escaping_charset: UTF-8
+      locale: zh_CN
+      boolean_format: true, false
+      datetime_format: yyyy-MM-dd HH:mm:ss
+      date_format: yyyy-MM-dd
+      time_format: HH:mm:ss
+      number_format: 0.######
+      whitespace_stripping: true
+      classic_compatible: true
+      auto_import: classpath:/templates/ftl/index.ftl
+      object_wrapper: freemarker.ext.beans.BeansWrapper
+    suffix: .html
+    template-loader-path: classpath:/templates/

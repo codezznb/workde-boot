@@ -19,25 +19,25 @@ import java.time.LocalDateTime;
 @Table(name="yd_user")
 public class User extends BaseEntity {
 
-	@FieldDefine(title = "手机号", width = "15%")
+	@FieldDefine(label = "手机号", width = "15%")
 	public String phone;
 
-	@FieldDefine(title = "密码", listEnable = false)
+	@FieldDefine(label = "密码", listEnable = false)
 	private String password;
 
-	@FieldDefine(title = "注册IP")
+	@FieldDefine(label = "注册IP")
 	private String regRemote;
 
-	@FieldDefine(title = "登录时间", width = "15%")
+	@FieldDefine(label = "登录时间", width = "15%")
 	private LocalDateTime loginAt;
 
-	@FieldDefine(title = "登录次数")
+	@FieldDefine(label = "登录次数")
 	private Integer loginCount;
 
-	@FieldDefine(title = "登录IP")
+	@FieldDefine(label = "登录IP")
 	private String loginRemote;
 
-	@FieldDefine(title = "状态", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "状态", listTemplet = Templets.TEMPLET_SWITCH_STATE)
 	private Integer state;
 
 	@Tolerate

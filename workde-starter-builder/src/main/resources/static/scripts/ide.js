@@ -2559,7 +2559,7 @@ var Ide = {
                         e = d.modifyDate;
                         break
                 }
-                Wb.download("builder?xwl=dev/ide/export-modules", {
+                Wb.download("builder?xwl=dev/ide/export-engine", {
                     filename: d.filename,
                     fileRange: a(),
                     lastModified: e
@@ -2574,7 +2574,7 @@ var Ide = {
             single: true,
             success: function(a) {
                 a.upload({
-                    url: "builder?xwl=dev/ide/import-modules",
+                    url: "builder?xwl=dev/ide/import-engine",
                     iconCls: "import_icon",
                     title: "导入模块包",
                     success: function() {

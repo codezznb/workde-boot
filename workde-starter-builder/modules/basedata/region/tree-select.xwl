@@ -1,0 +1,1 @@
+{"hidden":false,"children":[{"configs":{"itemId":"module"},"expanded":true,"children":[{"configs":{"itemId":"dataprovider1","sql":"select * from yd_region where parent_id=10000 order by id"},"expanded":false,"children":[],"type":"dataprovider"}],"type":"module"}],"roles":{"default":1},"title":"树查询","iconCls":"","inframe":false,"pageLink":""}

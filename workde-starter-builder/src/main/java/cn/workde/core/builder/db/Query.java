@@ -65,7 +65,7 @@ public class Query {
 		if (isCall) this.statement = connection.prepareCall(this.formattedSql);
 		else this.statement = connection.prepareStatement(this.formattedSql, Statement.RETURN_GENERATED_KEYS);
 
-		WebUtil.setObject(request, SysUtil.getId(), this.statement);
+		//WebUtil.setObject(request, SysUtil.getId(), this.statement);
 		regParameters();
 
 		if (hasArray) {
@@ -78,7 +78,7 @@ public class Query {
 
 			if ("query".equals(this.type)) {
 				result = this.statement.executeQuery();
-				WebUtil.setObject(request, SysUtil.getId(), result);
+				//WebUtil.setObject(request, SysUtil.getId(), result);
 			}else if("update".equals(this.type)) {
 				final int affectedRows = this.statement.executeUpdate();
 				result = affectedRows;
@@ -90,7 +90,7 @@ public class Query {
 						this.loadParams = "none";
 					}
 					result = this.statement.getResultSet();
-					WebUtil.setObject(request, SysUtil.getId(), result);
+					//WebUtil.setObject(request, SysUtil.getId(), result);
 				}else {
 					if (autoLoadParams) {
 						this.loadParams = "load";
@@ -334,7 +334,7 @@ public class Query {
 			if (param[2] != null) {
 				final Object object = DbUtil.getObject(st, i + 1, (int)param[1]);
 				if (object instanceof ResultSet) {
-					WebUtil.setObject(this.request, SysUtil.getId(), object);
+					//WebUtil.setObject(this.request, SysUtil.getId(), object);
 				}
 				map.put((String)param[0], object);
 			}

@@ -16,7 +16,6 @@ public class UserDefine extends ModuleDefine {
 	public UserDefine() {
 		this.setModuleTitle("用户");
 		this.setModel(User.class);
-		this.setListNumberTitle("序号");
 		this.setBaseService(UserService.class);
 		this.setModuleLogic(UserLogic.class);
 	}

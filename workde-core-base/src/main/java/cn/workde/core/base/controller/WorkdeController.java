@@ -47,7 +47,7 @@ public class WorkdeController {
 
 	protected Integer getPageSize() {
 		String limit = getRequest().getParameter("limit");
-		if(StringUtils.isEmpty(limit)) return 20;
+		if(StringUtils.isEmpty(limit)) return 10;
 		return Convert.toInt(limit);
 	}
 }

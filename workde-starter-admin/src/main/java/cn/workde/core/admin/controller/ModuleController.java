@@ -1,6 +1,5 @@
 package cn.workde.core.admin.controller;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.bean.copier.CopyOptions;
 import cn.workde.core.admin.module.ModuleMeta;
@@ -9,7 +8,6 @@ import cn.workde.core.admin.module.logic.IModuleLogic;
 import cn.workde.core.admin.module.service.ModuleService;
 import cn.workde.core.admin.properties.WorkdeAdminProperties;
 import cn.workde.core.admin.web.annotation.AdminController;
-import cn.workde.core.auto.service.AutoService;
 import cn.workde.core.base.controller.WorkdeController;
 import cn.workde.core.base.result.Result;
 import cn.workde.core.base.utils.JsonUtils;
@@ -56,46 +54,39 @@ public class ModuleController extends WorkdeController {
 		return baseService;
 	}
 
-	@RequestMapping(value = "", method = RequestMethod.GET)
-	public ModelAndView index() {
-		AdminController adminController = getAdminController();
-		String modulePath = PathUtils.normalizePath(workdeAdminProperties.getContextPath() + PathUtils.normalizePath(adminController.path()));
-		ModelAndView mv = new ModelAndView("crud/index");
-		mv.addObject("modulePath", modulePath);
+	@GetMapping(path = "list")
+	@ApiOperation(value = "列表")
+	public ModelAndView list(){
+		ModuleDefine moduleDefine = getModuleDefine();
+		ModuleMeta moduleMeta = moduleService.getModuleMeta(moduleDefine);
+		BaseService baseService = getBaseService();
+		ModelAndView mv = new ModelAndView("crud/list");
+		mv.addObject("mm", moduleMeta);
+		if(moduleDefine.getPage()) {
+			mv.addObject("value", baseService.page(getPageNum(), getPageSize()));
+		}else {
+			mv.addObject("value", baseService.all());
+		}
 		return mv;
 	}
 
-	@GetMapping(path = "meta")
-	@ApiOperation(value = "模块结构")
-	public Result<ModuleMeta> meta() {
-		ModuleDefine moduleDefine = getModuleDefine();
-		return Result.success(moduleService.getModuleMeta(moduleDefine));
-	}
-
-	@GetMapping(path = "list")
-	@ApiOperation(value = "列表")
-	public Result list(){
-		BaseService baseService = getBaseService();
-		baseService.page(getPageNum(), getPageSize());
-		if(getModuleDefine().getPage()) {
-			return Result.success(baseService.page(getPageNum(), getPageSize()));
-		}
-		return Result.success(baseService.all());
-	}
-
-	@GetMapping(path = "new_default")
-	@ApiOperation(value = "默认值")
-	public Result newDefault() {
+	@RequestMapping(value = "new", method = RequestMethod.GET)
+	public ModelAndView create() {
 		IModuleLogic moduleLogic = getModuleLogic();
-		if(moduleLogic != null) return Result.success(moduleLogic.getNewDefultValue());
-		return Result.success();
+		BaseEntity model = null;
+		if(moduleLogic != null) model = (BaseEntity) moduleLogic.getNewDefultValue();
+		ModuleDefine moduleDefine = getModuleDefine();
+		ModuleMeta moduleMeta = moduleService.getModuleMeta(moduleDefine, model);
+		ModelAndView mv = new ModelAndView("crud/create");
+		mv.addObject("mm", moduleMeta);
+		return mv;
 	}
 
 	@PostMapping(path = "new")
 	@ApiOperation(value = "保存")
-	public Result create(@RequestBody String body){
+	public Result save(@RequestBody String body){
 		ModuleDefine moduleDefine = getModuleDefine();
-		BaseEntity formModel = (BaseEntity) JsonUtils.parse(body, moduleDefine.getModel());
+		BaseEntity formModel = JsonUtils.parse(body, moduleDefine.getModel());
 		IModuleLogic moduleLogic = getModuleLogic();
 		if(moduleLogic != null) moduleLogic.beforeInsert(formModel);
 		BaseService baseService = getBaseService();
@@ -106,16 +97,21 @@ public class ModuleController extends WorkdeController {
 
 	@GetMapping(path = "{id}")
 	@ApiOperation(value = "修改")
-	public Result edit(@PathVariable("id") Long id){
-		BaseEntity result = getBaseService().byId(id);
-		return Result.success(result);
+	public ModelAndView edit(@PathVariable("id") String id){
+		BaseEntity model = getBaseService().byId(id);
+		ModuleDefine moduleDefine = getModuleDefine();
+		ModuleMeta moduleMeta = moduleService.getModuleMeta(moduleDefine, model);
+		ModelAndView mv = new ModelAndView("crud/edit");
+		mv.addObject("mm", moduleMeta);
+		mv.addObject("model", model);
+		return mv;
 	}
 
 	@PutMapping(path = "{id}")
 	@ApiOperation(value = "更新")
-	public Result update(@PathVariable("id") Long id, @RequestBody String body){
+	public Result update(@PathVariable("id") String id, @RequestBody String body){
 		BaseEntity updateModel = getBaseService().byId(id);
-		BaseEntity formModel = (BaseEntity) JsonUtils.parse(body, getModuleDefine().getModel());
+		BaseEntity formModel = JsonUtils.parse(body, getModuleDefine().getModel());
 		BeanUtil.copyProperties(formModel, updateModel, CopyOptions.create().setIgnoreNullValue(true));
 		IModuleLogic moduleLogic = getModuleLogic();
 		if(moduleLogic != null) moduleLogic.beforeUpdate(formModel);
@@ -126,7 +122,7 @@ public class ModuleController extends WorkdeController {
 
 	@DeleteMapping(path = "{id}")
 	@ApiOperation(value = "删除")
-	public Result delete(@PathVariable("id") Long id){
+	public Result delete(@PathVariable("id") String id){
 		BaseEntity deleteModel = getBaseService().byId(id);
 		IModuleLogic moduleLogic = getModuleLogic();
 		if(moduleLogic != null) moduleLogic.beforeDelete(deleteModel);

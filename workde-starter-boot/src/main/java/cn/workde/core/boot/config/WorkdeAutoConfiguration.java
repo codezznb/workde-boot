@@ -28,13 +28,14 @@ public class WorkdeAutoConfiguration {
 	@Bean
 	@ConditionalOnMissingBean
 	public Validator validator(){
-		log.info("【初始化配置-校验器】Bean：Validator ... 已初始化完毕。");
+		log.info("【初始化配置】Bean：Validator ... 已初始化完毕。");
 		return new Validator();
 	}
 
 	@Bean
 	@ConditionalOnMissingBean(SpringUtils.class)
 	public SpringUtils springUtils() {
+		log.info("【初始化配置】Bean：SpringUtils ... 已初始化完毕。");
 		return new SpringUtils();
 	}
 

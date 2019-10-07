@@ -1,10 +1,12 @@
 package cn.workde.core.admin.module;
 
+import cn.workde.core.admin.module.control.FormControl;
 import cn.workde.core.admin.module.define.ListField;
 import cn.workde.core.admin.module.define.ModuleDefine;
 import lombok.Data;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * @author zhujingang
@@ -12,6 +14,8 @@ import java.util.List;
  */
 @Data
 public class ModuleMeta {
+
+	private ModuleDefine moduleDefine;
 
 	private String moduleName;
 
@@ -23,11 +27,41 @@ public class ModuleMeta {
 
 	private List<ListField> fields;
 
+	private List<FormControl> newFields;
+
+	private List<FormControl> editFields;
 
 	public ModuleMeta(ModuleDefine moduleDefine) {
+		this.setModuleDefine(moduleDefine);
 		this.setModuleName(moduleDefine.getModel().getSimpleName());
 		this.setModuleTitle(moduleDefine.getModuleTitle());
 		this.setSize(moduleDefine.getTableSize());
 		this.setPage(moduleDefine.getPage());
 	}
+
+	public Integer getGroupSize() {
+		return moduleDefine.getFormGroups();
+	}
+
+	public String getGroupName(Integer groupIndex) {
+		return moduleDefine.getFormGroupName(groupIndex);
+	}
+
+	public List<FormControl> getNewFormFields(Integer groupIndex) {
+		if(getGroupSize() == 1) return newFields;
+		else {
+			List<FormControl> returnFields = newFields.stream().filter(field -> field.getGroup() == groupIndex).collect(Collectors.toList());
+			return returnFields;
+		}
+	}
+
+	public List<FormControl> getEdtFormFields(Integer groupIndex) {
+		if(getGroupSize() == 1) return editFields;
+		else {
+			List<FormControl> returnFields = editFields.stream().filter(field -> field.getGroup() == groupIndex).collect(Collectors.toList());
+			return returnFields;
+		}
+	}
+
+
 }

@@ -75,7 +75,7 @@ public class BaseLogic<T> implements IModuleLogic<T> {
 	 * @return
 	 */
 	@Override
-	public Map<String, Object> getNewDefultValue() {
+	public T getNewDefultValue() {
 		return null;
 	}
 }

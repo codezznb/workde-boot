@@ -1,8 +1,6 @@
 package cn.workde.core.admin.module.logic;
 
 
-import java.util.Map;
-
 /**
  * @author zhujingang
  * @date 2019/9/2 12:59 PM
@@ -19,6 +17,6 @@ public interface IModuleLogic<T> {
 	boolean beforeDelete(T deleted);
 	boolean afterDelete(T deleted);
 
-	Map<String, Object> getNewDefultValue();
+	T getNewDefultValue();
 
 }

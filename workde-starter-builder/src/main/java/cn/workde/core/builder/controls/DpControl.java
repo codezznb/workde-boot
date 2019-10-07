@@ -50,8 +50,6 @@ public class DpControl extends Control{
 
 		String type = this.gs("type");
 		final boolean autoPage = this.gb("autoPage", true);
-
-		final Connection connection = DbUtil.getConnection(request);
 		try {
 			if (type.isEmpty() && "1".equals(this.request.getParameter("_istree"))) {
 				type = "tree";

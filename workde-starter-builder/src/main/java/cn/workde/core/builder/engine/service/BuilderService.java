@@ -292,6 +292,9 @@ public class BuilderService {
 			if (className == null) {
 				control = new ExtControl();
 				isScriptControl = true;
+			} else if(className.equals("null")){
+				control = null;
+				isScriptControl = false;
 			}else {
 				if (className.indexOf(".") == -1) {
 					className = "cn.workde.core.builder.controls." + className;

@@ -163,11 +163,12 @@ public class TokenUtil {
 
 	public static UserInfo getUserInfo(HttpServletRequest request) {
 		Claims claims = getClaims(request);
+		System.out.println(claims);
 		if (claims == null) {
 			return null;
 		}
 
-		Long userId = Convert.toLong(claims.get(TokenConstant.USER_ID));
+		String userId = Convert.toStr(claims.get(TokenConstant.USER_ID));
 		String account = Convert.toStr(claims.get(TokenConstant.ACCOUNT));
 		Long expiresIn = claims.getExpiration().getTime();
 		UserInfo userInfo = new UserInfo();
@@ -187,8 +188,10 @@ public class TokenUtil {
 	 */
 	public static Claims getClaims(HttpServletRequest request) {
 		String auth = request.getHeader(TokenConstant.HEADER);
+		System.out.println(auth);
 		if (StringUtils.isNotBlank(auth)) {
 			String token = JwtUtil.getToken(auth);
+			System.out.println(token);
 			if (StringUtils.isNotBlank(token)) {
 				return parseJWT(token);
 			}

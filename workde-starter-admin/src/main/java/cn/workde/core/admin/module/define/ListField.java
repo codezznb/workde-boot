@@ -10,11 +10,9 @@ import lombok.Data;
 @Data
 public class ListField {
 
+	private String name;
 
-
-	private String field;
-
-	private String title;
+	private String label;
 
 	private String width;
 
@@ -25,8 +23,8 @@ public class ListField {
 	public ListField() { }
 
 	public ListField(String fieldName, FieldDefine fieldDefine) {
-		this.setField(fieldName);
-		this.setTitle(fieldDefine.title());
+		this.setName(fieldName);
+		this.setLabel(fieldDefine.label());
 		this.setWidth(fieldDefine.width());
 		this.setType(fieldDefine.listType());
 		this.setTemplet(fieldDefine.listTemplet());
@@ -34,23 +32,23 @@ public class ListField {
 
 	/**
 	 * 创建序号列
-	 * @param title
 	 * @return
 	 */
 	public static ListField createCheckboxField() {
 		ListField listField = new ListField();
+		listField.setWidth("10%");
 		listField.setType("checkbox");
 		return listField;
 	}
 
 	/**
 	 * 创建序号列
-	 * @param title
+	 * @param label
 	 * @return
 	 */
-	public static ListField createNumberField(String title) {
+	public static ListField createNumberField(String label) {
 		ListField listField = new ListField();
-		listField.setTitle(title);
+		listField.setLabel(label);
 		listField.setWidth("10%");
 		listField.setType("numbers");
 		return listField;

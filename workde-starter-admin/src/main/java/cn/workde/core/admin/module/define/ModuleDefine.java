@@ -1,9 +1,13 @@
 package cn.workde.core.admin.module.define;
 
+import cn.workde.core.admin.module.control.FormControl;
 import cn.workde.core.admin.module.logic.BaseLogic;
+import cn.workde.core.admin.web.annotation.FieldDefine;
 import cn.workde.core.tk.base.BaseEntity;
 import cn.workde.core.tk.base.BaseService;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author zhujingang
@@ -18,21 +22,11 @@ public class ModuleDefine {
 
 	private Class<? extends BaseLogic> moduleLogic;
 
-
-	/**
-	 * 设置序号列名称
-	 */
-	private String listNumberTitle;
-
 	/**
 	 * 模块名
 	 */
 	private String moduleTitle;
 
-	/**
-	 * 列表页显示复选框
-	 */
-	private Boolean checkbox;
 	/**
 	 * 表格尺寸
 	 * sm 小尺寸 lg 大尺寸
@@ -44,15 +38,12 @@ public class ModuleDefine {
 	 */
 	private Boolean page = true;
 
-	/**
-	 * 新增的时候只保存哪些字段
-	 * null 或 空 表示全部
-	 */
-	private String createFields;
+	public FormControl getFormControl(String name, FieldDefine fieldDefine, Boolean isNew) {
+		return null;
+	}
 
-	/**
-	 * 修改的时候只修改哪些字段
-	 * null 或 空 表示全部
-	 */
-	private String updateFields;
+	public Integer getFormGroups() { return 1; }
+
+	public String getFormGroupName(Integer group) { return "基本信息"; }
+
 }

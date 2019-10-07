@@ -1,6 +1,5 @@
 package cn.workde.core.builder.engine.service;
 
-import cn.hutool.core.io.resource.ResourceUtil;
 import cn.workde.core.base.utils.FileUtils;
 import cn.workde.core.base.utils.StringUtils;
 import cn.workde.core.builder.engine.Builder;
@@ -10,7 +9,7 @@ import cn.workde.core.builder.utils.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.util.ResourceUtils;
+import org.springframework.core.io.ClassPathResource;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -43,24 +42,27 @@ public class IdeService {
 		request.setAttribute("initParams", (Object) StringUtil.text(config.toString()));
 	}
 
-	public List<String> getIconList() throws FileNotFoundException {
-		final File iconPath = ResourceUtils.getFile("classpath:static/images");
-		final File[] files = FileUtil.listFiles(iconPath);
-		final List<String> list = new ArrayList<String>();
-		SortUtil.sort(files);
-		File[] array;
-		for (int length = (array = files).length, i = 0; i < length; ++i) {
-			final File file = array[i];
-			if (!file.isDirectory()) {
-				list.add(String.valueOf(FileUtil.removeExtension(file.getName())) + "_icon");
-			}
-		}
+	public List<String> getIconList() throws IOException {
+//		final File iconPath = ResourceUtils.getFile("classpath:static/images");
+//		final File[] files = FileUtil.listFiles(iconPath);
+//		final List<String> list = new ArrayList<String>();
+//		SortUtil.sort(files);
+//		File[] array;
+//		for (int length = (array = files).length, i = 0; i < length; ++i) {
+//			final File file = array[i];
+//			if (!file.isDirectory()) {
+//				System.out.println(String.valueOf(FileUtil.removeExtension(file.getName())) + "_icon");
+//				list.add(String.valueOf(FileUtil.removeExtension(file.getName())) + "_icon");
+//			}
+//		}
+		ClassPathResource resource = new ClassPathResource("static/icons");
+		final List<String> list = FileUtils.readLines(resource.getURL(), "utf-8");
 		return list;
 	}
 
 	public List<String[]> getGlyphClasses() throws Exception {
-		final File file = ResourceUtils.getFile("classpath:static/libs/fa/css/font-awesome-debug.css");
-		final String script = FileUtil.readString(file);
+		ClassPathResource resource = new ClassPathResource("static/libs/fa/css/font-awesome-debug.css");
+		final String script = FileUtils.readString(resource.getURL(), "utf-8");
 		String[] lines = script.substring(script.indexOf(".fa-glass")).split("}");
 		int j = lines.length;
 		List<String[]> result = new ArrayList<>();
@@ -76,8 +78,8 @@ public class IdeService {
 
 	public void getSysData(HttpServletRequest request, HttpServletResponse response) throws Exception {
 		Map<String, Object> sysData = new HashMap<>();
-		sysData.put("iconData", getIconList());
 		sysData.put("glyphClasses", getGlyphClasses());
+		sysData.put("iconData", getIconList());
 		WebUtil.send(response, new JSONObject(sysData));
 	}
 
@@ -121,7 +123,7 @@ public class IdeService {
 			if (content == null) {
 				content = new JSONObject();
 				if (!isFolder) {
-					content.put("icon", ("builder?xwl=dev/ide/get-file-icon&file=" + WebUtil.encode(FileUtil.getPath(file))));
+					content.put("static/icon", ("builder?xwl=dev/ide/get-file-icon&file=" + WebUtil.encode(FileUtil.getPath(file))));
 				}
 			}
 
@@ -139,9 +141,9 @@ public class IdeService {
 			if (!StringUtils.isEmpty(iconCls)) {
 				fileObject.put("iconCls", iconCls);
 			}
-			final String icon = content.optString("icon");
+			final String icon = content.optString("static/icon");
 			if (!StringUtils.isEmpty(icon)) {
-				fileObject.put("icon", icon);
+				fileObject.put("static/icon", icon);
 			}
 			if (isFolder) {
 				if (!hasChildren(file)) {
@@ -493,7 +495,7 @@ public class IdeService {
 			else {
 				content = new JSONObject();
 				content.put("file", (Object)shortFilename);
-				content.put("icon", (Object)("builder?xwl=dev/ide/get-file-icon&file=" + WebUtil.encode(filename)));
+				content.put("static/icon", (Object)("builder?xwl=dev/ide/get-file-icon&file=" + WebUtil.encode(filename)));
 				String fileText;
 				if (StringUtil.indexOf(imageTypes, fileExt) == -1) {
 					if (StringUtil.isEmpty(charset)) {
