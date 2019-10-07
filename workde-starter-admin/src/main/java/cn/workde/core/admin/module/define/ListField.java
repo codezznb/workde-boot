@@ -18,7 +18,6 @@ public class ListField {
 
 	private String type;
 
-	private String templet;
 
 	public ListField() { }
 
@@ -26,8 +25,7 @@ public class ListField {
 		this.setName(fieldName);
 		this.setLabel(fieldDefine.label());
 		this.setWidth(fieldDefine.width());
-		this.setType(fieldDefine.listType());
-		this.setTemplet(fieldDefine.listTemplet());
+		this.setType(fieldDefine.as());
 	}
 
 	/**

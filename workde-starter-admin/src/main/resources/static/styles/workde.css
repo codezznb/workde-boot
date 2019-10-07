@@ -1,6 +1,11 @@
 .layui-btn {
     background-color: #428bca!important;
 }
+
+.layui-btn-gray {
+    background-color: #999!important;
+}
+
 .layui-form-onswitch {
     background-color: #428bca!important;
     border-color: #428bca!important;
@@ -8,6 +13,10 @@
 
 .layui-laypage-em {
     background-color: #428bca!important;
+}
+
+.layui-laypage a:hover {
+    color: #428bca!important;
 }
 
 .layui-table-cell .layui-form-checkbox[lay-skin=primary] {

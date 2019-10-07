@@ -3,6 +3,7 @@ package cn.workde.core.admin.module.service;
 
 import cn.workde.core.admin.module.ModuleMeta;
 import cn.workde.core.admin.module.control.FormControl;
+import cn.workde.core.admin.module.control.SwitchControl;
 import cn.workde.core.admin.module.control.TextControl;
 import cn.workde.core.admin.module.define.ListField;
 import cn.workde.core.admin.module.define.ModuleDefine;
@@ -35,7 +36,7 @@ public class ModuleService {
 		ModuleMeta moduleMeta = new ModuleMeta(moduleDefine);
 		List<ModuleField> moduleFieldList = getModuleFieldList(moduleDefine);
 		moduleMeta.setNewFields(getNewFieldList(moduleDefine, moduleFieldList, model));
-		moduleMeta.setEditFields(getEditFieldList(moduleDefine, moduleFieldList, model));
+		moduleMeta.setEdtFields(getEdtFieldList(moduleDefine, moduleFieldList, model));
 		return moduleMeta;
 	}
 
@@ -57,34 +58,34 @@ public class ModuleService {
 		for(ModuleField mfd : fieldDefineList) {
 			FieldDefine fieldDefine = mfd.getFieldDefine();
 			if(!fieldDefine.newEnabel()) continue;
-			FormControl formControl = moduleDefine.getFormControl(mfd.getName(), fieldDefine, true);
-			if(formControl == null) {
-				formControl = new TextControl();
-				formControl.init(mfd.getName(), fieldDefine);
-			}
-			Object value = getValue(model, mfd.getName());
-			if(value != null) formControl.setValue(value.toString());
+			FormControl formControl = getFormControl(moduleDefine, mfd, fieldDefine, true, model);
 			formFields.add(formControl);
 		}
 		return formFields;
 	}
 
-	public List<FormControl> getEditFieldList(ModuleDefine moduleDefine, List<ModuleField> fieldDefineList, BaseEntity model) {
+	public List<FormControl> getEdtFieldList(ModuleDefine moduleDefine, List<ModuleField> fieldDefineList, BaseEntity model) {
 		List<FormControl> formFields = new ArrayList<>();
 		fieldDefineList.sort(Comparator.comparingInt(ModuleField::getNewOrder));
 		for(ModuleField mfd : fieldDefineList) {
 			FieldDefine fieldDefine = mfd.getFieldDefine();
 			if(!fieldDefine.edtEnable()) continue;
-			FormControl formControl = moduleDefine.getFormControl(mfd.getName(), fieldDefine, true);
-			if(formControl == null) {
-				formControl = new TextControl();
-				formControl.init(mfd.getName(), fieldDefine);
-			}
-			Object value = getValue(model, mfd.getName());
-			if(value != null) formControl.setValue(value.toString());
+			FormControl formControl = getFormControl(moduleDefine, mfd, fieldDefine, false, model);
 			formFields.add(formControl);
 		}
 		return formFields;
+	}
+
+	private FormControl getFormControl(ModuleDefine moduleDefine, ModuleField mfd, FieldDefine fieldDefine, Boolean isNew, BaseEntity model) {
+		FormControl formControl = moduleDefine.getFormControl(mfd.getName(), fieldDefine, isNew);
+		if(formControl == null) {
+			if(fieldDefine.as().equals("text")) formControl = new TextControl();
+			else if(fieldDefine.as().equals("switch")) formControl = new SwitchControl();
+			formControl.init(mfd.getName(), fieldDefine);
+		}
+		Object value = getValue(model, mfd.getName());
+		if(value != null) formControl.setValue(value);
+		return formControl;
 	}
 
 	private List<ModuleField> getModuleFieldList(ModuleDefine moduleDefine) {
@@ -109,7 +110,6 @@ public class ModuleService {
 
 	private static Object getValue(Object obj, String name) {
 		if(obj == null) return null;
-		System.out.println("get" + StringUtils.upperFirst(name));
 		Method method = ReflectionUtils.findMethod(obj.getClass(), "get" + StringUtils.upperFirst(name));
 		if(method != null) return ReflectionUtils.invokeMethod(method, obj);
 		return null;

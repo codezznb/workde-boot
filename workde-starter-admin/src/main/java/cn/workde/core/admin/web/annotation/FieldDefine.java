@@ -16,13 +16,7 @@ public @interface FieldDefine {
 
 	String width() default "10%";
 
-	String listType() default "";
-
-	/**
-	 * table 自定义列模板
-	 * @return
-	 */
-	String listTemplet() default "";
+	String as() default "text";
 
 	boolean listEnable() default true;		//列表是否显示该字段
 

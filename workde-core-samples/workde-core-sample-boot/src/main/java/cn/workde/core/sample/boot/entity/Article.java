@@ -1,6 +1,6 @@
 package cn.workde.core.sample.boot.entity;
 
-import cn.workde.core.admin.module.constant.Templets;
+import cn.workde.core.admin.module.constant.AsType;
 import cn.workde.core.admin.web.annotation.FieldDefine;
 import cn.workde.core.tk.base.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
@@ -111,28 +111,28 @@ public class Article extends BaseEntity {
 	 * 是否允许评论
 	 */
 	@ApiModelProperty("是否允许评论")
-	@FieldDefine(label = "是否允许评论", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "是否允许评论", as = "switch")
 	private Integer isMsg;
 
 	/**
 	 * 是否置顶
 	 */
 	@ApiModelProperty("是否置顶")
-	@FieldDefine(label = "是否置顶", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "是否置顶", as = AsType.SWTICH)
 	private Integer isTop;
 
 	/**
 	 * 是否推荐
 	 */
 	@ApiModelProperty("是否推荐")
-	@FieldDefine(label = "是否推荐", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "是否推荐", as = AsType.SWTICH)
 	private Integer isRed;
 
 	/**
 	 * 是否热门
 	 */
 	@ApiModelProperty("是否热门")
-	@FieldDefine(label = "是否热门", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "是否热门", as = AsType.SWTICH)
 	private Integer isHot;
 
 	/**

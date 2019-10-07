@@ -8,10 +8,9 @@ import cn.workde.core.admin.module.logic.IModuleLogic;
 import cn.workde.core.admin.module.service.ModuleService;
 import cn.workde.core.admin.properties.WorkdeAdminProperties;
 import cn.workde.core.admin.web.annotation.AdminController;
-import cn.workde.core.base.controller.WorkdeController;
+import cn.workde.core.base.result.Kv;
 import cn.workde.core.base.result.Result;
 import cn.workde.core.base.utils.JsonUtils;
-import cn.workde.core.base.utils.PathUtils;
 import cn.workde.core.base.utils.SpringUtils;
 import cn.workde.core.tk.base.BaseEntity;
 import cn.workde.core.tk.base.BaseService;
@@ -25,7 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
  * @date 2019/9/2 5:18 PM
  */
 @ResponseBody
-public class ModuleController extends WorkdeController {
+public class ModuleController extends WorkdeAdminController {
 
 	@Autowired
 	private ModuleService moduleService;
@@ -107,7 +106,7 @@ public class ModuleController extends WorkdeController {
 		return mv;
 	}
 
-	@PutMapping(path = "{id}")
+	@PostMapping(path = "{id}")
 	@ApiOperation(value = "更新")
 	public Result update(@PathVariable("id") String id, @RequestBody String body){
 		BaseEntity updateModel = getBaseService().byId(id);
@@ -122,13 +121,12 @@ public class ModuleController extends WorkdeController {
 
 	@DeleteMapping(path = "{id}")
 	@ApiOperation(value = "删除")
-	public Result delete(@PathVariable("id") String id){
+	public void delete(@PathVariable("id") String id){
 		BaseEntity deleteModel = getBaseService().byId(id);
 		IModuleLogic moduleLogic = getModuleLogic();
 		if(moduleLogic != null) moduleLogic.beforeDelete(deleteModel);
 		getBaseService().delete(deleteModel);
 		if(moduleLogic != null) moduleLogic.afterDelete(deleteModel);
-		return Result.success();
-
+		renderScript("crud/delete", Kv.create().set("id", id));
 	}
 }

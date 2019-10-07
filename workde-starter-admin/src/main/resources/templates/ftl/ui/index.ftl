@@ -6,3 +6,4 @@
 <#include "ftl/ui/select.ftl"/>
 <#include "ftl/ui/radio.ftl"/>
 <#include "ftl/ui/textarea.ftl"/>
+<#include "ftl/ui/switch.ftl"/>

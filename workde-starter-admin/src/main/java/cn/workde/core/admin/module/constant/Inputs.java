@@ -12,5 +12,5 @@ public interface Inputs {
 	String SELECT = "select";
 	String RADIO = "radio";
 	String TEXTAREA = "textarea";
-
+	String SWITCH = "switch";
 }

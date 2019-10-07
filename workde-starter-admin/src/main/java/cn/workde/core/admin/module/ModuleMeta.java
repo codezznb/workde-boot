@@ -29,7 +29,7 @@ public class ModuleMeta {
 
 	private List<FormControl> newFields;
 
-	private List<FormControl> editFields;
+	private List<FormControl> edtFields;
 
 	public ModuleMeta(ModuleDefine moduleDefine) {
 		this.setModuleDefine(moduleDefine);
@@ -56,9 +56,9 @@ public class ModuleMeta {
 	}
 
 	public List<FormControl> getEdtFormFields(Integer groupIndex) {
-		if(getGroupSize() == 1) return editFields;
+		if(getGroupSize() == 1) return edtFields;
 		else {
-			List<FormControl> returnFields = editFields.stream().filter(field -> field.getGroup() == groupIndex).collect(Collectors.toList());
+			List<FormControl> returnFields = edtFields.stream().filter(field -> field.getGroup() == groupIndex).collect(Collectors.toList());
 			return returnFields;
 		}
 	}

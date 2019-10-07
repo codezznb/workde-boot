@@ -1,6 +1,6 @@
 package cn.workde.core.sample.boot.entity;
 
-import cn.workde.core.admin.module.constant.Templets;
+import cn.workde.core.admin.module.constant.AsType;
 import cn.workde.core.admin.web.annotation.FieldDefine;
 import cn.workde.core.tk.base.BaseEntity;
 import lombok.Builder;
@@ -37,7 +37,7 @@ public class User extends BaseEntity {
 	@FieldDefine(label = "登录IP")
 	private String loginRemote;
 
-	@FieldDefine(label = "状态", listTemplet = Templets.TEMPLET_SWITCH_STATE)
+	@FieldDefine(label = "状态", as = AsType.SWTICH)
 	private Integer state;
 
 	@Tolerate

@@ -5,7 +5,7 @@
 	sytle：table的style样式。默认""。
 	width：表格的宽度。默认100%。
 -->
-<#macro table value listAction="list" class="layui-table" style="" width="100%">
+<#macro table value class="layui-table" style="" width="100%">
 <table class="${class}" style="${style}" width="${width}" cellspacing="1" cellpadding="0" border="0">
     <#if value?is_sequence><#local pageList=value/><#else><#local pageList=value.list/></#if>
 <#list pageList as row>

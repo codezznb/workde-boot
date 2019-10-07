@@ -67,7 +67,7 @@ public class FormControl extends Control {
 
 	private String onchange;
 
-	private String value;
+	private Object value;
 
 	public void init(String name, FieldDefine fieldDefine) {
 		this.setId(name);
