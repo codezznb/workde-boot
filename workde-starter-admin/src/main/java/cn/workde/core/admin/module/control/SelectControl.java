@@ -1,6 +1,6 @@
 package cn.workde.core.admin.module.control;
 
-import cn.workde.core.admin.module.constant.Inputs;
+import cn.workde.core.base.module.constant.Inputs;
 import lombok.Data;
 
 /**

@@ -35,7 +35,6 @@ public class ModuleMeta {
 		this.setModuleDefine(moduleDefine);
 		this.setModuleName(moduleDefine.getModel().getSimpleName());
 		this.setModuleTitle(moduleDefine.getModuleTitle());
-		this.setSize(moduleDefine.getTableSize());
 		this.setPage(moduleDefine.getPage());
 	}
 

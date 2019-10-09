@@ -1,4 +1,4 @@
-package cn.workde.core.admin.module.constant;
+package cn.workde.core.base.module.constant;
 
 /**
  * @author zhujingang
@@ -13,4 +13,6 @@ public interface Inputs {
 	String RADIO = "radio";
 	String TEXTAREA = "textarea";
 	String SWITCH = "switch";
+	String DATE = "date";
+	String READONLY = "readonly";
 }

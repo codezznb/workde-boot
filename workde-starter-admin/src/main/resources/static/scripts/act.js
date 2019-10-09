@@ -1,4 +1,4 @@
-var Wb = {
+var Act = {
     page: {},
     linkClickSelector: 'a[data-remote]',
     buttonClickSelector: 'button[data-remote]:not([form]):not(form button), button[data-confirm]:not([form]):not(form button)',
@@ -39,7 +39,7 @@ var Wb = {
                 if (settings.dataType === undefined) {
                     xhr.setRequestHeader('accept', '*/*;q=0.5, ' + settings.accepts.script);
                 }
-                if (Wb.fire(element, 'ajax:beforeSend', [xhr, settings])) {
+                if (Act.fire(element, 'ajax:beforeSend', [xhr, settings])) {
                     element.trigger('ajax:send', xhr);
                 } else {
                     return false;
@@ -61,24 +61,49 @@ var Wb = {
     allowAction: function(element) {
         var message = element.data('confirm');
         if (message) {
-            Wb.confirm(message, function() {
-                return Wb.handleRemote(element);
+            Act.confirm(message, function() {
+                return Act.handleRemote(element);
             });
         }else {
-            return Wb.handleRemote(element);
+            return Act.handleRemote(element);
         }
     },
     ready: function(func) {
         layui.use(['jquery','form', 'layer', 'laydate', 'element', 'laypage'], function(){
+            Act.initPluging();
             var $ = layui.jquery,
-                form = layui.form;
+                form = layui.form,
+                laydate = layui.laydate;
             form.render();
-            func();
-            $(document).on('click.wb', Wb.linkClickSelector, function (e) {
-                var link = $(this);
-                if (Wb.isRemote(link)) Wb.allowAction(link);
-                return false;
+            if(func) func();
+        });
+    },
+    initPluging: function() {
+        var $ = layui.jquery;
+        $('.act-date').each(function() {
+            var fmt = $(this).data('format') || "yyyy-MM-dd";
+            laydate.render({
+                elem: this,
+                format: fmt,
+                type: fmt == 'yyyy-MM-dd' ? 'date' : 'datetime'
             });
+        });
+        $('input[data-search-url]').keydown(function(e){
+            if(e.keyCode === 13){
+                var me = $(this);
+                var url = $(this).data("search-url");
+                var name = $(this).prop("name");
+                var query = $(this).val();
+                var obj =  Act.Url.parseParams((url.split("?")[1] || "").split("#")[0]);
+                obj[name] = query;
+                url = Act.Url.toString((url.split("?")[0] || "").split("#")[0], obj);
+                Act.stack.load(url);
+            }
+        });
+        $(document).on('click.act', Act.linkClickSelector, function (e) {
+            var link = $(this);
+            if (Act.isRemote(link)) Act.allowAction(link);
+            return false;
         });
     },
     remote: function(that) {
@@ -86,13 +111,13 @@ var Wb = {
         if(!url) url = that.attr('href');
         if(url) {
             var method = that.data('method') || 'POST';
-            Wb.ajax(url, method, {}, function(resp) {
+            Act.ajax(url, method, {}, function(resp) {
                 if(resp.code == 200 && resp.success) {
                     var success = that.data("success") || "操作成功";
-                    Wb.msg(success);
+                    Act.msg(success);
                 }else {
                     var fail = that.data("fail") || "操作失败";
-                    Wb.msg(fail);
+                    Act.msg(fail);
                 }
             })
         }
@@ -121,23 +146,23 @@ var Wb = {
         })
     },
     get: function(url, func){
-        Wb.ajax(url, 'get', null, function(resp){
+        Act.ajax(url, 'get', null, function(resp){
             if(func) func(resp);
         });
     },
 
     post: function (url, data, func) {
-        Wb.ajax(url, 'post', data, function (resp) {
+        Act.ajax(url, 'post', data, function (resp) {
             if (func) func(resp);
         });
     },
     put: function(url, data, func) {
-        Wb.ajax(url,'put', data, function(resp){
+        Act.ajax(url,'put', data, function(resp){
             if (func) func(resp);
         });
     },
     delete: function(url, func) {
-        Wb.ajax(url,'delete', {}, function(resp){
+        Act.ajax(url,'delete', {}, function(resp){
             if (func) func(resp);
         });
     },
@@ -163,6 +188,68 @@ var Wb = {
             }, second * 1000);
         }else {
             window.location.href = url;
+        }
+    },
+    stack: {
+        load: function(url, func){
+            if(Act.supportHistory) {
+                $.ajax({
+                    url: url,
+                    cache: false,
+                    dataType: 'html',
+                    headers: {
+                        pjax: true
+                    },
+                    success: function(resp){
+                        $('.act-admin .act-right').html(resp);
+                        history.replaceState({}, "", url);
+                        if(func) func();
+                    }
+                });
+            }else{
+                window.location.href = url;
+            }
+        },
+        reload: function(){
+            var url = location.href;
+            Act.stack.load(url);
+        }
+    },
+    Url: {
+        toString: function(url, obj){
+            search = Act.Url.serializeParams(obj);
+            if (search) {
+                url += "?" + search;
+            }
+            return url;
+        },
+        parseParams: function(str) {
+            var k, obj, param, v, _i, _len, _ref, _ref1;
+            obj = {};
+            _ref = str.split('&');
+            for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+                param = _ref[_i];
+                _ref1 = param.split('='), k = _ref1[0], v = _ref1[1];
+                if (k) {
+                    obj[k] = v;
+                }
+            }
+            return obj;
+        },
+        serializeParams: function(obj) {
+            var k, v;
+            if (!obj) {
+                return "";
+            }
+            return ((function() {
+                var _results;
+                _results = [];
+                for (k in obj) {
+                    v = obj[k];
+                    _results.push([k, v].join('='));
+                }
+                return _results;
+            })()).join('&');
         }
     }
 }

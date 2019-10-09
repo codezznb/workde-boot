@@ -7,3 +7,5 @@
 <#include "ftl/ui/radio.ftl"/>
 <#include "ftl/ui/textarea.ftl"/>
 <#include "ftl/ui/switch.ftl"/>
+<#include "ftl/ui/date.ftl"/>
+<#include "ftl/ui/readonly.ftl"/>

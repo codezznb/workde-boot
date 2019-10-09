@@ -1,25 +1,17 @@
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>后台管理中心</title>
-    <link rel="stylesheet" href="/styles/workde.css" />
-    <link rel="stylesheet" href="/layui/css/layui.css"  media="all">
-</head>
-<body class="workde-body">
-<div class="workde-nav">企业 <strong>/</strong>企业管理</div>
-<div class="workde-main">
-    <div class="workde-tit layui-clear">
-        <h3>企业管理</h3>
-    </div>
-    <form class="layui-form" action="">
+<@ui.layout>
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" onclick="history.back();">返回</a>
+        <a href="@{list()}">广告列表</a>
+        <a><cite>新建广告</cite></a>
+    </span>
+
+
+    <form class="act-form layui-form" action="">
         <#list 1..mm.groupSize as idx>
-        <div class="workde-form-group">${mm.getGroupName(idx)}</div>
-        <div class="workde-form">
-            <#list mm.getNewFormFields(idx) as field>
-                <@ui.field field />
-            </#list>
-        </div>
+        <div class="act-form-group">${mm.getGroupName(idx)}</div>
+        <#list mm.getNewFormFields(idx) as field>
+            <@ui.field field />
+        </#list>
         </#list>
         <div class="layui-form-item">
             <div class="layui-input-block">
@@ -29,25 +21,21 @@
         </div>
     </form>
 </div>
-<script src="/layui/layui.js" charset="utf-8"></script>
-<script src="/scripts/workde.js"></script>
+
 <script>
-    Wb.ready(function() {
+    Act.ready(function() {
         var form = layui.form;
         form.render();
 
         form.on('submit(form-submit)', function(data){
-            Wb.submit('new', data.field, function(resp) {
+            Act.submit('new', data.field, function(resp) {
                 if(resp.code == 200 && resp.success) {
-                    Wb.msg("操作成功");
-                    Wb.jump('list', 2);
+                    Act.msg("操作成功");
+                    Act.jump('list', 2);
                 }
             });
             return false;
         });
     })
 </script>
-</body>
-</html>
-
-
+</@ui.layout>

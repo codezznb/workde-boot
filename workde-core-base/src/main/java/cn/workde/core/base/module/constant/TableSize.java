@@ -1,4 +1,4 @@
-package cn.workde.core.admin.module.constant;
+package cn.workde.core.base.module.constant;
 
 /**
  * @author zhujingang

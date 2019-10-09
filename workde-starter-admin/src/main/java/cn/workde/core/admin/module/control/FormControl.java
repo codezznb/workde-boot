@@ -1,7 +1,7 @@
 package cn.workde.core.admin.module.control;
 
-import cn.workde.core.admin.module.constant.Inputs;
-import cn.workde.core.admin.web.annotation.FieldDefine;
+import cn.workde.core.base.module.constant.Inputs;
+import cn.workde.core.base.module.FieldDefine;
 import lombok.Data;
 
 /**
@@ -69,6 +69,8 @@ public class FormControl extends Control {
 
 	private Object value;
 
+	private Boolean readonly;
+
 	public void init(String name, FieldDefine fieldDefine) {
 		this.setId(name);
 		this.setName(name);
@@ -76,6 +78,7 @@ public class FormControl extends Control {
 		this.setLabel(fieldDefine.label());
 		this.setRequired(fieldDefine.required());
 		this.setHelp(fieldDefine.help());
+		this.setReadonly(fieldDefine.readonly());
 	}
 
 	public String getType() {

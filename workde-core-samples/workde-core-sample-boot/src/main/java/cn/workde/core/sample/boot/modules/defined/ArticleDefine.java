@@ -5,7 +5,7 @@ import cn.workde.core.admin.module.control.RadioControl;
 import cn.workde.core.admin.module.control.SelectControl;
 import cn.workde.core.admin.module.control.TextAreaControl;
 import cn.workde.core.admin.module.define.ModuleDefine;
-import cn.workde.core.admin.web.annotation.FieldDefine;
+import cn.workde.core.base.module.FieldDefine;
 import cn.workde.core.sample.boot.entity.Article;
 import cn.workde.core.sample.boot.service.ArticleService;
 import org.springframework.stereotype.Component;

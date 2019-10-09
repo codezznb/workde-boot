@@ -1,0 +1,200 @@
+.layui-btn {
+    background-color: #428bca!important;
+}
+
+.layui-btn-gray {
+    background-color: #999!important;
+}
+
+.layui-form-onswitch {
+    background-color: #428bca!important;
+    border-color: #428bca!important;
+}
+
+.layui-laypage-em {
+    background-color: #428bca!important;
+}
+
+.layui-laypage a:hover {
+    color: #428bca!important;
+}
+
+.layui-table-cell .layui-form-checkbox[lay-skin=primary] {
+    top: 2px!important;
+}
+
+.layui-breadcrumb {
+    margin-bottom: 30px;
+    display: inline-block;
+}
+
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+
+.act-admin {
+    background-color: #f2f2f2;
+    min-width: 1230px;
+    position: relative;
+}
+.act-head {
+    background-color: #fff;
+    border: 1px solid #c7c7c7;
+}
+
+.act-head .act-logo {
+    width: 200px;
+    height: 100%;
+    line-height: 60px;
+    font-size: 16px;
+    color: #1e4994;
+}
+
+.act-head .layui-nav {
+    background-color: #fff;
+}
+
+.act-head .layui-nav .layui-nav-item.active{
+    border-bottom: 3px solid #428bca;
+    background-color: transparent;
+    line-height: 57px;
+}
+
+.act-head .layui-nav .layui-nav-item a {
+    color: #777;
+    font-size: 16px;
+}
+
+.act-head+.act-main {
+    min-height: 725px;
+}
+
+.act-main {
+    margin: 30px 0;
+}
+
+.act-container {
+    width: 1200px;
+    margin:0 auto;
+    padding: 0;
+    position: relative;
+    background-color: #fff;
+}
+
+.main-lg-body .act-head .act-container {
+    width: auto;
+    padding: 0 30px;
+}
+
+.main-lg-body .act-main .act-container  {
+    width: auto;
+    margin: 0 30px;
+}
+
+.button-to-big {
+    position: absolute;
+    top: 0px;
+    right: -26px;
+    width: 25px;
+    padding: 15px 0;
+    background-color: #fff;
+    text-align: center;
+    border: 1px solid #c7c7c7;
+    border-left: 0
+}
+
+.act-panel {
+    border: 1px solid #c7c7c7;
+    margin-bottom: 0;
+
+}
+
+.act-panel-header {
+    height: 35px;
+    line-height: 35px;
+    border-bottom: 1px solid #e7e7eb;
+    background-color: #f8f8f8;
+    padding: 10px 30px;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    font-size: 16px;
+}
+
+.act-body {
+    width: 100%;
+    display: flex;
+    min-height: 725px;
+    padding: 0;
+    margin-bottom: 0;
+}
+
+.act-left-menu {
+    border-right: 1px solid #ebebe7;
+}
+
+.act-left-menu .layui-nav-item {
+    border-bottom: 1px solid #e7e7eb;
+}
+
+.act-left-menu .layui-nav-item.no-collapse {
+    border-bottom: 0;
+}
+
+.act-left-menu .layui-nav, .act-left-menu .layui-nav-itemed>.layui-nav-child {
+    background-color: #fff!important;
+}
+
+.act-left-menu .layui-nav.layui-nav-tree .layui-nav-item a.heading {
+    color: #a09f9f!important;
+}
+
+.act-left-menu .layui-nav.layui-nav-tree .layui-nav-item a {
+    color: #252424!important;
+    font-size: 14px;
+}
+
+.act-left-menu .layui-nav.layui-nav-tree .layui-this a, .act-left-menu .layui-nav.layui-nav-tree .layui-nav-item a:hover {
+    background-color: #428bca!important;
+    color: #fff!important;
+}
+
+.act-right {
+    flex: 1;
+    padding: 30px;
+}
+
+.act-form-group {
+    padding-left: 20px;
+    border-bottom: 1px #DFDFDF solid;
+    border-top: 1px #DFDFDF solid;
+    background-color: #F5F7F8;
+    height: 40px;
+    line-height: 40px;
+    margin-bottom: 20px;
+    color: #666666;
+}
+
+.act-form .layui-form-item {
+    margin-bottom: 15px;
+}
+
+.act-form .layui-form-label {
+    width: 100px;
+    text-align: left;
+}
+
+.act-form .layui-input-block {
+    margin-left: 140px;
+    line-height: 36px;
+}

@@ -1,12 +1,14 @@
 <#macro list_page value mm>
 <@ui.table value=value;object,i><#rt/>
-    <@ui.column title="序号" width="80px">${mm.page?string(i + value.startRow, i+1)}</@ui.column><#rt />
+    <@ui.column title="序号" width="10%">${mm.page?string(i + value.startRow, i+1)}</@ui.column><#rt />
     <#list mm.fields as field>
         <@ui.column title=field.label width=field.width>
-            <#if field.type == 'text'>
-                ${object[field.name]}
+            <#if field.type == 'date' || field.format>
+                ${(object[field.name].format(field.format))!}
             <#elseif field.type == 'switch'>
                 <@ui.list_switch field=field value=object[field.name] />
+            <#else>
+                ${object[field.name]}
             </#if>
         </@ui.column><#rt />
     </#list>

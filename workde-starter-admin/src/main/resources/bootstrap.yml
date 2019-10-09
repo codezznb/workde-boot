@@ -14,7 +14,7 @@ spring:
       number_format: 0.######
       whitespace_stripping: true
       classic_compatible: true
-      auto_import: classpath:/templates/ftl/index.ftl
+      auto_import: ftl/index.ftl as ui, ftl/spring.ftl as s
       object_wrapper: freemarker.ext.beans.BeansWrapper
     suffix: .html
     template-loader-path: classpath:/templates/

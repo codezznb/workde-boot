@@ -5,12 +5,13 @@ import lombok.Data;
 
 /**
  * @author zhujingang
- * @date 2019/9/30 1:54 PM
+ * @date 2019/10/8 1:03 PM
  */
 @Data
-public class TextControl extends FormControl {
+public class ReadonlyControl extends FormControl{
+
 	@Override
 	public String getType() {
-		return Inputs.DEFAULT;
+		return Inputs.READONLY;
 	}
 }

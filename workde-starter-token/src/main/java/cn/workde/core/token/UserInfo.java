@@ -21,8 +21,6 @@ public class UserInfo implements Serializable {
 	private String tokenType;
 	@ApiModelProperty(value = "刷新令牌")
 	private String refreshToken;
-	@ApiModelProperty(value = "头像")
-	private String avatar = "https://gw.alipayobjects.com/zos/rmsportal/BiazfanxmamNRoxxVxka.png";
 	@ApiModelProperty(value = "角色名")
 	private String authority;
 	@ApiModelProperty(value = "用户名")

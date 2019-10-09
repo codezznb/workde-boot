@@ -2,13 +2,12 @@ package cn.workde.core.admin.module.service;
 
 
 import cn.workde.core.admin.module.ModuleMeta;
-import cn.workde.core.admin.module.control.FormControl;
-import cn.workde.core.admin.module.control.SwitchControl;
-import cn.workde.core.admin.module.control.TextControl;
+import cn.workde.core.admin.module.control.*;
 import cn.workde.core.admin.module.define.ListField;
 import cn.workde.core.admin.module.define.ModuleDefine;
 import cn.workde.core.admin.module.define.ModuleField;
-import cn.workde.core.admin.web.annotation.FieldDefine;
+import cn.workde.core.base.module.FieldDefine;
+import cn.workde.core.base.module.constant.AsType;
 import cn.workde.core.base.utils.StringUtils;
 import cn.workde.core.tk.base.BaseEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -79,8 +78,10 @@ public class ModuleService {
 	private FormControl getFormControl(ModuleDefine moduleDefine, ModuleField mfd, FieldDefine fieldDefine, Boolean isNew, BaseEntity model) {
 		FormControl formControl = moduleDefine.getFormControl(mfd.getName(), fieldDefine, isNew);
 		if(formControl == null) {
-			if(fieldDefine.as().equals("text")) formControl = new TextControl();
-			else if(fieldDefine.as().equals("switch")) formControl = new SwitchControl();
+			if(fieldDefine.as().equals(AsType.TEXT)) formControl = new TextControl();
+			else if(fieldDefine.as().equals(AsType.SWTICH)) formControl = new SwitchControl();
+			else if(fieldDefine.as().equals(AsType.READONLY)) formControl = new ReadonlyControl();
+			else if(fieldDefine.as().equals(AsType.DATE)) formControl = new DateControl(fieldDefine.format());
 			formControl.init(mfd.getName(), fieldDefine);
 		}
 		Object value = getValue(model, mfd.getName());
@@ -103,7 +104,6 @@ public class ModuleService {
 				fieldDefineList.add(fieldDefine);
 			}
 		}
-
 		return fieldDefineList;
 
 	}

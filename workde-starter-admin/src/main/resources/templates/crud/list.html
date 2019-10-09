@@ -1,28 +1,22 @@
-<html lang="en">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-    <title>后台管理中心</title>
-    <link rel="stylesheet" href="/styles/workde.css" />
-    <link rel="stylesheet" href="/layui/css/layui.css"  media="all">
-</head>
-<body class="workde-body">
-<div class="workde-nav">企业 <strong>/</strong>企业管理</div>
-<div class="workde-main">
-    <div class="workde-btns">
-        <a href="new" class="layui-btn layui-btn-sm">增加</a>
+<@ui.layout>
+
+<div class="layui-row">
+    <div class="layui-col-md4 act-search-form">
+        <input type="text" class="layui-input" placeholder="搜索关键字" data-search-url="list" name="keyword" value="${keyword}">
     </div>
+    <div class="layui-col-md8 text-right">
+        <a class="layui-btn layui-btn-sm act-btn" href="new">+新建</a>
+    </div>
+</div>
+
     <form class="layui-form">
     <@ui.list_page value=list mm=mm />
     </form>
 </div>
-<script src="/layui/layui.js" charset="utf-8"></script>
-<script src="/scripts/workde.js"></script>
 <script>
-    Wb.ready(function(){
+    Act.ready(function(){
 
     });
 </script>
-</body>
-</html>
+</@ui.layout>
 

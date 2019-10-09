@@ -43,6 +43,12 @@ public class WebUtils extends org.springframework.web.util.WebUtils {
         return getIP(WebUtils.getRequest());
     }
 
+    public static String getSource() {
+    	String xType = getRequest().getHeader("x-type");
+    	if(StringUtils.isEmpty(xType)) return "web";
+    	return xType;
+	}
+
 	public static boolean isAjax() {
 		HttpServletRequest request = getRequest();
 		return (request.getHeader("X-Requested-With") != null && "XMLHttpRequest".equals(request.getHeader("X-Requested-With").toString()));

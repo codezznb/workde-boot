@@ -1,7 +1,6 @@
 package cn.workde.core.admin.module.define;
 
-import cn.workde.core.admin.web.annotation.FieldDefine;
-import cn.workde.core.base.utils.StringUtils;
+import cn.workde.core.base.module.FieldDefine;
 import lombok.Getter;
 import lombok.Setter;
 

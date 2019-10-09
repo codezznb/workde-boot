@@ -1,6 +1,6 @@
 package cn.workde.core.admin.module.define;
 
-import cn.workde.core.admin.web.annotation.FieldDefine;
+import cn.workde.core.base.module.FieldDefine;
 import lombok.Data;
 
 /**
@@ -18,6 +18,7 @@ public class ListField {
 
 	private String type;
 
+	private String format;
 
 	public ListField() { }
 
@@ -26,6 +27,7 @@ public class ListField {
 		this.setLabel(fieldDefine.label());
 		this.setWidth(fieldDefine.width());
 		this.setType(fieldDefine.as());
+		this.setFormat(fieldDefine.format());
 	}
 
 	/**

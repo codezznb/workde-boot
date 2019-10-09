@@ -1,5 +1,7 @@
-package cn.workde.core.admin.web.annotation;
+package cn.workde.core.base.module;
 
+
+import cn.workde.core.base.module.constant.DateFormat;
 
 import java.lang.annotation.*;
 
@@ -34,4 +36,8 @@ public @interface FieldDefine {
 
 	int order() default 100; //越小在越前面
 
+	boolean readonly() default false;
+
+	// 格式化
+	String format() default "";
 }

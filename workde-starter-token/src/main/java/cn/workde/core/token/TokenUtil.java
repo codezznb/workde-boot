@@ -53,7 +53,6 @@ public class TokenUtil {
 			return authInfo.set(TokenConstant.ACCOUNT, userInfo.getAccount())
 				.set(TokenConstant.USER_NAME, userInfo.getAccount())
 				.set(TokenConstant.NICK_NAME, userInfo.getRealName())
-				.set(TokenConstant.AVATAR, userInfo.getAvatar())
 				.set(TokenConstant.ACCESS_TOKEN, accessToken.getToken())
 				.set(TokenConstant.REFRESH_TOKEN, createRefreshToken(userInfo).getToken())
 				.set(TokenConstant.TOKEN_TYPE, TokenConstant.BEARER)

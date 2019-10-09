@@ -1,7 +1,7 @@
 package cn.workde.core.sample.boot.entity;
 
-import cn.workde.core.admin.module.constant.AsType;
-import cn.workde.core.admin.web.annotation.FieldDefine;
+import cn.workde.core.base.module.constant.AsType;
+import cn.workde.core.base.module.FieldDefine;
 import cn.workde.core.tk.base.BaseEntity;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;

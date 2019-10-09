@@ -5,6 +5,10 @@ import cn.workde.core.sample.boot.entity.User;
 import cn.workde.core.sample.boot.modules.logic.UserLogic;
 import cn.workde.core.sample.boot.service.UserService;
 import org.springframework.stereotype.Component;
+import tk.mybatis.mapper.entity.Example;
+import tk.mybatis.mapper.util.StringUtil;
+
+import java.util.Map;
 
 /**
  * @author zhujingang
@@ -18,5 +22,16 @@ public class UserDefine extends ModuleDefine {
 		this.setModel(User.class);
 		this.setBaseService(UserService.class);
 		this.setModuleLogic(UserLogic.class);
+		this.setOrderBy("reg_at desc");
+	}
+
+	@Override
+	public Example getExample(String keyword) {
+		Example example = new Example(getModel());
+		if(StringUtil.isNotEmpty(keyword)) {
+			example.createCriteria().orLike("phone", "%"+keyword+"%");
+		}
+		if(StringUtil.isNotEmpty(getOrderBy())) example.setOrderByClause(getOrderBy());
+		return example;
 	}
 }

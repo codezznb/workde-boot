@@ -8,6 +8,7 @@ import cn.workde.core.admin.module.service.ModuleService;
 import cn.workde.core.admin.properties.WorkdeAdminProperties;
 import cn.workde.core.admin.web.WorkdeHandlerMapping;
 import lombok.extern.slf4j.Slf4j;
+import no.api.freemarker.java8.Java8ObjectWrapper;
 import org.springframework.boot.autoconfigure.AutoConfigureAfter;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnWebApplication;
@@ -20,8 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.event.EventListener;
 import org.springframework.web.accept.ContentNegotiationManager;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
-import org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer;
 
+import javax.annotation.PostConstruct;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -40,8 +41,11 @@ public class WorkdeAdminAutoConfiguration {
 
 	private final WorkdeAdminProperties workdeAdminProperties;
 
-	public WorkdeAdminAutoConfiguration(WorkdeAdminProperties workdeAdminProperties) {
+	private final freemarker.template.Configuration configuration;
+
+	public WorkdeAdminAutoConfiguration(WorkdeAdminProperties workdeAdminProperties, freemarker.template.Configuration configuration) {
 		this.workdeAdminProperties = workdeAdminProperties;
+		this.configuration = configuration;
 	}
 	
 	@Bean
@@ -73,6 +77,12 @@ public class WorkdeAdminAutoConfiguration {
 		log.info("【初始化配置-菜单管理】... 已初始化完毕");
 	}
 
+	@PostConstruct
+	public void postConstruct() {
+		configuration.setObjectWrapper(
+			new Java8ObjectWrapper(freemarker.template.Configuration.getVersion())); // VERSION_2_3_26
+	}
+
 	@Configuration
 	@ConditionalOnWebApplication(type = ConditionalOnWebApplication.Type.SERVLET)
 	public static class ServletRestModuleConfiguration {
@@ -92,6 +102,5 @@ public class WorkdeAdminAutoConfiguration {
 		}
 
 	}
-
 
 }

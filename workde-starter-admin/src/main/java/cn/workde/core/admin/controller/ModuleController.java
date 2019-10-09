@@ -55,17 +55,18 @@ public class ModuleController extends WorkdeAdminController {
 
 	@GetMapping(path = "list")
 	@ApiOperation(value = "列表")
-	public ModelAndView list(){
+	public ModelAndView list(String keyword){
 		ModuleDefine moduleDefine = getModuleDefine();
 		ModuleMeta moduleMeta = moduleService.getModuleMeta(moduleDefine);
 		BaseService baseService = getBaseService();
 		ModelAndView mv = new ModelAndView("crud/list");
 		mv.addObject("mm", moduleMeta);
 		if(moduleDefine.getPage()) {
-			mv.addObject("value", baseService.page(getPageNum(), getPageSize()));
+			mv.addObject("value", baseService.page(moduleDefine.getExample(keyword), getPageNum(), getPageSize()));
 		}else {
-			mv.addObject("value", baseService.all());
+			mv.addObject("value", baseService.list(moduleDefine.getExample(keyword)));
 		}
+		mv.addObject("keyword", keyword);
 		return mv;
 	}
 

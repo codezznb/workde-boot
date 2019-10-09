@@ -1,6 +1,8 @@
 package cn.workde.core.admin.controller;
 
 import cn.hutool.core.io.resource.ResourceUtil;
+import cn.workde.core.admin.module.menu.MenuGroup;
+import cn.workde.core.admin.module.menu.MenuManager;
 import cn.workde.core.base.controller.WorkdeController;
 import cn.workde.core.base.result.Kv;
 import cn.workde.core.base.utils.WebUtils;
@@ -9,16 +11,24 @@ import freemarker.template.Configuration;
 import freemarker.template.Template;
 import freemarker.template.TemplateException;
 import freemarker.template.TemplateExceptionHandler;
+import org.springframework.web.bind.annotation.ModelAttribute;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
 /**
  * @author zhujingang
  * @date 2019/10/7 9:40 PM
  */
 public class WorkdeAdminController extends WorkdeController {
+
+	@ModelAttribute(value = "menuGroupList")
+	public List<MenuGroup> getMenuGroupList() {
+		List<MenuGroup> menuGroupList =  MenuManager.getInstance().getMenuGroups();
+		return menuGroupList;
+	}
 
 	protected void renderScript(String file) {
 		renderScript(file, null);

@@ -6,7 +6,7 @@
 	class：css样式class
 	style：css样式style
 -->
-<#macro column title="" width="" align="" class="layui-table-cell" style="">
+<#macro column title="" width="" align="" class="" style="">
     <#if title=""><td>title and code all not assign!</td><#return></#if>
     <#if i==-1>
 	<th<#if width!=""> width="${width}"</#if><#if class!=""> class="${class}"</#if><#if style!=""> style="${style}"</#if>>${title}</th><#rt/>

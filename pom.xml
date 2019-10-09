@@ -16,7 +16,7 @@
     <packaging>pom</packaging>
 
     <properties>
-        <revision>1.2.6-SNAPSHOT</revision>
+        <revision>1.2.8-SNAPSHOT</revision>
         <java.version>1.8</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -48,7 +48,7 @@
         <module>workde-starter-cache</module>
         <module>workde-starter-alisms</module>
         <module>workde-starter-admin</module>
-        <module>workde-starter-builder</module>
+        <!--<module>workde-starter-builder</module>-->
         <module>workde-core-samples</module>
 
     </modules>

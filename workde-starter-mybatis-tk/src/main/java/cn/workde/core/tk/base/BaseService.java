@@ -18,7 +18,7 @@ import java.util.Map;
  * @author zhujingang
  * @date 2019/8/29 4:36 PM
  */
-public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
+public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implements IBaseService<T> {
 
     @Autowired
     protected M mapper;
@@ -92,6 +92,10 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
 		return mapper.selectByExample(example);
 	}
 
+	public List<T> list(Example example) {
+		return mapper.selectByExample(example);
+	}
+
 	public PageInfo<T> page(int pageNum, int pageSize) {
 		return page(null, null, pageNum, pageSize);
 	}
@@ -109,6 +113,12 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> {
 		Example example = new Example(entityClass);
 		if(ObjectUtils.isNotEmpty(params)) example.createCriteria().andEqualTo(params);
 		if(StringUtils.isNotEmpty(orderBy)) example.setOrderByClause(orderBy);
+		PageHelper.startPage(pageNum, pageSize);
+		PageInfo<T> pageInfo = new PageInfo<>(mapper.selectByExample(example));
+		return pageInfo;
+	}
+
+	public PageInfo<T> page(Example example, int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
 		PageInfo<T> pageInfo = new PageInfo<>(mapper.selectByExample(example));
 		return pageInfo;
