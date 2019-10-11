@@ -27,6 +27,13 @@ spring:
     suffix: .html
     template-loader-path: classpath:/templates/
 
+mybatis:
+  ##开启驼峰映射
+  configuration:
+    map-underscore-to-camel-case: true
+    # 打印sql
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+
 workde:
   secure:
     enable: false

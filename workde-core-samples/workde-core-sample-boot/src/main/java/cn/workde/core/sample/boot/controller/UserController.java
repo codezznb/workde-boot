@@ -2,10 +2,12 @@ package cn.workde.core.sample.boot.controller;
 
 import cn.workde.core.admin.module.menu.annotation.AdminMenu;
 import cn.workde.core.base.controller.WorkdeController;
+import cn.workde.core.base.result.Kv;
 import cn.workde.core.base.result.Result;
 import cn.workde.core.boot.annotation.SerializeField;
 import cn.workde.core.sample.boot.entity.User;
 import cn.workde.core.sample.boot.modules.menu.ArticleModuleListener;
+import cn.workde.core.sample.boot.service.UserLoginService;
 import cn.workde.core.sample.boot.service.UserService;
 import com.github.pagehelper.PageInfo;
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport;
@@ -33,6 +35,8 @@ public class UserController extends WorkdeController {
 
 	private UserService userService;
 
+	private UserLoginService userLoginService;
+
 	@GetMapping(value = "", produces = MediaType.TEXT_HTML_VALUE)
 	@AdminMenu(groupId = ArticleModuleListener.MENU_GROUP_USER, text = "注册用户")
 	public Result index() {
@@ -47,8 +51,9 @@ public class UserController extends WorkdeController {
 	@ApiOperationSupport(order = 2)
 	@ApiOperation(value = "列表", notes = "传入user")
 	@SerializeField(clazz = User.class, includes = "id,phone,reg_remote,login_at,login_count,login_remote,state")
-	public Result<List<User>> list() {
-		return Result.success(userService.list(getPermitParams("phone", "state"), "id desc"));
+	public Result list() {
+		Kv kv = Kv.create().set("userId", "11111");
+		return Result.success(userLoginService.page(kv, "id desc", getPageNum(), 2));
 	}
 
 

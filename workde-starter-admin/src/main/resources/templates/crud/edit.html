@@ -1,16 +1,27 @@
-<@ui.layout>
-    <span class="layui-breadcrumb">
-        <a href="javascript:;" onclick="history.back();">返回</a>
-        <a href="list">广告列表</a>
-        <a><cite>新建广告</cite></a>
-    </span>
-    <form class="act-form layui-form" action="">
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>后台管理中心</title>
+    <link rel="stylesheet" href="/styles/workde.css" />
+    <link rel="stylesheet" href="/layui/css/layui.css"  media="all">
+    <script src="/layui/layui.js" charset="utf-8"></script>
+    <script src="/scripts/act.js"></script>
+</head>
+<body class="workde-body">
+<div class="workde-nav">企业 <strong>/</strong>${mm.moduleDefine.moduleTitle} <strong>/</strong> 修改</div>
+<div class="workde-main">
+    <div class="workde-tit layui-clear">
+        <h3>${mm.moduleDefine.moduleTitle}管理</h3>
+    </div>
+    <form class="layui-form" action="">
         <#list 1..mm.groupSize as idx>
-        <div class="act-form-group">${mm.getGroupName(idx)}</div>
-
-        <#list mm.getEdtFormFields(idx) as field>
-            <@ui.field field />
-        </#list>
+        <div class="workde-form-group">${mm.getGroupName(idx)}</div>
+        <div class="workde-form">
+            <#list mm.getEdtFormFields(idx) as field>
+                <@ui.field field />
+            </#list>
+        </div>
         </#list>
         <div class="layui-form-item">
             <div class="layui-input-block">
@@ -20,6 +31,7 @@
         </div>
     </form>
 </div>
+
 <script>
     Act.ready(function() {
         var form = layui.form;
@@ -35,6 +47,6 @@
         });
     })
 </script>
-</@ui.layout>
-
+</body>
+</html>
 

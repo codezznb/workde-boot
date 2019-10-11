@@ -23,6 +23,25 @@
     top: 2px!important;
 }
 
+.layui-breadcrumb {
+    margin-bottom: 30px;
+    display: inline-block;
+}
+
+.left {
+    float: left;
+}
+.right {
+    float: right;
+}
+
+.text-left {
+    text-align: left;
+}
+.text-right {
+    text-align: right;
+}
+
 .workde-header {
     background: #fff!important;
     border-bottom: 1px solid #E7EBEF;
@@ -164,4 +183,22 @@
 .workde-main .layui-form .layui-input-block {
     margin-left: 180px;
     line-height: 36px;
+}
+
+.workde-input-group {
+    position: relative;
+}
+
+.workde-input-group .layui-input {
+    height: 30px;
+    line-height: 30px;
+}
+
+.workde-input-group .workde-input-group-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 80px;
+    border-top-left-radius: 0px;
+    border-bottom-left-radius: 0px;
 }

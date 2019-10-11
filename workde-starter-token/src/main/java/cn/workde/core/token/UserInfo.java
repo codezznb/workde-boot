@@ -25,8 +25,6 @@ public class UserInfo implements Serializable {
 	private String authority;
 	@ApiModelProperty(value = "用户名")
 	private String realName;
-	@ApiModelProperty(value = "账号名")
-	private String account;
 	@ApiModelProperty(value = "过期时间")
 	private long expiresIn;
 	@ApiModelProperty(value = "许可证")

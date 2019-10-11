@@ -1,14 +1,35 @@
-<@ui.layout>
-
-<div class="layui-row">
-    <div class="layui-col-md4 act-search-form">
-        <input type="text" class="layui-input" placeholder="搜索关键字" data-search-url="list" name="keyword" value="${keyword}">
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>后台管理中心</title>
+    <link rel="stylesheet" href="/styles/workde.css" />
+    <link rel="stylesheet" href="/layui/css/layui.css"  media="all">
+    <script src="/layui/layui.js" charset="utf-8"></script>
+    <script src="/scripts/act.js"></script>
+</head>
+<body class="workde-body">
+<div class="workde-nav">企业 <strong>/</strong>${mm.moduleDefine.moduleTitle}</div>
+<div class="workde-main">
+    <div class="layui-row">
+        <div class="layui-col-md3 workde-search-form">
+            <#if mm.moduleDefine.search>
+                <div class="workde-input-group">
+                    <input type="text" class="layui-input" placeholder="搜索关键字" data-search-url="list" name="keyword" value="${keyword}">
+                    <a href="javascript:;" class="layui-btn layui-btn-sm workde-input-group-btn search-btn">
+                        <i class="layui-icon">&#xe615;</i>搜索
+                    </a>
+                </div>
+            <#else>
+                &nbsp;
+            </#if>
+        </div>
+        <div class="layui-col-md9 text-right">
+            <a href="new" class="layui-btn layui-btn-sm act-btn">
+                <i class="layui-icon">&#xe608;</i>新建
+            </a>
+        </div>
     </div>
-    <div class="layui-col-md8 text-right">
-        <a class="layui-btn layui-btn-sm act-btn" href="new">+新建</a>
-    </div>
-</div>
-
     <form class="layui-form">
     <@ui.list_page value=list mm=mm />
     </form>
@@ -18,5 +39,6 @@
 
     });
 </script>
-</@ui.layout>
+</body>
+</html>
 

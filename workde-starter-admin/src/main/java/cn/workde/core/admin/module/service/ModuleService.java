@@ -45,7 +45,7 @@ public class ModuleService {
 		for(ModuleField mfd : fieldDefineList) {
 			FieldDefine fieldDefine = mfd.getFieldDefine();
 			if(!fieldDefine.listEnable()) continue;
-			ListField listField = new ListField(mfd.getName(), fieldDefine);
+			ListField listField = new ListField(mfd.getName(), fieldDefine, moduleDefine);
 			listFields.add(listField);
 		}
 		return listFields;

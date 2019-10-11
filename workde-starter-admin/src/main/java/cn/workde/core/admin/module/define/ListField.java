@@ -20,38 +20,21 @@ public class ListField {
 
 	private String format;
 
+	private ModuleDefine moduleDefine;
+
 	public ListField() { }
 
-	public ListField(String fieldName, FieldDefine fieldDefine) {
+	public ListField(String fieldName, FieldDefine fieldDefine, ModuleDefine moduleDefine) {
 		this.setName(fieldName);
 		this.setLabel(fieldDefine.label());
 		this.setWidth(fieldDefine.width());
 		this.setType(fieldDefine.as());
 		this.setFormat(fieldDefine.format());
+		this.setModuleDefine(moduleDefine);
 	}
 
-	/**
-	 * 创建序号列
-	 * @return
-	 */
-	public static ListField createCheckboxField() {
-		ListField listField = new ListField();
-		listField.setWidth("10%");
-		listField.setType("checkbox");
-		return listField;
-	}
-
-	/**
-	 * 创建序号列
-	 * @param label
-	 * @return
-	 */
-	public static ListField createNumberField(String label) {
-		ListField listField = new ListField();
-		listField.setLabel(label);
-		listField.setWidth("10%");
-		listField.setType("numbers");
-		return listField;
+	public Object getValue(Object value) {
+		return moduleDefine.getListFieldValue(this, value);
 	}
 
 }

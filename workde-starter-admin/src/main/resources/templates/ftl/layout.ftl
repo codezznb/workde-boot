@@ -38,7 +38,7 @@
         <div class="act-container">
             <div class="act-panel">
                 <a href="javascript:;" class="js-big-main button-to-big color-gray" title="正常">正常</a>
-                <div class="act-panel-header">企业管理</div>
+                <div class="act-panel-header">${mm.moduleDefine.moduleTitle}</div>
                 <div class="act-body">
                     <div class="act-left-menu">
                         <ul class="layui-nav layui-nav-tree">

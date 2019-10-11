@@ -111,7 +111,9 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
 
 	public PageInfo<T> page(Map<String, Object> params, String orderBy, int pageNum, int pageSize) {
 		Example example = new Example(entityClass);
-		if(ObjectUtils.isNotEmpty(params)) example.createCriteria().andEqualTo(params);
+		if(ObjectUtils.isNotEmpty(params)) {
+			example.createCriteria().andEqualTo(params);
+		}
 		if(StringUtils.isNotEmpty(orderBy)) example.setOrderByClause(orderBy);
 		PageHelper.startPage(pageNum, pageSize);
 		PageInfo<T> pageInfo = new PageInfo<>(mapper.selectByExample(example));

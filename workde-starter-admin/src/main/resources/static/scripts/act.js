@@ -88,18 +88,18 @@ var Act = {
                 type: fmt == 'yyyy-MM-dd' ? 'date' : 'datetime'
             });
         });
-        $('input[data-search-url]').keydown(function(e){
-            if(e.keyCode === 13){
-                var me = $(this);
-                var url = $(this).data("search-url");
-                var name = $(this).prop("name");
-                var query = $(this).val();
-                var obj =  Act.Url.parseParams((url.split("?")[1] || "").split("#")[0]);
-                obj[name] = query;
-                url = Act.Url.toString((url.split("?")[0] || "").split("#")[0], obj);
-                Act.stack.load(url);
-            }
+        $('.workde-input-group .search-btn').click(function(e) {
+            var ele = $(this).prev();
+            var url = ele.data("search-url");
+            var name = ele.prop("name");
+            var query = ele.val();
+            var obj =  Act.Url.parseParams((url.split("?")[1] || "").split("#")[0]);
+            obj[name] = query;
+            url = Act.Url.toString((url.split("?")[0] || "").split("#")[0], obj);
+            Act.stack.load(url);
+            return false;
         });
+
         $(document).on('click.act', Act.linkClickSelector, function (e) {
             var link = $(this);
             if (Act.isRemote(link)) Act.allowAction(link);

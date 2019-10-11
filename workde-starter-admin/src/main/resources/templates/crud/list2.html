@@ -1,0 +1,26 @@
+<@ui.layout>
+<div class="layui-row">
+
+    <div class="layui-col-md4 act-search-form">
+        <#if mm.moduleDefine.search>
+        <input type="text" class="layui-input" placeholder="搜索关键字" data-search-url="list" name="keyword" value="${keyword}">
+        <#else>
+            &nbsp;
+        </#if>
+    </div>
+
+    <div class="layui-col-md8 text-right">
+        <a class="layui-btn layui-btn-sm act-btn" href="new">+新建</a>
+    </div>
+</div>
+    <form class="layui-form">
+    <@ui.list_page value=list mm=mm />
+    </form>
+</div>
+<script>
+    Act.ready(function(){
+
+    });
+</script>
+</@ui.layout>
+

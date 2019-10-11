@@ -16,8 +16,11 @@ import cn.workde.core.tk.base.BaseEntity;
 import cn.workde.core.tk.base.BaseService;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.io.FileNotFoundException;
 
 /**
  * @author zhujingang
@@ -53,13 +56,32 @@ public class ModuleController extends WorkdeAdminController {
 		return baseService;
 	}
 
+	protected String getControllerName() {
+		String name = this.getClass().getSimpleName();
+		if(name.endsWith("Controller")) name = name.substring(0,name.indexOf("Controller"));
+		return name;
+	}
+
+	protected String getTemplateFileName(String name) {
+		String controllerName = getControllerName();
+		String fileName = controllerName + "/" + name;
+		try {
+			ResourceUtils.getFile("classpath:templates/" + fileName + ".html");
+			return fileName;
+		} catch (FileNotFoundException e) {
+			return "crud/" + name;
+		}
+	}
+
 	@GetMapping(path = "list")
 	@ApiOperation(value = "列表")
 	public ModelAndView list(String keyword){
+		getControllerName();
 		ModuleDefine moduleDefine = getModuleDefine();
 		ModuleMeta moduleMeta = moduleService.getModuleMeta(moduleDefine);
 		BaseService baseService = getBaseService();
-		ModelAndView mv = new ModelAndView("crud/list");
+		String fileName = getTemplateFileName("list");
+		ModelAndView mv = new ModelAndView(fileName);
 		mv.addObject("mm", moduleMeta);
 		if(moduleDefine.getPage()) {
 			mv.addObject("value", baseService.page(moduleDefine.getExample(keyword), getPageNum(), getPageSize()));

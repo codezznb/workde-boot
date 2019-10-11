@@ -1,0 +1,41 @@
+<@ui.layout>
+    <span class="layui-breadcrumb">
+        <a href="javascript:;" onclick="history.back();">返回</a>
+        <a href="@{list()}">${mm.moduleDefine.moduleTitle}列表</a>
+        <a><cite>新建${mm.moduleDefine.moduleTitle}</cite></a>
+    </span>
+
+
+    <form class="act-form layui-form" action="">
+        <#list 1..mm.groupSize as idx>
+        <div class="act-form-group">${mm.getGroupName(idx)}</div>
+        <#list mm.getNewFormFields(idx) as field>
+            <@ui.field field />
+        </#list>
+        </#list>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="button" class="layui-btn layui-btn-sm" lay-submit lay-filter="form-submit">立即提交</button>
+                <a href="javascript:history.back();" class="layui-btn layui-btn-sm">返回</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    Act.ready(function() {
+        var form = layui.form;
+        form.render();
+
+        form.on('submit(form-submit)', function(data){
+            Act.submit('new', data.field, function(resp) {
+                if(resp.code == 200 && resp.success) {
+                    Act.msg("操作成功");
+                    Act.jump('list', 2);
+                }
+            });
+            return false;
+        });
+    })
+</script>
+</@ui.layout>

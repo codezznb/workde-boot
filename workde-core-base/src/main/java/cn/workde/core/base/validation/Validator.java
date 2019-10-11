@@ -345,12 +345,11 @@ public class Validator {
 			Console.log("校验对象：{}", param);
 			JSONObject paramHint = new JSONObject();
 			violations.forEach(violation -> {
-				String key = violation.getPropertyPath().toString();
 				String msg = violation.getMessage();
-				paramHint.put(key, msg);
+				throw new ValidateException(msg);
 			});
 
-			throw new ValidateException(paramHint.toJSONString());
+			// throw new ValidateException(paramHint.toJSONString());
 		}
 
 		return this;

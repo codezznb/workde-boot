@@ -50,9 +50,7 @@ public class TokenUtil {
 		try {
 			TokenInfo accessToken = createJWT(param, "audience", "issuser", TokenConstant.ACCESS_TOKEN);
 			//返回accessToken
-			return authInfo.set(TokenConstant.ACCOUNT, userInfo.getAccount())
-				.set(TokenConstant.USER_NAME, userInfo.getAccount())
-				.set(TokenConstant.NICK_NAME, userInfo.getRealName())
+			return authInfo.set(TokenConstant.NICK_NAME, userInfo.getRealName())
 				.set(TokenConstant.ACCESS_TOKEN, accessToken.getToken())
 				.set(TokenConstant.REFRESH_TOKEN, createRefreshToken(userInfo).getToken())
 				.set(TokenConstant.TOKEN_TYPE, TokenConstant.BEARER)
@@ -162,17 +160,14 @@ public class TokenUtil {
 
 	public static UserInfo getUserInfo(HttpServletRequest request) {
 		Claims claims = getClaims(request);
-		System.out.println(claims);
 		if (claims == null) {
 			return null;
 		}
 
 		String userId = Convert.toStr(claims.get(TokenConstant.USER_ID));
-		String account = Convert.toStr(claims.get(TokenConstant.ACCOUNT));
 		Long expiresIn = claims.getExpiration().getTime();
 		UserInfo userInfo = new UserInfo();
 		userInfo.setId(userId);
-		userInfo.setAccount(account);
 		userInfo.setExpiresIn(expiresIn);
 		userInfo.setUserParam(claims);
 
@@ -187,10 +182,8 @@ public class TokenUtil {
 	 */
 	public static Claims getClaims(HttpServletRequest request) {
 		String auth = request.getHeader(TokenConstant.HEADER);
-		System.out.println(auth);
 		if (StringUtils.isNotBlank(auth)) {
 			String token = JwtUtil.getToken(auth);
-			System.out.println(token);
 			if (StringUtils.isNotBlank(token)) {
 				return parseJWT(token);
 			}
@@ -201,5 +194,10 @@ public class TokenUtil {
 			}
 		}
 		return null;
+	}
+
+	public static void main(String[] args) {
+		String token = "eyJ0eXAiOiJKc29uV2ViVG9rZW4iLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJpc3N1c2VyIiwiYXVkIjoiYXVkaWVuY2UiLCJ1c2VyX2lkIjoiMTE3NzEyNTAzOTA4NzAyNjE3NiIsInRva2VuX3R5cGUiOiJhY2Nlc3NfdG9rZW4iLCJhY2NvdW50IjoiMTgwNjczNDExODQiLCJleHAiOjE1NzA3ODA3NzAsIm5iZiI6MTU3MDY5NDM3MH0._BkMpB1t7EH6jxX-UnEInuLBqt7_G8Nc5RvDH71fF1o";
+		System.out.println(parseJWT(token));
 	}
 }

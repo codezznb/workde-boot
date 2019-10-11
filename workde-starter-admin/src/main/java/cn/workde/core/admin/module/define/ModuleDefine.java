@@ -44,6 +44,11 @@ public class ModuleDefine {
 	 */
 	private Boolean page = true;
 
+	/**
+	 * 树形表格
+	 */
+	private Boolean asTree = false;
+
 	public FormControl getFormControl(String name, FieldDefine fieldDefine, Boolean isNew) {
 		return null;
 	}
@@ -52,6 +57,8 @@ public class ModuleDefine {
 
 	public String getFormGroupName(Integer group) { return "基本信息"; }
 
+	public Object getListFieldValue(ListField listField, Object value) { return value; }
+
 	/**
 	 * 列表查询
 	 * @param keyword
@@ -59,11 +66,12 @@ public class ModuleDefine {
 	 */
 	public Example getExample(String keyword) {
 		Example example = new Example(getModel());
-		if(StringUtils.isNotEmpty(search)) {
+		if(!StringUtils.hasEmpty(keyword, search)) {
+			keyword = "%" + keyword + "%";
 			String[] columns = search.split(",");
-			example.createCriteria();
-			for(String column : columns) {
-
+			Example.Criteria criteria = example.createCriteria();
+			for (String column : columns) {
+				criteria.orLike(column, keyword);
 			}
 		}
 		if(StringUtils.isNotEmpty(getOrderBy())) example.setOrderByClause(getOrderBy());

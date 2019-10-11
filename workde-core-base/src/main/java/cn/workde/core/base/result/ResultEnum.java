@@ -28,7 +28,7 @@ public enum ResultEnum {
 
     // 400 - 客户端错误
     PARAM_VOID(400, "参数为空"),
-    PARAM_CHECK_NOT_PASS(401, "参数校验未通过，请参照API核对后重试"),
+    PARAM_CHECK_NOT_PASS(400, "参数校验未通过，请参照API核对后重试"),
     PARAM_VALUE_INVALID(402, "参数校验未通过，无效的value"),
     PARAM_DECRYPT_ERROR(403, "参数解密错误"),
 
