@@ -43,6 +43,12 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
         return mapper.selectOne(entity);
     }
 
+    public T one(Map<String, Object> params) {
+		Example example = new Example(entityClass);
+		if(ObjectUtils.isNotEmpty(params)) example.createCriteria().andEqualTo(params);
+		return mapper.selectOneByExample(example);
+	}
+
     public T byId(String id) { return mapper.selectByPrimaryKey(id); }
 
     public T save(T entity) {

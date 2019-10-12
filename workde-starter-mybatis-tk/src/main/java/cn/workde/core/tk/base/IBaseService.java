@@ -16,6 +16,8 @@ public interface IBaseService<T extends BaseEntity> {
 
 	T one(T entity);
 
+	T one(Map<String, Object> params);
+
 	T byId(String id);
 
 	T save(T entity);
