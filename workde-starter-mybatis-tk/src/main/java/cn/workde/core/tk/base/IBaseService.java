@@ -44,4 +44,10 @@ public interface IBaseService<T extends BaseEntity> {
 
 	void deleteByExample(T entity);
 
+	void update(T entity, Map<String, Object> params);
+
+	void updateById(T entity);
+
+	void updateByExample(T entity, Example example);
+
 }

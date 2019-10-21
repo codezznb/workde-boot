@@ -33,10 +33,15 @@ public class WorkdeController {
 
 
 	protected Kv getPermitParams(String ...names){
+		return getPermitParams(false, names);
+	}
+
+	protected Kv getPermitParams(Boolean ignoreBlank, String ...names){
 		Kv kv = Kv.create();
 		Arrays.asList(names).stream().forEach(name -> {
 			String value = getRequest().getParameter(name);
-			if(value != null) kv.put(name, value);
+			if(ignoreBlank && StringUtils.isNotEmpty(value)) kv.put(name, value);
+			else if(value != null) kv.put(name, value);
 		});
 		return kv;
 	}

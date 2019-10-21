@@ -144,4 +144,23 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
 		mapper.deleteByExample(entity);
 	}
 
+	@Override
+	public void update(T entity, Map<String, Object> params) {
+		Example example = new Example(entityClass);
+		if(ObjectUtils.isNotEmpty(params)) {
+			example.createCriteria().andEqualTo(params);
+		}
+		updateByExample(entity, example);
+	}
+
+	@Override
+	public void updateById(T entity) {
+		mapper.updateByPrimaryKey(entity);
+	}
+
+	@Override
+	public void updateByExample(T entity, Example example) {
+		mapper.updateByExample(entity, example);
+	}
+
 }
