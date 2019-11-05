@@ -56,4 +56,7 @@ public interface IBaseService<T extends BaseEntity> {
 
 	void updateByExample(T entity, Example example);
 
+	void updateByIdSelective(T entity);
+
+	void updateByExampleSelective(T entity, Example example);
 }

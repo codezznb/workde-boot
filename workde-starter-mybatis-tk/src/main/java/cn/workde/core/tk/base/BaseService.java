@@ -200,5 +200,14 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
 		mapper.updateByExample(entity, example);
 	}
 
+	@Override
+	public void updateByIdSelective(T entity) {
+		mapper.updateByPrimaryKeySelective(entity);
+	}
+
+	@Override
+	public void updateByExampleSelective(T entity, Example example) {
+		mapper.updateByExampleSelective(entity, example);
+	}
 
 }
