@@ -22,6 +22,12 @@ public interface IBaseService<T extends BaseEntity> {
 
 	T save(T entity);
 
+	int count(T entity);
+
+	int count(Map<String, Object> params);
+
+	int count(Example example);
+
 	List<T> list(Map<String, Object> params);
 
 	List<T> list(String orderBy);

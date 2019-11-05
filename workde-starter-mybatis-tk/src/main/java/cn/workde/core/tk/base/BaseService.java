@@ -29,6 +29,7 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
 		return mapper.selectAll();
 	}
 
+	@Override
     public boolean unique(String property, String value) {
         Example example = new Example(entityClass);
         example.createCriteria().andEqualTo(property, value);
@@ -39,18 +40,24 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
         return true;
     }
 
+	@Override
     public T one(T entity){
         return mapper.selectOne(entity);
     }
 
+	@Override
     public T one(Map<String, Object> params) {
 		Example example = new Example(entityClass);
-		if(ObjectUtils.isNotEmpty(params)) example.createCriteria().andEqualTo(params);
+		if(ObjectUtils.isNotEmpty(params)) {
+			example.createCriteria().andEqualTo(params);
+		}
 		return mapper.selectOneByExample(example);
 	}
 
+	@Override
     public T byId(String id) { return mapper.selectByPrimaryKey(id); }
 
+	@Override
     public T save(T entity) {
         int result = 0;
         Date currentDate = new Date();
@@ -60,12 +67,6 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
         if (entity.getId() == null) {
 			entity.setId(IdUtils.getId().toString());
             entity.setCreated(currentDate);
-
-            /**
-             * 用于自动回显 ID，领域模型中需要 @ID 注解的支持
-             * {@link AbstractBaseDomain}
-             */
-            //result = mapper.insertUseGeneratedKeys(entity);
 			result = mapper.insert(entity);
         }
 
@@ -83,63 +84,99 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
         return null;
     }
 
-    public List<T> list(Map<String, Object> params) {
+	@Override
+	public int count(T entity) {
+		return mapper.selectCount(entity);
+	}
+
+
+	@Override
+	public int count(Map<String, Object> params) {
+		Example example = new Example(entityClass);
+		if(ObjectUtils.isNotEmpty(params)) {
+			example.createCriteria().andEqualTo(params);
+		}
+		return count(example);
+	}
+
+	@Override
+	public int count(Example example) {
+		return mapper.selectCountByExample(example);
+	}
+
+	@Override
+	public List<T> list(Map<String, Object> params) {
 		return list(params, null);
 	}
 
+	@Override
 	public List<T> list(String orderBy) {
 		return list(null, orderBy);
 	}
 
+	@Override
 	public List<T> list(Map<String, Object> params, String orderBy) {
 		Example example = new Example(entityClass);
-		if(ObjectUtils.isNotEmpty(params)) example.createCriteria().andEqualTo(params);
-		if(StringUtils.isNotEmpty(orderBy)) example.setOrderByClause(orderBy);
+		if(ObjectUtils.isNotEmpty(params)) {
+			example.createCriteria().andEqualTo(params);
+		}
+		if(StringUtils.isNotEmpty(orderBy)) {
+			example.setOrderByClause(orderBy);
+		}
 		return mapper.selectByExample(example);
 	}
 
+	@Override
 	public List<T> list(Example example) {
 		return mapper.selectByExample(example);
 	}
 
+	@Override
 	public PageInfo<T> page(int pageNum, int pageSize) {
 		return page(null, null, pageNum, pageSize);
 	}
 
+	@Override
 	public PageInfo<T> page(Map<String, Object> params, int pageNum, int pageSize) {
 		return page(params, null, pageNum, pageSize);
 	}
 
+	@Override
 	public PageInfo<T> page(String orderBy, int pageNum, int pageSize) {
 		return page(null, orderBy, pageNum, pageSize);
 	}
-
 
 	public PageInfo<T> page(Map<String, Object> params, String orderBy, int pageNum, int pageSize) {
 		Example example = new Example(entityClass);
 		if(ObjectUtils.isNotEmpty(params)) {
 			example.createCriteria().andEqualTo(params);
 		}
-		if(StringUtils.isNotEmpty(orderBy)) example.setOrderByClause(orderBy);
+		if(StringUtils.isNotEmpty(orderBy)) {
+			example.setOrderByClause(orderBy);
+		}
 		PageHelper.startPage(pageNum, pageSize);
 		PageInfo<T> pageInfo = new PageInfo<>(mapper.selectByExample(example));
 		return pageInfo;
 	}
 
+	@Override
 	public PageInfo<T> page(Example example, int pageNum, int pageSize) {
 		PageHelper.startPage(pageNum, pageSize);
 		PageInfo<T> pageInfo = new PageInfo<>(mapper.selectByExample(example));
 		return pageInfo;
 	}
 
+	@Override
 	public void delete(T entity) {
 		mapper.delete(entity);
 	}
 
+	@Override
 	public void deleteById(String id) {
 		mapper.deleteByPrimaryKey(id);
 	}
 
+	@Override
 	public void deleteByExample(T entity){
 		mapper.deleteByExample(entity);
 	}
@@ -162,5 +199,6 @@ public class BaseService<T extends BaseEntity, M extends BaseMapper<T>> implemen
 	public void updateByExample(T entity, Example example) {
 		mapper.updateByExample(entity, example);
 	}
+
 
 }

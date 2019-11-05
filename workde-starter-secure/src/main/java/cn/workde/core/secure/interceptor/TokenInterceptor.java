@@ -38,11 +38,12 @@ public class TokenInterceptor extends HandlerInterceptorAdapter {
             response.setHeader("Content-type", MediaType.APPLICATION_JSON_UTF8_VALUE);
             response.setStatus(HttpServletResponse.SC_OK);
             try {
-				if(WebUtils.isAjax()) {
-					response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(result)));
-				} else {
-					response.sendRedirect(workdeSecureProperties.getLoginPage());
-				}
+				response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(result)));
+//				if(WebUtils.isAjax()) {
+//					response.getWriter().write(Objects.requireNonNull(JsonUtils.toJson(result)));
+//				} else {
+//					response.sendRedirect(workdeSecureProperties.getLoginPage());
+//				}
             } catch (IOException e) {
                 e.printStackTrace();
             }
