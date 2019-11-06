@@ -15,4 +15,12 @@ public class WorkdeUserController extends WorkdeController {
 		return userInfo;
 	}
 
+	public String getUserId() {
+		UserInfo userInfo = getUserInfo();
+		if(userInfo == null) {
+			return null;
+		}
+		return userInfo.getId();
+	}
+
 }
