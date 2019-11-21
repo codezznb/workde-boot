@@ -1,7 +1,9 @@
 package cn.workde.core.boot.json;
 
 import cn.workde.core.boot.annotation.MoreSerializeField;
+import cn.workde.core.boot.annotation.PageSerializeField;
 import cn.workde.core.boot.annotation.SerializeField;
+import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.MethodParameter;
 import org.springframework.web.context.request.NativeWebRequest;
@@ -22,7 +24,7 @@ public class JsonReturnHandler implements HandlerMethodReturnValueHandler {
 	@Override
 	public boolean supportsReturnType(MethodParameter methodParameter) {
 		// 如果有我们自定义的 JSON 注解 就用我们这个Handler 来处理
-		boolean hasJsonAnnotation= methodParameter.hasMethodAnnotation(SerializeField.class) || methodParameter.hasMethodAnnotation(MoreSerializeField.class);
+		boolean hasJsonAnnotation= methodParameter.hasMethodAnnotation(SerializeField.class) || methodParameter.hasMethodAnnotation(MoreSerializeField.class) || methodParameter.hasMethodAnnotation(PageSerializeField.class);
 		return hasJsonAnnotation;
 	}
 
@@ -43,6 +45,9 @@ public class JsonReturnHandler implements HandlerMethodReturnValueHandler {
 				Arrays.asList(moreSerializeField.value()).forEach( serializeField -> {
 					jsonSerializer.filter(serializeField);
 				});
+			}else if(a instanceof PageSerializeField) {
+				PageSerializeField pageSerializeField = (PageSerializeField) a;
+				jsonSerializer.filter(PageInfo.class, pageSerializeField.includes(), "");
 			}
 		});
 		response.setCharacterEncoding("UTF-8");
