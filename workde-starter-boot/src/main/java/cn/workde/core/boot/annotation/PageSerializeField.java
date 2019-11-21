@@ -13,6 +13,6 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PageSerializeField {
 
-	String includes() default "pageNum,pageSize,size,pages";
-	
+	String includes() default "pageNum,pageSize,total,list,pages";
+
 }
