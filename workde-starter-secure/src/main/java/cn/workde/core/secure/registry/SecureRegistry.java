@@ -33,6 +33,7 @@ public class SecureRegistry {
 		this.defaultExcludePatterns.add("/scripts/**");
 		this.defaultExcludePatterns.add("/layui/**");
 		this.defaultExcludePatterns.add("/cpanel/login");
+		this.defaultExcludePatterns.add("/static/**");
     }
 
     /**
