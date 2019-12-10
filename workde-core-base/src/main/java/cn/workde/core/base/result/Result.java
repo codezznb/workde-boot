@@ -5,7 +5,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.http.HttpStatus;
 
 import java.io.Serializable;
 
@@ -203,8 +202,8 @@ public class Result<T> implements Serializable {
      * @param data 数据
      * @return HTTP请求，最外层响应对象
      */
-    public static Result<String> param_check_not_pass(String data) {
-        return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), ResultEnum.PARAM_CHECK_NOT_PASS.getMsg(), data);
+    public static Result<?> param_check_not_pass(String data) {
+        return error(ResultEnum.PARAM_CHECK_NOT_PASS.getCode(), data);
     }
 
 
