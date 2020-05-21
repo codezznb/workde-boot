@@ -30,10 +30,11 @@ public class SecureRegistry {
         this.defaultExcludePatterns.add("/auth/**");
 		this.defaultExcludePatterns.add("/reg/**");
 		this.defaultExcludePatterns.add("/forget/**");
-		this.defaultExcludePatterns.add("/scripts/**");
 		this.defaultExcludePatterns.add("/layui/**");
+		this.defaultExcludePatterns.add("/scripts/**");
+		this.defaultExcludePatterns.add("/images/**");
+		this.defaultExcludePatterns.add("/styles/**");
 		this.defaultExcludePatterns.add("/cpanel/login");
-		this.defaultExcludePatterns.add("/static/**");
     }
 
     /**

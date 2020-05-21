@@ -101,14 +101,17 @@ public class TokenUtil {
 			.signWith(signatureAlgorithm, signingKey);
 
 		//设置JWT参数
-		if(user != null) user.forEach(builder::claim);
+		if(user != null) {
+			user.forEach(builder::claim);
+		}
 
 		//添加Token过期时间
 		long expireMillis;
 		if (tokenType.equals(TokenConstant.ACCESS_TOKEN)) {
-			expireMillis = 24 * 60 * 60 * 1000l;
+			expireMillis = 24 * 60 * 60 * 1000L;
+			// expireMillis = 1 * 60 * 1000L;
 		} else if (tokenType.equals(TokenConstant.REFRESH_TOKEN)) {
-			expireMillis = 30 * 24 * 60 * 60 * 1000l;
+			expireMillis = 30 * 24 * 60 * 60 * 1000L;
 		} else {
 			expireMillis = getExpire();
 		}
