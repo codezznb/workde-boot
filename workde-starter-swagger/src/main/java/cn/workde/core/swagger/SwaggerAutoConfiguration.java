@@ -1,6 +1,6 @@
 package cn.workde.core.swagger;
 
-import com.github.xiaoymin.knife4j.spring.annotations.EnableSwaggerBootstrapUi;
+import com.github.xiaoymin.knife4j.spring.annotations.EnableKnife4j;
 import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import com.google.common.collect.Lists;
@@ -27,7 +27,7 @@ import java.util.List;
  */
 @Configuration
 @EnableSwagger2
-@EnableSwaggerBootstrapUi
+@EnableKnife4j
 @EnableConfigurationProperties(SwaggerProperties.class)
 public class SwaggerAutoConfiguration {
 
