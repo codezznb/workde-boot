@@ -1,6 +1,7 @@
 package cn.workde.core.alisms.config;
 
 
+import cn.workde.core.alisms.properties.AlismsJgyProperties;
 import cn.workde.core.alisms.properties.AlismsProperties;
 import cn.workde.core.alisms.service.IAliyunService;
 import cn.workde.core.alisms.service.impl.AliyunServiceImpl;
@@ -13,7 +14,7 @@ import org.springframework.context.annotation.Configuration;
  * @date 2019/9/23 9:01 AM
  */
 @Configuration
-@EnableConfigurationProperties(AlismsProperties.class)
+@EnableConfigurationProperties({AlismsProperties.class, AlismsJgyProperties.class})
 public class WorkdeSmsAutoConfiguration {
 
 	@Bean

@@ -14,4 +14,10 @@ public interface IAliyunService {
 	 */
 	IAcsClient getAcsClient();
 
+	/**
+	 * 获取阿里云的ACSClient
+	 * @return IAcsClient
+	 */
+	IAcsClient getJgyAcsClient();
+
 }
