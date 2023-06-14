@@ -24,7 +24,7 @@
         <maven.compiler.source>${java.version}</maven.compiler.source>
         <maven.compiler.target>${java.version}</maven.compiler.target>
         <compile.version>8</compile.version>
-        <hutool.version>4.6.2</hutool.version>
+        <hutool.version>5.8.19</hutool.version>
         <fastjson.version>1.2.59</fastjson.version>
         <knife4j.version>2.0.1</knife4j.version>
 
